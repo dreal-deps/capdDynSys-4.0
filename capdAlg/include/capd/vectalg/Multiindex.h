@@ -51,16 +51,16 @@ public:
   Multipointer(size_type dim, int data[]) : Vector<int,0>(dim,data){}
   Multipointer(size_type dim,bool) : Vector<int,0>(dim,true){}
 
-#ifdef CAPD_STD_CPP11
-  Multipointer(Multipointer&& v) : Vector<int,0>(v) {}
-  Multipointer & operator=(Multipointer && v) {
-    Vector<int,0>::operator= ( static_cast< Vector<int,0> &&>(v));
-    return *this;
-  }
-  Multipointer(std::initializer_list<int> l) : Vector<int,0>(l.size(), false) {
-    std::copy(l.begin(), l.end(), this->begin());
-  }
-#endif
+// #ifdef CAPD_STD_CPP11
+//   Multipointer(Multipointer&& v) : Vector<int,0>(v) {}
+//   Multipointer & operator=(Multipointer && v) {
+//     Vector<int,0>::operator= ( static_cast< Vector<int,0> &&>(v));
+//     return *this;
+//   }
+//   Multipointer(std::initializer_list<int> l) : Vector<int,0>(l.size(), false) {
+//     std::copy(l.begin(), l.end(), this->begin());
+//   }
+// #endif
 
   /// order of derivative
   inline size_type module() const{
@@ -113,16 +113,16 @@ public:
   Multiindex(size_type dim, int data[]) : Vector<int,0>(dim,data){}
   Multiindex(size_type dim,bool) : Vector<int,0>(dim,true){}
 
-#ifdef CAPD_STD_CPP11
-  Multiindex(Multiindex&& v) : Vector<int,0>(v) {}
-  Multiindex & operator=(Multiindex && v) {
-    Vector<int,0>::operator= ( static_cast< Vector<int,0> &&>(v));
-    return *this;
-  }
-  Multiindex(std::initializer_list<int> l) : Vector<int,0>(l.size(), false) {
-    std::copy(l.begin(), l.end(), this->begin());
-  }
-#endif
+// #ifdef CAPD_STD_CPP11
+//   Multiindex(Multiindex&& v) : Vector<int,0>(v) {}
+//   Multiindex & operator=(Multiindex && v) {
+//     Vector<int,0>::operator= ( static_cast< Vector<int,0> &&>(v));
+//     return *this;
+//   }
+//   Multiindex(std::initializer_list<int> l) : Vector<int,0>(l.size(), false) {
+//     std::copy(l.begin(), l.end(), this->begin());
+//   }
+// #endif
 
   bool hasNext();
 
