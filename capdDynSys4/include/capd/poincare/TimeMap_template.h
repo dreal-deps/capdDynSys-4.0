@@ -36,7 +36,7 @@ template <typename SolverT>
 template<typename SetType>
 void TimeMap<SolverT>::moveSet(ScalarType Time, SetType &originalSet, void* current)
 {
-  SaveStepControl<SolverT> ssc(m_solver);
+  // SaveStepControl<SolverT> ssc(m_solver);
 
   ScalarType maxStep;
   if(this->m_currentSet != current)
