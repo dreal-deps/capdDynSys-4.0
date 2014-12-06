@@ -96,7 +96,7 @@ AM_CONDITIONAL(HAVE_CAPD_GUI, [test "x${CAPD_PACKAGES_GUI}" != "x"])
 PKG_CHECK_EXISTS([mpcapdDynSys], [MPCAPD_PACKAGES="${MPCAPD_PACKAGES} mpcapdDynSys"], [])
 PKG_CHECK_EXISTS([mpcapdAlg], [MPCAPD_PACKAGES="${MPCAPD_PACKAGES} mpcapdAlg"], [])
 
-AS_IF([test "x${MPCAPD_PACKAGES}" != "x"],
+AS_IF([test "x${MPCAPD_PACKAGES}" = "xenable_mpcapd"],
 	    [AC_SUBST([MPCAPD_PACKAGES])
 	    PKG_CHECK_MODULES([mpcapd], [${MPCAPD_PACKAGES} ${CAPD_PACKAGES}])
 	    DEFINE_LIBS_FLAGS_ONLY(mpcapd_LIBS)
@@ -106,7 +106,7 @@ AS_IF([test "x${MPCAPD_PACKAGES}" != "x"],
 	    AC_CONFIG_FILES(${top_capd_build}/bin/mpcapd-config:mpcapd-config-dev.in)
 	    ])
 
-AM_CONDITIONAL([HAVE_MPCAPD], [test "x${MPCAPD_PACKAGES}" != "x"])
+AM_CONDITIONAL([HAVE_MPCAPD], [test "x${MPCAPD_PACKAGES}" = "xenable_mpcapd"])
 
 AS_IF([test "x${MPCAPD_PACKAGES}" != "x" && test "x${CAPD_PACKAGES_GUI}" != "x"],
 	    [AC_SUBST([MPCAPD_PACKAGES])
