@@ -52,12 +52,11 @@ inline bool subset(double A_small, double A_big)
    return ( A_small == A_big );
 }
 
-inline bool subsetInterior(long double A_small, long double A_big)
-{
+inline bool subsetInterior(long double /* A_small */, long double /* A_big */){
    return false;
 }
 
-inline bool subsetInterior(double A_small, double A_big)
+inline bool subsetInterior(double /*A_small*/, double /*A_big*/)
 {
    return false;
 }

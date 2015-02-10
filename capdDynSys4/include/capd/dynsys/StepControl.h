@@ -299,7 +299,7 @@ public:
   }
 
   template <class Solver, class SetType>
-  void init(Solver& solver, typename Solver::ScalarType const& t, const SetType& s) const {
+  void init(Solver& solver, typename Solver::ScalarType const& /*t*/, const SetType& s) const {
     typedef typename Solver::ScalarType ScalarType;
     typedef typename Solver::VectorType VectorType;
     typedef typename Solver::MatrixType MatrixType;

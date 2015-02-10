@@ -52,14 +52,14 @@ public:
   virtual VectorType operator()(const ScalarType& h) const = 0;
   virtual MatrixType derivative(const ScalarType& h) const = 0;
   virtual MatrixType operator[](const ScalarType& h) const = 0;
-  virtual HessianType hessian(const ScalarType& h) const {
+  virtual HessianType hessian(const ScalarType& /*h*/) const {
     throw std::logic_error("ParametricCurve::hessian is not implemented in abstract class. Use C2Curve or CnCurve instead.");
   }
-  virtual JetType jet(const ScalarType& h) const{
+  virtual JetType jet(const ScalarType& /*h*/) const{
     throw std::logic_error("ParametricCurve::jet is not implemented in abstract class. Use CnCurve instead.");
   }
 
-  virtual void eval(ScalarType h, JetType& v) const{
+  virtual void eval(ScalarType /*h*/, JetType& /*v*/) const{
     throw std::logic_error("ParametricCurve::eval is not implemented in abstract class. Use CnCurve instead.");
   }
   virtual void setDomain(Real left, Real right);

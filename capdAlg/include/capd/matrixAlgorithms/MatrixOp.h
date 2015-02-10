@@ -28,7 +28,7 @@ inline bool isDivisible(intType a, intType b){
 return a % b == intType(0);
 }
 
-inline bool isDivisible(double a, double b){
+inline bool isDivisible(double /*a*/, double /*b*/){
 return true;
 }
 

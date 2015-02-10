@@ -96,7 +96,7 @@ public :
     return BaseSet(predictor).show() + BaseSet(corrector).show();
   }
 
-  void move(DynSysType& solver){
+  void move(DynSysType& /*solver*/){
     throw std::logic_error("C0HOSet: cannot move HO-type sets via abstract C0DynSys.");
   }
 

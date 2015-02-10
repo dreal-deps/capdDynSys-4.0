@@ -132,7 +132,7 @@ public:
 
 protected:
   // TimeRange is base for all types of sets and nonrigorous CxCoeff
-  void saveCurrentSet(const capd::diffAlgebra::TimeRange<ScalarType>& set){
+  void saveCurrentSet(const capd::diffAlgebra::TimeRange<ScalarType>& /*set*/){
   }
 
   void saveCurrentSet(const capd::dynset::C1Set<MatrixType>& set){

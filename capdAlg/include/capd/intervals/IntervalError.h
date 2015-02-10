@@ -72,6 +72,9 @@ protected:
 ///  
 ///   @author Tomasz Kapela   @date 11-01-2006
 //////////////////////////////////////////////////////////////////////////////
+template <class T>
+void ignore_unused(T&) {} 
+
 template < typename T_Bound > 
 inline void checkInterval( const char * A_msg,  
                            const T_Bound & A_left, 
@@ -80,6 +83,10 @@ inline void checkInterval( const char * A_msg,
 #ifdef  __DEBUGGING__
     if( A_left > A_right)
       throw IntervalError<T_Bound>(A_msg, A_left, A_right);
+#else
+    ignore_unused(A_msg);
+    ignore_unused(A_left);
+    ignore_unused(A_right);
 #endif   
 }
 
