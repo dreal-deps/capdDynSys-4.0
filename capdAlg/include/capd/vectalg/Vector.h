@@ -78,7 +78,7 @@ public:
   Vector(Iterator begin, Iterator end);
 
 #ifdef CAPD_HAVE_CXX11
-  Vector(Vector&& v) : ContainerType(v) {}
+  Vector(Vector&& v) noexcept : ContainerType(std::move(v)) {}
   Vector & operator=(Vector && v) {
     ContainerType::operator= ( static_cast< ContainerType &&>(v));
     return *this;
