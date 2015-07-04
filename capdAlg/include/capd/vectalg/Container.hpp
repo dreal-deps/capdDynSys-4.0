@@ -30,8 +30,9 @@ namespace vectalg{
 
   /// Move constructor
 template<typename Scalar>
-Container<Scalar,0>::Container(Container && a_container)
-  : data(a_container.data), capacity(a_container.capacity) {
+Container<Scalar,0>::Container(Container && a_container) noexcept
+  : data(a_container.data), capacity(a_container.capacity)
+{
   a_container.data = 0;
   a_container.capacity = 0;
 }
