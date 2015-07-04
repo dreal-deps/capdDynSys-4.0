@@ -25,7 +25,7 @@
 #include "capd/rounding/RoundingTraits.h"
 #include "capd/intervals/IntervalTraits.h"
 #include "capd/basicalg/doubleFun.h"
-
+#include "capd/settings/compilerSetting.h"
 
 namespace capd{
 /// Interval arithmetics
@@ -94,7 +94,11 @@ public:
   Interval();
 
   /// copying constructor
-  Interval  ( const Interval & A_iv ) ;
+#ifdef CAPD_HAVE_CXX11
+  Interval  ( const Interval & A_iv ) noexcept;
+#else
+  Interval  ( const Interval & A_iv );
+#endif
 
   /// constructor from any class that can be coverted to BoundType
   // template < typename T_Scalar >
