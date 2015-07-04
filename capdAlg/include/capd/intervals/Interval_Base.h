@@ -32,11 +32,17 @@ inline Interval<T_Bound, T_Rnd>::Interval()
 {}
 
 /// copying constructor
+#ifdef CAPD_HAVE_CXX11
+template < typename T_Bound, typename T_Rnd>
+inline Interval < T_Bound, T_Rnd >::Interval( const Interval & A_iv ) noexcept
+               : m_left( A_iv.m_left ), m_right( A_iv.m_right )
+{}
+#else
 template < typename T_Bound, typename T_Rnd>
 inline Interval < T_Bound, T_Rnd >::Interval( const Interval & A_iv )
                : m_left( A_iv.m_left ), m_right( A_iv.m_right )
 {}
-
+#endif
 /// constructor from any class that can be coverted to BoundType
 template < typename T_Bound, typename T_Rnd> 
 //template < typename T_Scalar >
