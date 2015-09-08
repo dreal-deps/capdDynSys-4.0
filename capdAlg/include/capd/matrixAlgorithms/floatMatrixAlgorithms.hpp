@@ -24,7 +24,6 @@
 #include "capd/matrixAlgorithms/floatMatrixAlgorithms.h"
 #include "capd/basicalg/TypeTraits.h"
 #include "capd/basicalg/doubleFun.h"
-#include "capd/intervals/IComplex.h"
 #include "capd/vectalg/Matrix.hpp"
 
 namespace capd{
@@ -105,7 +104,7 @@ void gauss(MatrixType a, ResultType b, ResultType& result)
   typedef typename MatrixType::ScalarType ScalarType;
   typedef typename MatrixType::size_type size_type;
   typedef typename TypeTraits<ScalarType>::Real Real;
-  
+
   size_type i,j,k;
   const size_type dimension = a.numberOfRows();
   std::vector<size_type> p(dimension);
@@ -134,7 +133,7 @@ void gauss(MatrixType a, ResultType b, ResultType& result)
     {
       throw std::runtime_error( "Gauss elimination: singular matrix\n");
     }
-    
+
     for(i=j+1;i<dimension;++i)
     {
       ScalarType factor = a[p[i]][j]/a[p[j]][j];
@@ -758,26 +757,6 @@ MatrixType gaussInverseMatrix(const MatrixType& A)
   gauss(A,b,result);
 
   return result;
-}
-
-template<class MatrixType>
-void krawczykCorrection(const MatrixType& A, MatrixType& invA)
-{
-  typedef typename MatrixType::size_type size_type;
-  MatrixType C = midMatrix(invA);
-  // compute T = C*A-Id
-  MatrixType T = C*A;
-  for(size_type i=1;i<=T.numberOfRows();++i)
-    T(i,i) -= TypeTraits<typename MatrixType::ScalarType>::one();
-  invA = intersection(C - T*invA,invA);
-}
-
-template<class MatrixType>
-MatrixType krawczykInverse(const MatrixType& A)
-{
-  MatrixType invA = gaussInverseMatrix(A);
-  krawczykCorrection(A,invA);
-  return invA;
 }
 
 }} // namespace capd::matrixAlgorithms

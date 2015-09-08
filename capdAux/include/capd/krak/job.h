@@ -245,7 +245,7 @@ inline int capd::krak::job::type()
    return A_JOB;
 }
 
-inline capd::krak::Stat capd::krak::job::process(capd::krak::UserMove &um)
+inline capd::krak::Stat capd::krak::job::process(capd::krak::UserMove& /*um*/)
 {
    return running;
 }

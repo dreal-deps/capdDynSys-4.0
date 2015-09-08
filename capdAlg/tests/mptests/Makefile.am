@@ -8,4 +8,4 @@ mpsintest_libs=  ${mpcapdAlg_LIBS} ${capdAux_LIBS}
 # ${mpcapdintervals_LIBS} 
 mpsintest_LDADD=${mpsintest_libs}
 mpsintest_DEPENDENCIES=${filter %.a %.la,${mpsintest_libs}} 
-mpsintest_CXXFLAGS=${mpcapdintervals_CFLAGS} ${mpfr_CFLAGS} ${capdAux_CFLAGS}
+mpsintest_CXXFLAGS= ${AM_CXXFLAGS} ${mpcapdintervals_CFLAGS} ${mpfr_CFLAGS} ${capdAux_CFLAGS}

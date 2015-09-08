@@ -563,7 +563,7 @@ namespace DivTimeByConst
   }
 
   template<class T>
-  inline void eval(const unsigned degree, const T* left, const T* right, T* result, const unsigned dim, const unsigned order, const unsigned coeffNo)
+  inline void eval(const unsigned /*degree*/, const T* left, const T* right, T* result, const unsigned /*dim*/, const unsigned /*order*/, const unsigned coeffNo)
   {
     evalC0(left,right,result,coeffNo);
   }
@@ -575,7 +575,7 @@ namespace DivTimeByConst
   }
 
   template<class T>
-  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* right, T* result, const unsigned dim, const unsigned order)
+  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* right, T* result, const unsigned /*dim*/, const unsigned /*order*/)
   {
     if(degree==0)
       *result = (*left) / (*right);
@@ -593,7 +593,7 @@ namespace DivFunTimeByConst
   }
 
   template<class T>
-  inline void eval(const unsigned degree, const T* left, const T* right, T* result, const unsigned dim, const unsigned order, const unsigned coeffNo)
+  inline void eval(const unsigned /*degree*/, const T* left, const T* right, T* result, const unsigned /*dim*/, const unsigned /*order*/, const unsigned coeffNo)
   {
     evalC0(left,right,result,coeffNo);
   }
@@ -605,7 +605,7 @@ namespace DivFunTimeByConst
   }
 
   template<class T>
-  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* right, T* result, const unsigned dim, const unsigned order)
+  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* right, T* result, const unsigned /*dim*/, const unsigned /*order*/)
   {
     if(degree==0)
       *result = (*left) / (*right);
@@ -623,7 +623,7 @@ namespace DivFunTimeByTime
   }
 
   template<class T>
-  inline void eval(const unsigned degree, const T* left, const T* right, T* result, const unsigned dim, const unsigned order, const unsigned coeffNo)
+  inline void eval(const unsigned /*degree*/, const T* left, const T* right, T* result, const unsigned /*dim*/, const unsigned /*order*/, const unsigned coeffNo)
   {
     evalC0(left,right,result,coeffNo);
   }
@@ -635,7 +635,7 @@ namespace DivFunTimeByTime
   }
 
   template<class T>
-  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* right, T* result, const unsigned dim, const unsigned order)
+  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* right, T* result, const unsigned /*dim*/, const unsigned /*order*/)
   {
     if(degree==0)
       *result = (*left) / (*right);
@@ -653,7 +653,7 @@ namespace DivFunTimeByFunTime
   }
 
   template<class T>
-  inline void eval(const unsigned degree, const T* left, const T* right, T* result, const unsigned dim, const unsigned order, const unsigned coeffNo)
+  inline void eval(const unsigned /*degree*/, const T* left, const T* right, T* result, const unsigned /*dim*/, const unsigned /*order*/, const unsigned coeffNo)
   {
     evalC0(left,right,result,coeffNo);
   }
@@ -665,7 +665,7 @@ namespace DivFunTimeByFunTime
   }
 
   template<class T>
-  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* right, T* result, const unsigned dim, const unsigned order)
+  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* right, T* result, const unsigned /*dim*/, const unsigned /*order*/)
   {
     if(degree==0)
       *result = (*left) / (*right);
@@ -686,7 +686,7 @@ namespace DivConstByConst
   }
 
   template<class T>
-  inline void eval(const unsigned degree, const T* left, const T* right, T* result, const unsigned dim, const unsigned order, const unsigned coeffNo)
+  inline void eval(const unsigned /*degree*/, const T* left, const T* right, T* result, const unsigned /*dim*/, const unsigned /*order*/, const unsigned coeffNo)
   {
     evalC0(left,right,result,coeffNo);
   }
@@ -698,7 +698,7 @@ namespace DivConstByConst
   }
 
   template<class T>
-  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* right, T* result, const unsigned dim, const unsigned order)
+  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* right, T* result, const unsigned /*dim*/, const unsigned /*order*/)
   {
     if(degree==0)
       *result = (*left) / (*right);

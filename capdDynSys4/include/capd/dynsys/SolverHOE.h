@@ -51,30 +51,12 @@ public:
   // Overridden methods from DynSys
   VectorType Remainder(const ScalarType& t, const VectorType& x, VectorType& out_enc);
   VectorType enclosure(const ScalarType& t, const VectorType& x) ;
-  void encloseC0Map(
-      const ScalarType& t,  //< @param[in] current time of ODE
-      const VectorType& x0, //< @param[in] an internal point of x, usually center of x
-      const VectorType& x,  //< @param[in] set to be moved along the trajectories of ODE
-      VectorType& o_phi,    //< @param[out] bound for phi(x0), where phi is a numerical method
-      VectorType& o_rem,    //< @param[out] bound for the error of numerical method over the time step
-      VectorType& o_enc,    //< @param[out] enclosure of all trajectories starting from x over the time interval (time step of numerical method)
-      MatrixType& o_jacPhi  //< @param[out] bound for derivative Dphi(x)
-  );
+  void computeRemainder(ScalarType t, const VectorType& xx, VectorType& o_enc, VectorType& o_rem);
+  void computeRemainder(ScalarType t, const VectorType& xx, capd::diffAlgebra::C1TimeJet<MatrixType>& o_enc, capd::diffAlgebra::C1TimeJet<MatrixType>& o_rem);
 
   // Overridden methods from C1DynSys
   /// computes simultaneously an enclosure for the solutions to ODE and associated variational equations
   void c1Enclosure(const ScalarType& t, const VectorType& x, VectorType& o_enc, MatrixType& o_jacEnc);
-  void encloseC1Map(
-      const ScalarType& t,  //< @param[in] current time of ODE
-      const VectorType& x0, //< @param[in] an internal point of x, usually center of x
-      const VectorType& x,  //< @param[in] set to be moved along the trajectories of ODE
-      VectorType& o_phi,    //< @param[out] bound for phi(x0), where phi is a numerical method
-      VectorType& o_rem,    //< @param[out] bound for the error of numerical method over the time step
-      VectorType& o_enc,    //< @param[out] enclosure of all trajectories starting from x over the time interval (time step of numerical method)
-      MatrixType& o_jacPhi, //< @param[out] bound for derivative Dphi(x)
-      MatrixType& o_jacRem, //< @param[out] bound for the error of numerical method over the time step for variational equation
-      MatrixType& o_jacEnc  //< @param[out] enclosure of all trajectories of variational equations with initial condition set to Identity over the time interval (time step of numerical method)
-  );
 
   /// This operator computes image of the set (in given representation) using set.move function, see capd/dynsys/Move.h for details
   /// This template together with SetTraits prevent usage of various types of jets with incompatible solvers.

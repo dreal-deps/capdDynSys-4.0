@@ -117,8 +117,12 @@ std::ostream & print(
 ){
   typedef typename Jet<MatrixT,DEGREE>::Multiindex Multiindex;
   typedef typename Jet<MatrixT,DEGREE>::Multipointer Multipointer;
-  if(lastFun<0) lastFun=coeff.imageDimension();
-  if(maxDegree<0) maxDegree=coeff.degree();
+//  if((lastFun<0) or (lastFun > coeff.imageDimension())) 
+  if((unsigned)lastFun > coeff.imageDimension()) 
+    lastFun=coeff.imageDimension();
+//  if((maxDegree<0) or (maxDegree > coeff.degree()))
+  if((unsigned)maxDegree > coeff.degree())
+    maxDegree=coeff.degree();
   for(int r=minDegree; r<= maxDegree; ++r){
     if(r)
       str << "\nTaylor coefficients of order " << r << " :";
@@ -157,8 +161,9 @@ std::string Jet<MatrixT,DEGREE>::toString(
        int firstFun /*= 0*/, int lastFun /*= -1*/,
        int firstVariable /*= 0*/,
        int minDegree /*= 0*/, int maxDegree /*= -1*/,
-       int precision /* =15*/) const {
+       int precision /* =-1*/) const {
   std::ostringstream str;
+  str.precision((precision>0)? precision : (capd::TypeTraits<ScalarType>::numberOfDigits() + 1) );
   print(str, *this, minDegree, maxDegree, firstFun, lastFun, firstVariable);
   return str.str();
 }

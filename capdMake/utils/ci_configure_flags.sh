@@ -1,9 +1,11 @@
 #!/bin/sh
 
+set -o verbose
+
 # it is required by nested configure in distcheck because we cannot pass there any arguments
 export with_boost=${WITH_BOOST}
 boost_version_req="104900"
-tmpfile="$(mktemp).cpp"
+tmpfile="$(mktemp XXXXXXX).cpp"
 cat - <<_ACEOF > ${tmpfile}
 #include <boost/version.hpp>
 
@@ -27,3 +29,5 @@ else
     export with_boost="no"
     echo "Boost not detected"
 fi
+
+rm -f "${tmpfile}" "${tmpfile}.o"

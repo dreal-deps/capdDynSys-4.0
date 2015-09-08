@@ -19,7 +19,7 @@
 
 using namespace capd::vectalg;
 
-int main(int argc, char* argv[]){
+int main(int , char* []){
   try{
     Vector<int,0> v(5),w(5),z(1);
 

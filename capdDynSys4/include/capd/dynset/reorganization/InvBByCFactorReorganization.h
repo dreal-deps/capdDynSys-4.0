@@ -15,6 +15,7 @@
 #define _CAPD_DYNSYS_C1FACTORREORGANIZATION_H_
 
 #include "capd/dynset/reorganization/FactorPolicy.h"
+#include "capd/vectalg/Vector_Interval.hpp"
 
 namespace capd{
 namespace dynset{

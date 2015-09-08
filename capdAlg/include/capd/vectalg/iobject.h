@@ -13,6 +13,7 @@
 // distributed under the terms of the GNU General Public License.
 // Consult  http://capd.wsb-nlu.edu.pl/ for details.
 
+
 #ifndef _CAPD_VECTALG_IOBJECT_H_
 #define _CAPD_VECTALG_IOBJECT_H_
 

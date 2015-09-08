@@ -63,7 +63,6 @@ public:
   void setDegree(size_type degree);  ///< Sets new maximal degree of the jet and reallocates memory
 
   void clearCoefficients();                 ///< sets all coefficients to zero
-  void derivative(BasicCnCurve& out) const; ///< computes time derivative of curve as a curve
 
   const ScalarType& centerCoefficient(size_type i, size_type k) const;
   const ScalarType& coefficient(size_type i, size_type k) const;

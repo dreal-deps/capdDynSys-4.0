@@ -83,14 +83,12 @@ public:
   virtual ScalarType evalAt(const Set& set) const = 0;
 
   /** computes gradient of return time
-      @param[in] Px - value of Poincare map
       @param[in] derivativeOfFlow - solution to first variational equation computed at return time
       @param[in] gradientOnPx - gradient of function that defines Poincare section evaluated at Px
       @param[in] denominator - scalar product of vector field evaluated at Px and gradientOnPx
       @param[out] result - computed gradient of return time
   */
   virtual void computeDT(
-          const VectorType& Px,
           const MatrixType& derivativeOfFlow,
           const VectorType& gradientOnPx,
           const ScalarType& denominator,

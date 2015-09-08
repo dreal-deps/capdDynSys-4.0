@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE(xasin)
 
 using capd::autodiff::Node;
 
-void _f(Node t, Node in[], int dimIn, Node out[], int dimOut, Node params[], int noParams)
+void _f(Node /*t*/, Node in[], int /*dimIn*/, Node out[], int /*dimOut*/, Node /*params*/[], int /*noParams*/)
 {
   out[0] = -asin(-in[0]*in[1]);
 }

@@ -40,10 +40,10 @@ struct C1SetMove{
 // this excludes C2Set, CnSet as well as attempts of sending IVector as an argument to Taylor(HOE) solver.
 template<class T, class SetT>
 struct C1SetMove<T,SetT,false>{
-	  static void move(SetT& set, T& ){
+	  static void move(SetT&, T&){
 		  throw std::logic_error("Logic error: This solver can integrate C0Sets and C1Sets, only.\n");
 	  }
-    static void move(SetT& set, SetT& result, T& ){
+    static void move(SetT&, SetT&, T&){
 		  throw std::logic_error("Logic error: This solver can integrate C0Sets and C1Sets, only.\n");
 	  }
 };
@@ -65,10 +65,10 @@ struct C2SetMove{
 // this excludes CnSet as well as attempts of sending IVector as an argument to C2Taylor solver.
 template<class T, class SetT>
 struct C2SetMove<T,SetT,false>{
-	  static void move(SetT& set, T& ){
+	  static void move(SetT& , T&){
 		  throw std::logic_error("Logic error: This solver can integrate C0Sets, C1Sets and C2Sets, only.\n");
 	  }
-    static void move(SetT& set, SetT& result, T& ){
+    static void move(SetT&, SetT&, T&){
 		  throw std::logic_error("Logic error: This solver can integrate C0Sets, C1Sets and C2Sets, only.\n");
 	  }
 };
@@ -91,10 +91,10 @@ struct CnSetMove{
 // this excludes attempts of sending IVector as an argument to C2Taylor solver.
 template<class T, class SetT>
 struct CnSetMove<T,SetT,false>{
-	  static void move(SetT& set, T& ){
+	  static void move(SetT&, T&){
 		  throw std::logic_error("Logic error: This solver can integrate sets only. Do not use it for nonrigorous computations.\n");
 	  }
-    static void move(SetT& set, SetT& result, T& ){
+    static void move(SetT&, SetT&, T&){
 		  throw std::logic_error("Logic error: This solver can integrate sets only. Do not use it for nonrigorous computations.\n");
 	  }
 };
@@ -111,7 +111,7 @@ struct C1JetMove{
 // this excludes C2Jet, CnJet
 template<class T, class JetT>
 struct C1JetMove<T,JetT,false>{
-	  static void move(JetT& Jet, T& ){
+	  static void move(JetT&, T& ){
 		  throw std::logic_error("Logic error: This solver can integrate C0Jets and C1Jets, only.\n");
 	  }
 };
@@ -126,7 +126,7 @@ struct C2JetMove{
 // this excludes CnJet
 template<class T, class JetT>
 struct C2JetMove<T,JetT,false>{
-	  static void move(JetT& Jet, T& ){
+	  static void move(JetT&, T&){
 		  throw std::logic_error("Logic error: This solver can integrate C0Jets, C1Jets and C2Jets, only.\n");
 	  }
 };
@@ -140,7 +140,7 @@ struct CnJetMove{
 
 template<class T, class JetT>
 struct CnJetMove<T,JetT,false>{
-	  static void move(JetT& Jet, T& ){
+	  static void move(JetT&, T&){
 		  throw std::logic_error("Logic error: This solver can integrate Jets. Do not use it for rigorous computations.\n");
 	  }
 };

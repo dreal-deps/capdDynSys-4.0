@@ -27,8 +27,7 @@ class SetProperties{
 template <class SetT>
 class SetProperties<SetT, false>{
   public:
-  static void check(SetT & set){
- 
+  static void check(SetT&){
   }
 };
 template<class TM, class V>

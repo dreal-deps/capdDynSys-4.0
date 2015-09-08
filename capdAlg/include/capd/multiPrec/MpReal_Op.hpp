@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////
+ //////////////////////////////////////////////////////////////////////////////
 //   Package:          CAPD
 
 /////////////////////////////////////////////////////////////////////////////
@@ -467,7 +467,7 @@ inline const MpReal & max(const MpReal& a, const MpReal& b) {
 // Outputs the value on the stream o in base 'base' with 'nb_digits'
 // with rounding mode rnd
 inline std::ostream& MpReal::put(std::ostream& o, RoundingMode rnd,
-    PrecisionType prec, int base, int nb_digits) const {
+    PrecisionType /*prec*/, int base, int nb_digits) const {
 
   bool neg = (sign(*this) < 0);
 
@@ -513,7 +513,7 @@ inline std::ostream& MpReal::put(std::ostream& o, RoundingMode rnd,
 
 inline void MpReal::get(const std::string & str,
    		RoundingMode rnd,
-   		PrecisionType prec,
+   		PrecisionType /*prec*/,
    		int base){
 	if(mpfr_set_str(mpfr_rep, str.c_str(), base, rnd)) {
 	    std::cerr << " Problem reading from string " << std::endl;

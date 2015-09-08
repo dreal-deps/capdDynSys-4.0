@@ -168,7 +168,7 @@ template Matrix<double,CAPD_DEFAULT_DIMENSION,CAPD_DEFAULT_DIMENSION>& multiplyA
 template Matrix<long double,CAPD_DEFAULT_DIMENSION,CAPD_DEFAULT_DIMENSION>& multiplyAssignObjectScalarAddObject<>(Matrix<long double,CAPD_DEFAULT_DIMENSION,CAPD_DEFAULT_DIMENSION>&, long double const&, Matrix<long double,CAPD_DEFAULT_DIMENSION,CAPD_DEFAULT_DIMENSION> const&);
 
 template void Matrix<int, CAPD_DEFAULT_DIMENSION,CAPD_DEFAULT_DIMENSION>::setToIdentity();
-template Matrix<int, CAPD_DEFAULT_DIMENSION,CAPD_DEFAULT_DIMENSION> Matrix<int, CAPD_DEFAULT_DIMENSION,CAPD_DEFAULT_DIMENSION>::Identity(unsigned);
+template Matrix<int, CAPD_DEFAULT_DIMENSION,CAPD_DEFAULT_DIMENSION> Matrix<int, CAPD_DEFAULT_DIMENSION,CAPD_DEFAULT_DIMENSION>::Identity(size_type);
 template Matrix<int, CAPD_DEFAULT_DIMENSION,CAPD_DEFAULT_DIMENSION>::Matrix(MatrixSlice<Matrix<int, CAPD_DEFAULT_DIMENSION,CAPD_DEFAULT_DIMENSION> > const&);
 template std::string cppReprezentation<>(Matrix<int, CAPD_DEFAULT_DIMENSION, CAPD_DEFAULT_DIMENSION> const&, std::string const&, std::string const&);
 template std::string cppReprezentation<>(Matrix<double, CAPD_DEFAULT_DIMENSION, CAPD_DEFAULT_DIMENSION> const&, std::string const&, std::string const&);

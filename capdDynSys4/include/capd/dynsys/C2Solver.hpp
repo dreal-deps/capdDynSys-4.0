@@ -23,6 +23,7 @@
 #include "capd/dynsys/Solver.hpp"
 #include "capd/dynsys/BasicC2Solver.hpp"
 #include "capd/vectalg/Norm.hpp"
+#include "approveRemainder.h"
 
 namespace capd{
 namespace dynsys{
@@ -95,7 +96,6 @@ void C2Solver<MapType,StepControlT,CurveT>::encloseC2Map(
     HessianType& o_hessianEnc
   )
 {
-  VectorType* center = this->getCoefficientsAtCenter();
   VectorType* coeff = this->getCoefficients();
   MatrixType* matrixCoeff = this->getMatrixCoefficients();
   HessianType* hessianCoeff = this->getHessianCoefficients();
@@ -106,22 +106,40 @@ void C2Solver<MapType,StepControlT,CurveT>::encloseC2Map(
   hessianCoeff[0].clear();
   this->m_vField->computeODECoefficients(coeff,matrixCoeff,hessianCoeff,order);
   this->computeCoefficientsAtCenter(x,order);
-  this->computeTimeStep(t,xx);
+  
+  capd::diffAlgebra::C2TimeJet<MatrixType> phi(&o_phi,&o_jacPhi,&o_hessianPhi);
+  capd::diffAlgebra::C2TimeJet<MatrixType> rem(&o_rem,&o_jacRem,&o_hessianRem);
+  capd::diffAlgebra::C2TimeJet<MatrixType> enc(&o_enc,&o_jacEnc,&o_hessianEnc);
 
-  o_enc = this->enclosure(t,xx);
-  this->c2Enclosure(o_enc,o_jacEnc,o_hessianEnc);
-  this->c2Remainder(o_enc,o_jacEnc,o_hessianEnc,o_rem,o_jacRem,o_hessianRem);
+  capd::dynsys::computeAndApproveRemainder(*this,t,xx,phi,rem,enc);
+}
 
+// ####################################################################
+
+template<typename MapType,typename StepControlT, typename CurveT>
+void C2Solver<MapType,StepControlT,CurveT>::computeRemainder(ScalarType t, const VectorType& xx, C2TimeJetType& o_enc, C2TimeJetType& o_rem)
+{
+  o_enc.vector() = this->enclosure(t,xx);
+  this->c2Enclosure(o_enc.vector(),o_enc.matrix(),o_enc.hessian());
+  this->c2Remainder(o_enc.vector(),o_enc.matrix(),o_enc.hessian(),o_rem.vector(),o_rem.matrix(),o_rem.hessian());
+}
+
+// ####################################################################
+
+template<typename MapType,typename StepControlT, typename CurveT>
+void C2Solver<MapType,StepControlT,CurveT>::sumTaylorSeries(C2TimeJetType& o_phi)
+{
+  const int order = this->getOrder();
   // summation of the Taylor series
-  o_phi = center[order];
-  o_jacPhi = matrixCoeff[order];
-  o_hessianPhi = hessianCoeff[order];
-  for(int r = order - 1; r >= 0; --r)
+  o_phi.vector() = this->getCoefficientsAtCenter()[order];
+  o_phi.matrix() = this->getMatrixCoefficients()[order];
+  o_phi.hessian() = this->getHessianCoefficients()[order];
+  for(int i = order - 1; i >= 0; --i)
   {
-    capd::vectalg::multiplyAssignObjectScalarAddObject(o_phi,this->m_step,center[r]);
-    capd::vectalg::multiplyAssignObjectScalarAddObject(o_jacPhi,this->m_step,matrixCoeff[r]);
-    capd::vectalg::multiplyAssignObjectScalarAddObject(o_hessianPhi,this->m_step,hessianCoeff[r]);
-  }
+    capd::vectalg::multiplyAssignObjectScalarAddObject(o_phi.matrix(),this->getStep(),this->getMatrixCoefficients()[i]);
+    capd::vectalg::multiplyAssignObjectScalarAddObject(o_phi.vector(),this->getStep(),this->getCoefficientsAtCenter()[i]);
+    capd::vectalg::multiplyAssignObjectScalarAddObject(o_phi.hessian(),this->getStep(),this->getHessianCoefficients()[i]);
+  }  
 }
 
 }} // namespace capd::dynsys

@@ -17,6 +17,7 @@
 #include <exception>
 #include "capd/intervals/MpInterval.h"
 #include "capd/intervals/MpIntervalSettings.h"
+#include "capd/auxil/ignoreUnused.h"
 
 class NaNException : public std::exception {
   const char * what() const throw () {
@@ -34,6 +35,8 @@ inline void testNaN(const MpInterval & x) {
 #ifdef __MPI_TEST_NAN__
   if(isNaN(x.leftBound()) || isNaN(x.rightBound())))
   throw NaNException();
+#else 
+  capd::auxil::ignoreUnused(x);
 #endif  // __MPI_TEST_NAN__
 }
 

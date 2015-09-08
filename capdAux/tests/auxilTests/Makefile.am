@@ -10,19 +10,19 @@ endif
 TESTS=${check_PROGRAMS}
 
 CRefTest_SOURCES=CRefTest.cpp
-CRefTest_CXXFLAGS=${capdauxil_CFLAGS}
+CRefTest_CXXFLAGS= ${AM_CXXFLAGS} ${capdauxil_CFLAGS}
 
 functorTest_SOURCES=functorTest.cpp
-functorTest_CXXFLAGS=${capdauxil_CFLAGS}
+functorTest_CXXFLAGS= ${AM_CXXFLAGS} ${capdauxil_CFLAGS}
 
 skipCommentsIstreamTest_SOURCES=skipCommentsIstreamTest.cpp
-skipCommentsIstreamTest_CXXFLAGS=${capdauxil_CFLAGS}
+skipCommentsIstreamTest_CXXFLAGS= ${AM_CXXFLAGS} ${capdauxil_CFLAGS}
 skipCommentsIstreamTest_LDFLAGS=${capdauxil_LIBS}
 
 
 
 auxilTest_SOURCES=auxilTestMain.cpp LoggerTest.cpp BuildInfoTest.cpp
-auxilTest_CXXFLAGS=${capdAux_CFLAGS} -I${top_builddir}/../include
+auxilTest_CXXFLAGS= ${AM_CXXFLAGS} ${capdAux_CFLAGS} -I${top_builddir}/../include
 auxilTest_libs=${capdAux_LIBS} ${BOOST_UNIT_TEST_FRAMEWORK_LIBS}
 auxilTest_LDFLAGS=${BOOST_UNIT_TEST_FRAMEWORK_LDFLAGS}
 auxilTest_LDADD=${auxilTest_libs}

@@ -19,9 +19,10 @@ AC_SUBST(capdMake)
 AC_SUBST(capd_src_dir)
 AC_SUBST(capd_build_dir)
 
-AC_CHECK_FILE([${capdMake}], [], [
-			     AC_MSG_ERROR([could not find capdMake in ${top_capd}. Set --top_capd to a direcotry where you have capdMake. There we will put binaries and libraries])
-			     exit -1])
+# AC_CHECK_FILE Does not work with cross-compilation
+# AC_CHECK_FILE([${capdMake}], [], [
+# 			     AC_MSG_ERROR([could not find capdMake in ${top_capd}. Set --top_capd to a direcotry where you have capdMake. There we will put binaries and libraries])
+# 			     exit -1])
 
 pkg_config_dev="${PWD}/${top_capd_build}/lib/pkgconfig-dev"
 pkg_config_install="${PWD}/${top_capd_build}/lib/pkgconfig-install"
@@ -39,34 +40,34 @@ fi
 pkg_config_dev=`cd ${pkg_config_dev}; pwd`
 pkg_config_install=`cd ${pkg_config_install}; pwd`
 
-AS_IF([ test "x$BASH" != "x" ],
-[
-    # for ${!} syntax check http://wiki.bash-hackers.org/syntax/pe#indirection
-    pkg_config_path_var="PKG_CONFIG_PATH"
-    # for cross platform compilation we need to compute real PKG_CONFIG_PATH variable name
-    AS_IF([ test "${host_alias}" = "i686-pc-mingw32" ],
-          [ pkg_config_path_var="PKG_CONFIG_PATH_i686_pc_mingw32"], [])
-    AS_IF([ test "${host_alias}" = "x86_64-w64-mingw32" ],
-          [ pkg_config_path_var="PKG_CONFIG_PATH_x86_64_w64_mingw32"], [])
-    AS_IF([ test "${host_alias}" = "i686-w64-mingw32" ],
-          [ pkg_config_path_var="PKG_CONFIG_PATH_i686_w64_mingw32"], [])
+# AS_IF([ test "x$BASH" != "x" ],
+# [
+#     # for ${!} syntax check http://wiki.bash-hackers.org/syntax/pe#indirection
+#     pkg_config_path_var="PKG_CONFIG_PATH"
+#     # for cross platform compilation we need to compute real PKG_CONFIG_PATH variable name
+#     AS_IF([ test "${host_alias}" = "i686-pc-mingw32" ],
+#           [ pkg_config_path_var="PKG_CONFIG_PATH_i686_pc_mingw32"], [])
+#     AS_IF([ test "${host_alias}" = "x86_64-w64-mingw32" ],
+#           [ pkg_config_path_var="PKG_CONFIG_PATH_x86_64_w64_mingw32"], [])
+#     AS_IF([ test "${host_alias}" = "i686-w64-mingw32" ],
+#           [ pkg_config_path_var="PKG_CONFIG_PATH_i686_w64_mingw32"], [])
 
 
-    AS_IF([ test "x${!pkg_config_path_var}" = "x" ],
-                 [ export ${pkg_config_path_var}="${pkg_config_dev}"],
-                 [ export ${pkg_config_path_var}="${pkg_config_dev}${PATH_SEPARATOR}${!pkg_config_path_var}"])
+#     AS_IF([ test "x${!pkg_config_path_var}" = "x" ],
+#                  [ export ${pkg_config_path_var}="${pkg_config_dev}"],
+#                  [ export ${pkg_config_path_var}="${pkg_config_dev}${PATH_SEPARATOR}${!pkg_config_path_var}"])
 
-    echo "Exporting ${pkg_config_path_var} as ${!pkg_config_path_var}"
-],
-[
-    AC_MSG_WARN([Your interpreter is not like BASH])
+#     echo "Exporting ${pkg_config_path_var} as ${!pkg_config_path_var}"
+# ],
+# [
+#     AC_MSG_WARN([Your interpreter is not like BASH])
     AS_IF([ test "x${PKG_CONFIG_PATH}" = "x" ],
                  [ export PKG_CONFIG_PATH="${pkg_config_dev}"],
                  [ export PKG_CONFIG_PATH="${pkg_config_dev}${PATH_SEPARATOR}${PKG_CONFIG_PATH}"])
 
-    echo "Exporting PKG_CONFIG_PATH as ${PKG_CONFIG_PATH}"
-]
-)
+#     echo "Exporting PKG_CONFIG_PATH as ${PKG_CONFIG_PATH}"
+# ]
+# )
 
 
 AC_SUBST(PKG_CONFIG_DIR,[\${libdir}/pkgconfig])
@@ -193,28 +194,46 @@ fi
 AM_MAINTAINER_MODE
 
 if test "x${CAPD_REPOS}" = "xyes"; then
-   CAPD_CFLAGS="-Wall ${CAPD_CFLAGS}"
+   CAPD_CXXFLAGS="${CAPD_CXXFLAGS} -Wall -Wextra"
+   CAPD_CPPFLAGS="${CAPD_CPPFLAGS} -Wall -Wextra"
+else
+ #save disk space without debug symbols
+   CAPD_CXXFLAGS="${CAPD_CXXFLAGS} -g0 -O2"
+   CAPD_CPPFLAGS="${CAPD_CPPFLAGS} -g0 -O2"
+: ${CFLAGS="-O2"}
+: ${CXXFLAGS="-O2"}
 fi
 
-AC_SUBST([CAPD_CFLAGS])
+AC_SUBST([CAPD_CXXFLAGS])
+AC_SUBST([CAPD_CPPFLAGS])
 AM_CONDITIONAL([WITH_CAPD_EXAMPLES], [ ! test -n "$WITHOUT_CAPD_EXAMPLES" ])
 
 
 
 AC_ARG_ENABLE(asserts,
 AS_HELP_STRING([--enable-asserts],
-               [enable asserts, default: no]),
+               [enable asserts, default: yes if .svn or .git]),
 [case "${enableval}" in
              yes) asserts=true ;;
              no)  asserts=false ;;
              *)   AC_MSG_ERROR([bad value ${enableval} for --enable-asserts]) ;;
 esac],
-[asserts=false])
+[
+  AS_IF([test "x${CAPD_REPOS}" = "xyes"],
+        [asserts=true],
+        [asserts=false])
+])
 
 AS_IF([test x"$asserts" = x"false"],
 [
-   CAPD_CFLAGS="-DBOOST_DISABLE_ASSERTS ${CAPD_CFLAGS}"
+   CAPD_CXXFLAGS="${CAPD_CXXFLAGS} -DBOOST_DISABLE_ASSERTS"
 ])
+
+
+AC_SUBST([CAPD_AM_CXXFLAGS], ["${CAPD_CXXFLAGS}"])
+AC_SUBST([CAPD_AM_CPPFLAGS], ["${CAPD_CPPFLAGS}"])
+AC_SUBST([LIBCAPD_LDFLAGS], ["-Wl,-Bstatic"])
+
 
 
 #########

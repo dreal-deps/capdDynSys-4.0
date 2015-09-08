@@ -20,7 +20,7 @@ if HAVE_CAPD
 
 noinst_LTLIBRARIES=libcapdweaksymbols.la
 libcapdweaksymbols_la_SOURCES=main_entry.cpp
-libcapdweaksymbols_la_CXXFLAGS=${capd_CFLAGS} -I${top_srcdir}/../../capdAlg/include -I${top_srcdir}/../../capdAux/include
+libcapdweaksymbols_la_CXXFLAGS= ${AM_CXXFLAGS} ${capd_CFLAGS} -I${top_srcdir}/../../capdAlg/include -I${top_srcdir}/../../capdAux/include
 libcapdweaksymbols_la_LDFLAGS=
 
 bin_SCRIPTS+= capd-config

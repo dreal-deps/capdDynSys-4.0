@@ -31,7 +31,7 @@ const char fileContents[] = "\
    [next]          \n\
    message = \"The numbers are\" "; 
            
-int main (int argc, char *argv [])
+int main (int /*argc*/, char */*argv*/ [])
 {
      
     // We construct ini reader   and set it up to stop parsing on raw_data section 

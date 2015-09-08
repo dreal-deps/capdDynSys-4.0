@@ -72,7 +72,7 @@ void verifyExistenceOfPeriodicOrbit(IPoincareMap& pm, IVector X, int period)
 
 // ----------------------------------- MAIN ----------------------------------------
 
-int main(int argc, char* argv[])
+int main()
 {
   cout.precision(17);
   try{

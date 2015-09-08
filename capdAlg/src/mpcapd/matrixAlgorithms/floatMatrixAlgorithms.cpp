@@ -14,7 +14,7 @@
 #include "capd/auxil/minmax.h"
 #include "capd/vectalg/mplib.h"
 #include "capd/matrixAlgorithms/floatMatrixAlgorithms.hpp"
-
+#include "capd/vectalg/Matrix_Interval.hpp"
 
 #ifdef __HAVE_MPFR__
   using namespace capd;

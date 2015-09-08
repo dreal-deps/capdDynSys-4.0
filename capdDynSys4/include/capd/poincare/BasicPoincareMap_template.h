@@ -41,6 +41,12 @@ T BasicPoincareMap<SolverT, SectionT>::reachSection(
   int n,        ///<                number of iterates
   ScalarType * lastStep   ///< if given
 ){
+  
+  /// @TODO : implement for n>1
+  if(n != 1){
+    throw std::runtime_error("BasicPoincareMap::reachSection not implemented for higher iterates of PoincareMap (n>1)\n");
+  }
+  
   this->m_solver.getStepControl().init(this->m_solver,theSet.getCurrentTime(),theSet);
 
   T v = theSet;

@@ -24,7 +24,7 @@ class IdQRPolicy
 {
 public:
   template<class VectorT, class MatrixT>
-  void computeBinvB(MatrixT& B, MatrixT& invB, const VectorT& v) const
+  void computeBinvB(MatrixT& B, MatrixT& invB, const VectorT& /*v*/) const
   {
     B.setToIdentity();
     invB.setToIdentity();

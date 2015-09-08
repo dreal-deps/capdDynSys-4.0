@@ -58,8 +58,9 @@ public:
                    const VectorType &enc, const VectorType& fieldOnEnc,
                    const ScalarType &secOnEnc, const VectorType &secGrad,
                    const ScalarType innerP)
-    : std::runtime_error(info), theSet(tS), beforeProblem(bP) , enclosure(enc),
-      vectorFieldOnEnclosure(fieldOnEnc), sectionGradientOnEnclosure(secGrad), innerProduct(innerP)
+    : std::runtime_error(info), theSet(tS), beforeProblem(bP) , 
+          enclosure(enc), vectorFieldOnEnclosure(fieldOnEnc), sectionGradientOnEnclosure(secGrad), 
+          sectionOnEnclosure(secOnEnc), innerProduct(innerP)
   {
     std::ostringstream d;
     d << std::runtime_error::what()<< "\n";

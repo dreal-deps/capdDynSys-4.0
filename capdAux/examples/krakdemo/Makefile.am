@@ -5,5 +5,5 @@ krakdemo_SOURCES=krakdemo.cpp
 krakdemo_libs=${capdkrak_LIBS} ${capdauxil_LIBS}
 krakdemo_LDADD=${krakdemo_libs}
 krakdemo_DEPENDENCIES=${filter %.a %.la,${krakdemo_libs}}
-krakdemo_CXXFLAGS=${capdkrak_CFLAGS} ${capdauxil_CFLAGS}
+krakdemo_CXXFLAGS= ${AM_CXXFLAGS} ${capdkrak_CFLAGS} ${capdauxil_CFLAGS}
 

@@ -35,8 +35,8 @@ public:
   typedef VectorT VectorType;
   typedef typename VectorT::ScalarType ScalarType;
 
-  virtual ScalarType operator()(const VectorType& u) const =0;
-  virtual VectorType gradient(const VectorType& u) const =0;    
+  virtual ScalarType operator()(const VectorType& /*u*/) const =0;
+  virtual VectorType gradient(const VectorType& /*u*/) const =0;    
   virtual ~FadFunction() {}
 };
 
@@ -57,38 +57,38 @@ public:
   // It should compute value of a nonautonomous vector field on a vector u.
   // If the ODE is autonomous, simply do not use the 't' argument in the definition.
   template <class TimeT, typename AVector>
-  AVector operator()(const TimeT& t, const AVector& u) const;
+  AVector operator()(const TimeT& /*t*/, const AVector& /*u*/) const;
   
   /// For backward compatibility.
   /// It computes derivative of the vector field for an autonomous vector field.
   /// You can implement it as follow.
   template <typename AVector>
-  AVector operator()(const AVector& u) const;
+  AVector operator()(const AVector& /*u*/) const;
 
   /// This operator should compute derivative of the vector field.
   /// One can specify own implementation
   /// or use in the implementation a template function
   /// computeDerivative from file differentiate.h (as in the example of the Lorenz system below)
   /// which performs FAD to compute derivative of a map.
-  virtual MatrixType derivative(const ScalarType& t, const VectorType& u) const = 0;
+  virtual MatrixType derivative(const ScalarType& /*t*/, const VectorType& /*u*/) const = 0;
 
   /// computes simultaneously value and derivative of the map for a given vector and time
-  virtual VectorType operator()(ScalarType t, const VectorType&, MatrixType &) const = 0;
+  virtual VectorType operator()(ScalarType /*t*/, const VectorType&, MatrixType &) const = 0;
 
   /// For backward compatibility.
   /// It computes derivative of the vector field for an autonomous vector field.
-  virtual MatrixType operator[](const VectorType& u) const = 0;
+  virtual MatrixType operator[](const VectorType& /*u*/) const = 0;
 
   /// This function should set parameter value of the vector field
   /// as a Description we may use integers or strings, etc.
   template <typename Description>
-  void setParameter(Description s, Scalar value){}
+  void setParameter(Description /*s*/, Scalar /*value*/){}
   
   /// You must implement this method. It must return the dimension of the phase space.
-  const unsigned dimension() {return D;}
+  unsigned dimension() {return static_cast<unsigned>(D);}
 
   /// Maximal order of spacial derivatives that this map can compute
-  const unsigned degree() { return 1;}
+  unsigned degree() { return 1u;}
 };
 
 
@@ -134,7 +134,7 @@ public:
   /// This operator computes vector field of the Lorenz system.
   /// The system is autonomous, but the operator must have two arguments in order to fit requested signature.
   template <typename TimeT, typename AVector>
-  AVector operator()(const TimeT& t, const AVector& in) const
+  AVector operator()(const TimeT& /*t*/, const AVector& in) const
   {
     return (*this)(in);
   }
@@ -202,7 +202,7 @@ public:
   }
 
   // section must provide a gradient method
-  VectorType gradient(const VectorType& u) const
+  VectorType gradient(const VectorType& /*u*/) const
   {
     return grad;
   }

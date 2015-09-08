@@ -1,4 +1,4 @@
-/// @addtogroup taylor
+/// @addtogroup tayltst
 /// @{
 
 /////////////////////////////////////////////////////////////////////////////
@@ -19,7 +19,6 @@
 
 #include "capd/krak/krak.h"
 #include "capd/capdlib.h"
-
 using namespace capd;
 
 const int DIMENSION = 3;
@@ -31,7 +30,7 @@ double maxy=2.6;
 
 Frame fr, txt;
 double step=0.25;
-int order = 30;
+int order = 20;
 
 void axes(Frame &fr)
 {
@@ -49,7 +48,7 @@ void initGraph(double step, int order)
   fr.setWorldCoord(minx,miny,maxx,maxy);
   rootFrame.Clear();
   axes(fr);
-  rootFrame << "Test of set arithmetics using class IMap and ITaylor.\n";
+  rootFrame << "Comparison of various epresentations and algorithms for IVP using class IMap and IOdeSolver.\n";
   rootFrame << "Evaluation of the set and its projection onto plane y\"=0.\n\n";
   rootFrame << "ODE: Michelson system\n";
   rootFrame << "Step control turned off. Constant time step: " << step << ",  order: " << order << "\n";
@@ -118,20 +117,20 @@ int main(int, char *[])
     DInterval iv(-sizeOfSet,sizeOfSet);
     IVector r(0.,iv,0.);
 
-    C0Intv2Set intv2(v,r);
-    C0RectSet rect(v,r);
-    C0Rect2Set rect2(v,r);
-    C0HOTripletonSet ho2(v,r);
+    C0Rect2Set doubleton(v,r);
+    C0HORect2Set ho_doubleton(v,r);
+    C0TripletonSet tripleton(v,r);
+    C0HOTripletonSet ho_tripleton(v,r);
 
     IMap f="par:c;var:x,y,z;fun:y,z,c^2-y-0.5*x*x;";
     f.setParameter("c", DInterval(1.0));
     IOdeSolver solver(f,order);
     solver.setStep(step);
 
-    computeRigorousTrajectory(intv2,solver,RED,"C0Intv2Set");
-    computeRigorousTrajectory(rect,solver,MAGENTA,"C0RectSet");
-    computeRigorousTrajectory(rect2,solver,GREEN,"C0Rect2Set");
-    computeRigorousTrajectory(ho2,solver,VIOLET,"C0HORect2Set");
+    computeRigorousTrajectory(doubleton,solver,RED,"C0Rect2Set");
+    computeRigorousTrajectory(tripleton,solver,GREEN,"C0TripletonSet");
+    computeRigorousTrajectory(ho_doubleton,solver,MAGENTA,"C0HORect2Set");
+    computeRigorousTrajectory(ho_tripleton,solver,VIOLET,"C0HOTripletonSet");
     computeNonrigorousTrajectory(z,sizeOfSet,40);
     waitBt();
 

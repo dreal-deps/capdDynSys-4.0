@@ -18,10 +18,12 @@
 
 #include <string>
 #include <stdexcept>
+#include "capd/diffAlgebra/C1TimeJet.h"
 #include "capd/dynset/C0Set.h"
 #include "capd/dynset/C1Set.h"
 #include "capd/dynsys/C1DynSys.h"
 #include "capd/dynsys/BasicSolver.h"
+#include "capd/poincare/SaveStepControl.h"
 
 namespace capd{
 namespace dynsys{
@@ -42,7 +44,8 @@ public:
   typedef typename MatrixType::ScalarType ScalarType;
   typedef BasicSolver<MapT,StepControlT,CurveT> BaseTaylor;
   typedef typename MatrixType::size_type size_type;
-
+  typedef diffAlgebra::C1TimeJet<MatrixType> C1TimeJetType;
+  
   Solver(MapType& vField, size_type order, const StepControlT& stepControl = StepControlT());
   void setOrder(size_type order); ///< Sets the order of the Taylor method
 
@@ -110,9 +113,14 @@ public:
   void computeRemainderCoefficients(const VectorType& x, const MatrixType& M);
   void computeRemainderCoefficients(ScalarType t, const VectorType& x);
   void computeRemainderCoefficients(ScalarType t, const VectorType& x, const MatrixType& M);
+  virtual void computeRemainder(ScalarType t, const VectorType& xx, VectorType& o_enc, VectorType& o_rem);
+  virtual void computeRemainder(ScalarType t, const VectorType& xx, C1TimeJetType& o_enc, C1TimeJetType& o_rem);
 
+  void computePhiCoefficients(ScalarType t, const VectorType& x, const VectorType& xx);
   void computePsiCoefficients(ScalarType t, const VectorType& x, const VectorType& xx, size_type order);
 
+  void sumTaylorSeries(C1TimeJetType& o_phi);
+  
   ScalarType getCoeffNorm(size_type, size_type degree) const;
   ScalarType getStep() const{
     return BaseTaylor::getStep();
@@ -130,7 +138,15 @@ public:
     return psiCurve;
   }
 
+  // @override
+  void computeTimeStep(const ScalarType& t, const VectorType& x){
+    this->m_step = this->isStepChangeAllowed()
+        ? this->getStepControl().computeNextTimeStep(*this,t,x)
+        : capd::min(this->m_fixedTimeStep,this->getMaxStep());
+  }
+
 protected:
+
   // TimeRange is base for all types of sets and nonrigorous CxCoeff
   void saveCurrentSet(const capd::diffAlgebra::TimeRange<ScalarType>& /*set*/){
   }
@@ -139,12 +155,6 @@ protected:
     this->setInitMatrix((MatrixType)set);
   }
 
-  // @override
-  void computeTimeStep(const ScalarType& t, const VectorType& x){
-    this->m_step = this->isStepChangeAllowed()
-        ? this->getStepControl().computeNextTimeStep(*this,t,x)
-        : capd::min(this->m_fixedTimeStep,this->getMaxStep());
-  }
 
   void operator=(const Solver& ){}
   Solver(const Solver& t) : BaseTaylor(t), psiCurve(0.,0.,1,1,1){}
@@ -199,6 +209,33 @@ inline void Solver<MapType,StepControlType,CurveType>::computeRemainderCoefficie
 //###########################################################//
 
 template<typename MapType, typename StepControlType,typename CurveType>
+void Solver<MapType,StepControlType,CurveType>::computeRemainder(
+      ScalarType t,
+      const VectorType& xx,
+      VectorType& o_enc,
+      VectorType& o_rem 
+  ){
+  o_rem = this->Remainder(t,xx,o_enc);     
+}
+
+//###########################################################//
+
+template<typename MapType, typename StepControlType,typename CurveType>
+void Solver<MapType,StepControlType,CurveType>::computeRemainder(
+      ScalarType t, 
+      const VectorType& xx, 
+      C1TimeJetType& o_enc, 
+      C1TimeJetType& o_rem  
+  )
+{
+  o_enc.vector() = this->enclosure(t,xx);
+  o_enc.matrix() = this->jacEnclosure(t,o_enc.vector());
+  this->JacRemainder(t,o_enc.vector(),o_enc.matrix(),o_rem.vector(),o_rem.matrix());
+}
+
+//###########################################################//
+
+template<typename MapType, typename StepControlType,typename CurveType>
 inline void Solver<MapType,StepControlType,CurveType>::computePsiCoefficients(
     ScalarType t, const VectorType& x, const VectorType& xx, size_type order
   )
@@ -213,6 +250,33 @@ inline void Solver<MapType,StepControlType,CurveType>::computePsiCoefficients(
   coeff[0] = xx;
   matrixCoeff[0].setToIdentity();
   this->m_vField->computeODECoefficients(coeff,matrixCoeff,order);
+}
+
+//###########################################################//
+
+template<typename MapType, typename StepControlType,typename CurveType>
+inline void Solver<MapType,StepControlType,CurveType>::computePhiCoefficients(
+    ScalarType t, const VectorType& x, const VectorType& xx
+  )
+{
+  this->setCurrentTime(t);
+  this->computeCoefficientsAtCenter(x,this->getOrder());
+  this->computeCoefficients(xx,this->getOrder());
+}
+
+//###########################################################//
+
+template<typename MapType, typename StepControlType,typename CurveType>
+inline void Solver<MapType,StepControlType,CurveType>::sumTaylorSeries(C1TimeJetType& o_phi)
+{
+  const int order=this->getOrder();
+  o_phi.vector() = this->getCoefficientsAtCenter()[order];
+  o_phi.matrix() = this->getMatrixCoefficients()[order];
+  for(int i=order-1;i>=0;--i)
+  {
+    capd::vectalg::multiplyAssignObjectScalarAddObject(o_phi.matrix(),this->getStep(),this->getMatrixCoefficients()[i]);
+    capd::vectalg::multiplyAssignObjectScalarAddObject(o_phi.vector(),this->getStep(),this->getCoefficientsAtCenter()[i]);
+  }
 }
 
 }} // namespace capd::dynsys

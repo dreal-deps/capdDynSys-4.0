@@ -21,7 +21,7 @@
 
 using namespace capd::vectalg;
 
-int main(int argc, char* argv[]){
+int main(int , char* []){
   try{
     Matrix<double,0,0> m(1,1);
     std::istringstream s("{{5.0,4.5,4.0},{3.5,3.0,2.5},{-7.0 , 5, -8 }}");

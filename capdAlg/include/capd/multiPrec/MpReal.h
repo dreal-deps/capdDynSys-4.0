@@ -35,6 +35,7 @@
 #include <mpfr.h>
 #include "capd/basicalg/TypeTraits.h"
 #include "capd/auxil/minmax.h"
+#include "capd/auxil/ignoreUnused.h"
 
 namespace capd{
 namespace multiPrec{
@@ -277,7 +278,7 @@ class MpReal {
     MpReal leftBound()                             { return *this; }
     MpReal rightBound()                            { return *this; }
     bool contains(const MpReal & X)                { return (mpfr_cmp(mpfr_rep,X.mpfr_rep)==0); }
-    bool containsInInterior(const MpReal & X)      { return false; }
+    bool containsInInterior(const MpReal & /*X*/)      { return false; }
 };
 
 inline const MpReal& leftBound(const MpReal& x){

@@ -18,6 +18,7 @@
 
 #include "capd/dynsys/CnSolver.h"
 #include "capd/dynsys/enclosure.h"
+#include "capd/dynsys/approveRemainder.h"
 
 namespace capd{
 namespace dynsys{
@@ -37,43 +38,38 @@ CnSolver<MapType,StepControlT,CurveT>::encloseCnMap(
       )
 {
   size_type i,j;
-  VectorType* coeff = this->getCoefficientsAtCenter();
-  for(i=0;i<this->dimension();++i)
-  {
-    this->centerCoefficient(i,0) = x[i];
-    this->coefficient(i,0) = xx[i];
-    for(j=0;j<this->dimension();++j)
-      this->coefficient(i,j,0) =
-         (i==j) ? TypeTraits<ScalarType>::one() : TypeTraits<ScalarType>::zero();
-  }
-  phi.clear();
-  this->setCurrentTime(t);
+  this->setInitialCondition(t,x,xx);
   this->m_vField->computeODECoefficients(this->getCoefficients(),phi.degree(),this->getOrder());
-  this->m_vField->computeODECoefficients(coeff,this->getOrder());
-  this->computeTimeStep(t,xx);
+  this->m_vField->computeODECoefficients(this->getCoefficientsAtCenter(),this->getOrder());
 
-  for(i=0;i<this->dimension();++i)
-  {
+  capd::dynsys::computeAndApproveRemainder(*this,t,xx,phi,rem,enc);
+
+  VectorType v = this->getCoefficientsAtCenter()[this->getOrder()];
+  for(int r = this->getOrder() - 1; r >= 0; --r)
+    capd::vectalg::multiplyAssignObjectScalarAddObject(v,this->m_step,this->getCoefficientsAtCenter()[r]);
+
+  return v;
+}
+
+// ####################################################################
+
+template<typename MapType,typename StepControlT, typename CurveT>
+template<class JetT>
+void CnSolver<MapType,StepControlT,CurveT>::sumTaylorSeries(JetT& phi)
+{
+  size_type i,j;
+  for(i=0;i<this->dimension();++i) {
     ScalarType* p = this->getCoefficients()[this->getOrder()].begin(i);
     typename JetT::iterator b = phi.begin(i), e = phi.end(i);
     for(;b!=e;++b,++p)
       *b = *p;
-    for(int r = this->getOrder()-1;r>=0;--r)
-    {
+    for(int r = this->getOrder()-1;r>=0;--r){
       ScalarType* p = this->getCoefficients()[r].begin(i);
       typename JetT::iterator b = phi.begin(i), e = phi.end(i);
       for(;b!=e;++b,++p)
         *b = (*b)*this->m_step + (*p);
     }
   }
-
-  VectorType v = coeff[this->getOrder()];
-  for(int r = this->getOrder() - 1; r >= 0; --r)
-    capd::vectalg::multiplyAssignObjectScalarAddObject(v,this->m_step,coeff[r]);
-  this->cnEnclosure(t,xx,enc);
-  this->cnRemainder(enc,rem);
-
-  return v;
 }
 
 //###########################################################//
@@ -83,8 +79,7 @@ template<class JetT>
 void CnSolver<MapType,StepControlType,CurveType>::cnRemainder(const JetT& enc, JetT& result)
 {
   size_type degree = result.degree();
-  for(size_type i=0;i<this->dimension();++i)
-  {
+  for(size_type i=0;i<this->dimension();++i){
     typename JetT::const_iterator b = enc.begin(i), e=enc.end(i);
     ScalarType* p = &this->remainderCoefficient(i,0);
     while(b!=e)
@@ -98,7 +93,6 @@ void CnSolver<MapType,StepControlType,CurveType>::cnRemainder(const JetT& enc, J
   this->m_vField->computeODECoefficients(this->getRemainderCoefficients(),degree,this->getOrder()+1);
 
   ScalarType factor = power(this->m_step,this->getOrder()+1);
-
   for(size_type i=0;i<this->dimension();++i)
   {
     ScalarType* p = &this->remainderCoefficient(i,this->getOrder()+1);
@@ -141,9 +135,20 @@ CnSolver<MapT,StepControlT,CurveT>::cnEnclosure(const ScalarType& t, const Vecto
       ScalarType res(-size,size);
       for(size_type j=0;j<dimension();++j)
         refVector[j] = res;
-    };
+    }
   }
   return enc;
+}
+
+
+// ---------------------------------------------------------------------------------------
+
+template <typename MapT, typename StepControlT,typename CurveT>
+template<class JetT>
+void CnSolver<MapT, StepControlT,CurveT>::computeRemainder(ScalarType t, const VectorType& xx, JetT& o_enc, JetT& o_rem)
+{
+  this->cnEnclosure(t,xx,o_enc);
+  this->cnRemainder(o_enc,o_rem);
 }
 
 }}

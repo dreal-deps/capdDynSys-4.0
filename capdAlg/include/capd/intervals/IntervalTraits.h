@@ -62,26 +62,26 @@ template <typename T_Bound>
 class IntervalIOTraits{
 public:
 	typedef T_Bound BoundType;
-	static std::ostream & bitWrite(std::ostream & out, const BoundType & x){
+	static std::ostream & bitWrite(std::ostream & out, const BoundType & /*x*/){
 		throw std::runtime_error(" bitWrite not implemented for given type!");
 		return out;
 	}
-	static std::istream & bitRead(std::istream & in, BoundType & x){
+	static std::istream & bitRead(std::istream & in, BoundType & /*x*/){
 		throw std::runtime_error(" bitRead not implemented for given type!");
 		return in;
 	}
-	static std::ostream & hexWrite(std::ostream & out, const BoundType & x){
+	static std::ostream & hexWrite(std::ostream & out, const BoundType & /*x*/){
 		throw std::runtime_error(" hexWrite not implemented for given type!");
 		return out;
 	}
-	static std::istream & hexRead(std::istream & in, BoundType & x){
+	static std::istream & hexRead(std::istream & in, BoundType & /*x*/){
 		throw std::runtime_error(" hexRead not implemented for given type!");
 		return in;
 	}
-	static BoundType readDown(const std::string & in){
+	static BoundType readDown(const std::string & /*in*/){
 		throw std::runtime_error(" readDown not implemented for given type!");
 	}
-	static BoundType readUp(const std::string & in){
+	static BoundType readUp(const std::string & /*in*/){
 		throw std::runtime_error(" readUp not implemented for given type!");
 	}
 };

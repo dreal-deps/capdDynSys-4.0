@@ -75,7 +75,7 @@ protected:
 template<typename VectorType>
 template<typename Functional>
 inline
-Function<VectorType>::Function(Functional f, int dimIn, int noParam, size_type degree)
+Function<VectorType>::Function(Functional f, int dimIn, int noParam, size_type /*degree*/)
   : BaseFunction(f,dimIn,1,noParam)
 {
   this->realloc(1);

@@ -168,7 +168,7 @@ namespace Sqrt
   } // evalC3
 
   template<class T>
-  inline void evalCn(const unsigned degree, const T* left, const T* right, T* result, const unsigned dim, const unsigned order, const unsigned coeffNo)
+  inline void evalCn(const unsigned degree, const T* left, const T* /*right*/, T* result, const unsigned dim, const unsigned order, const unsigned coeffNo)
   {
     using capd::vectalg::Multiindex;
     const unsigned shift = binomial(dim+degree-1,dim);
@@ -310,7 +310,7 @@ namespace Sqrt
   } // evalC2
 
   template<class T>
-  inline void evalC3HomogenousPolynomial(const T* left, const T* right, T* result, const unsigned dim, const unsigned order)
+  inline void evalC3HomogenousPolynomial(const T* left, const T* /*right*/, T* result, const unsigned dim, const unsigned order)
   {
     unsigned i1 = order;
     for(unsigned derNo=0;derNo<dim;++derNo,i1+=order)
@@ -445,7 +445,7 @@ namespace SqrtFunTime
   }
 
   template<class T>
-  inline void eval(const unsigned degree, const T* left, const T* right, T* result, const unsigned dim, const unsigned order, const unsigned coeffNo)
+  inline void eval(const unsigned /*degree*/, const T* left, const T* right, T* result, const unsigned /*dim*/, const unsigned /*order*/, const unsigned coeffNo)
   {
     Sqrt::evalC0(left,right,result,coeffNo);
   }
@@ -457,7 +457,7 @@ namespace SqrtFunTime
   }
 
   template<class T>
-  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* /*right*/, T* result, const unsigned dim, const unsigned order)
+  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* /*right*/, T* result, const unsigned /*dim*/, const unsigned /*order*/)
   {
     if(degree==0)
       *result = sqrt(*left);
@@ -478,7 +478,7 @@ namespace SqrtTime
   }
 
   template<class T>
-  inline void eval(const unsigned degree, const T* left, const T* right, T* result, const unsigned dim, const unsigned order, const unsigned coeffNo)
+  inline void eval(const unsigned /*degree*/, const T* left, const T* right, T* result, const unsigned /*dim*/, const unsigned /*order*/, const unsigned coeffNo)
   {
     evalC0(left,right,result,coeffNo);
   }
@@ -490,7 +490,7 @@ namespace SqrtTime
   }
 
   template<class T>
-  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* /*right*/, T* result, const unsigned dim, const unsigned order)
+  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* /*right*/, T* result, const unsigned /*dim*/, const unsigned /*order*/)
   {
     if(degree==0)
       *result = sqrt(*left);
@@ -503,13 +503,13 @@ namespace SqrtTime
 namespace SqrtConst
 {
   template<class T>
-  inline void evalC0(const T* left, const T* /*right*/, T* result, const unsigned coeffNo)
+  inline void evalC0(const T* left, const T* /*right*/, T* result, const unsigned /*coeffNo*/)
   {
     *result = sqrt(*left);
   }
 
   template<class T>
-  inline void eval(const unsigned degree, const T* left, const T* /*right*/, T* result, const unsigned dim, const unsigned order, const unsigned coeffNo)
+  inline void eval(const unsigned /*degree*/, const T* left, const T* /*right*/, T* result, const unsigned /*dim*/, const unsigned /*order*/, const unsigned /*coeffNo*/)
   {
     *result = sqrt(*left);
   }
@@ -521,7 +521,7 @@ namespace SqrtConst
   }
 
   template<class T>
-  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* /*right*/, T* result, const unsigned dim, const unsigned order)
+  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* /*right*/, T* result, const unsigned /*dim*/, const unsigned /*order*/)
   {
     if(degree==0)
       *result = sqrt(*left);

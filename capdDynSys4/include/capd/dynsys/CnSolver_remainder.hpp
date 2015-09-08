@@ -100,6 +100,33 @@ void CnSolver<MapType,StepControlT,CurveT>::c2Remainder(
   }
 }
 
+// ---------------------------------------------------------------------------------------
+
+template <typename MapT, typename StepControlT,typename CurveT>
+void CnSolver<MapT, StepControlT,CurveT>::computeRemainder(ScalarType t, const VectorType& xx, VectorType& o_enc, VectorType& o_rem)
+{
+  o_rem = this->Remainder(t,xx,o_enc);     
+}
+
+// ---------------------------------------------------------------------------------------
+
+template <typename MapT, typename StepControlT,typename CurveT>
+void CnSolver<MapT, StepControlT,CurveT>::computeRemainder(ScalarType t, const VectorType& xx, C1TimeJetType& o_enc, C1TimeJetType& o_rem)
+{
+  o_enc.vector() = this->enclosure(t,xx);
+  o_enc.matrix() = this->jacEnclosure(t,o_enc.vector());
+  this->JacRemainder(t,o_enc.vector(),o_enc.matrix(),o_rem.vector(),o_rem.matrix());
+}
+
+// ---------------------------------------------------------------------------------------
+
+template <typename MapT, typename StepControlT,typename CurveT>
+void CnSolver<MapT, StepControlT,CurveT>::computeRemainder(ScalarType t, const VectorType& xx, C2TimeJetType& o_enc, C2TimeJetType& o_rem)
+{
+  o_enc.vector() = this->enclosure(t,xx);
+  this->c2Enclosure(o_enc.vector(),o_enc.matrix(),o_enc.hessian());
+  this->c2Remainder(o_enc.vector(),o_enc.matrix(),o_enc.hessian(),o_rem.vector(),o_rem.matrix(),o_rem.hessian());
+}
 
 
 }} // namespace capd::dynsys

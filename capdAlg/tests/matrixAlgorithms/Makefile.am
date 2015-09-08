@@ -9,13 +9,13 @@ endif
 TESTS=${check_PROGRAMS}
 
 floatMatrixAlgorithmsTest_SOURCES=floatMatrixAlgorithmsTest.cpp
-floatMatrixAlgorithmsTest_CXXFLAGS=${capdintervals_CFLAGS} ${capdvectalg_CFLAGS}
+floatMatrixAlgorithmsTest_CXXFLAGS= ${AM_CXXFLAGS} ${capdintervals_CFLAGS} ${capdvectalg_CFLAGS}
 floatMatrixAlgorithmsTest_libs=${capdintervals_LIBS} ${capdvectalg_LIBS}
 floatMatrixAlgorithmsTest_LDADD=${floatMatrixAlgorithmsTest_libs}
 floatMatrixAlgorithmsTest_DEPENDENCIES=${filter %.a %.la,${floatMatrixAlgorithmsTest_libs}}
 
 intMatrixAlgorithmsTest_SOURCES=intMatrixAlgorithmsTest_legacy.cpp
-intMatrixAlgorithmsTest_CXXFLAGS=${capdAlg_CFLAGS} ${mpcapdAlg_CFLAGS}
+intMatrixAlgorithmsTest_CXXFLAGS= ${AM_CXXFLAGS} ${capdAlg_CFLAGS} ${mpcapdAlg_CFLAGS}
 intMatrixAlgorithmsTest_libs=${capdAlg_LIBS} ${mpcapdAlg_LIBS}
 intMatrixAlgorithmsTest_LDADD=${intMatrixAlgorithmsTest_libs}
 intMatrixAlgorithmsTest_DEPENDENCIES=${filter %.a %.la,${intMatrixAlgorithmsTest_libs}}
@@ -25,7 +25,7 @@ matrixAlgorithmsTest_SOURCES=matrixAlgorithmsTestMain.cpp intMatrixAlgorithmsTes
 if HAVE_PARI
    matrixAlgorithmsTest_SOURCES+=PARIInterfaceTest.cpp
 endif
-matrixAlgorithmsTest_CXXFLAGS=${capdAlg_CFLAGS} ${mpcapdAlg_CFLAGS} ${BOOST_CPPFLAGS}
+matrixAlgorithmsTest_CXXFLAGS= ${AM_CXXFLAGS} ${capdAlg_CFLAGS} ${mpcapdAlg_CFLAGS} ${BOOST_CPPFLAGS}
 matrixAlgorithmsTest_libs=${capdAlg_LIBS} ${mpcapdAlg_LIBS} ${BOOST_UNIT_TEST_FRAMEWORK_LIBS}
 matrixAlgorithmsTest_LDFLAGS=${BOOST_UNIT_TEST_FRAMEWORK_LDFLAGS}
 matrixAlgorithmsTest_LDADD=${matrixAlgorithmsTest_libs}

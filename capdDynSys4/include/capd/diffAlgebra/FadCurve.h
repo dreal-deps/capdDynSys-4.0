@@ -54,7 +54,6 @@ public:
   size_type dimension() const;            ///< Returns the dimension in which the parametric curve is embedded
 
   void clearCoefficients();             ///< sets all coefficients to zero
-  void derivative(FadCurve& out) const; ///< computes time derivative of curve as a curve
 
   const ScalarType& centerCoefficient(size_type i, size_type j) const;
   const ScalarType& coefficient(size_type i, size_type j) const;

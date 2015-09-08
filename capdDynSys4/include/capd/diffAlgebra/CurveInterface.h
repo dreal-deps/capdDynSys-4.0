@@ -37,7 +37,7 @@ public:
   typedef Hessian<ScalarType,VectorType::csDim,VectorType::csDim> HessianType;
   typedef Jet<MatrixType,0> JetType;
 
-  void setInitMatrix(const MatrixType& M){
+  void setInitMatrix(const MatrixType&){
     throw std::logic_error("CurveInterface::setInitHessian is not implemented. Use Curve, C2Curve or CnCurve instead.");
   }
   void setInitHessian(const HessianType&){

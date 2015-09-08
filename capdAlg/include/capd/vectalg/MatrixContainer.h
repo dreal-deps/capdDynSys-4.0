@@ -82,7 +82,7 @@ public:
   using Container<Scalar,rows*cols>::end;
   using Container<Scalar,rows*cols>::size;
   static Dimension dimension() { return Dimension(rows,cols); }
-  static void setDefaultDimension(Dimension d){}
+  static void setDefaultDimension(Dimension){}
   inline void resize(size_type r, size_type c)
   {
     if(r!=rows || c!=cols)

@@ -9,12 +9,12 @@
 
 // Copyright (C) 2000-2005 by the CAPD Group.
 //
-// This file constitutes a part of the CAPD library, 
+// This file constitutes a part of the CAPD library,
 // distributed under the terms of the GNU General Public License.
-// Consult  http://capd.wsb-nlu.edu.pl/ for details. 
+// Consult  http://capd.wsb-nlu.edu.pl/ for details.
 
-#ifndef _CAPD_MATRIXALGORITHMS_FLOATMATRIXALGORITHMS_H_ 
-#define _CAPD_MATRIXALGORITHMS_FLOATMATRIXALGORITHMS_H_ 
+#ifndef _CAPD_MATRIXALGORITHMS_FLOATMATRIXALGORITHMS_H_
+#define _CAPD_MATRIXALGORITHMS_FLOATMATRIXALGORITHMS_H_
 
 #include <vector>
 #include <stdexcept>
@@ -65,8 +65,8 @@ void QR_decompose(const MatrixType& A, MatrixType& Q, MatrixType& R);
 
 template<typename MatrixType>
 int symMatrixDiagonalize(
-  const MatrixType& A, 
-  MatrixType& D, 
+  const MatrixType& A,
+  MatrixType& D,
   typename MatrixType::ScalarType diagonalizingRelTolerance = capd::TypeTraits<typename MatrixType::ScalarType>::epsilon()
 );
 
@@ -76,7 +76,7 @@ int symMatrixDiagonalize(
 /// next bound is computed from Gerschgorin theorem
 template<typename MatrixType>
 typename MatrixType::ScalarType spectralRadiusOfSymMatrix(
-  const MatrixType & A, 
+  const MatrixType & A,
   typename MatrixType::ScalarType diagonalizingRelTolerance = capd::TypeTraits<typename MatrixType::ScalarType>::epsilon()
 );
 
@@ -86,7 +86,7 @@ typename MatrixType::ScalarType spectralRadiusOfSymMatrix(
 /// next bound is computed from Gerschgorin theorem
 template<typename MatrixType>
 typename MatrixType::ScalarType maxEigenValueOfSymMatrix(
-  const MatrixType &A, 
+  const MatrixType &A,
   typename MatrixType::ScalarType diagonalizingRelTolerance = capd::TypeTraits<typename MatrixType::ScalarType>::epsilon()
 );
 
@@ -111,11 +111,8 @@ MatrixType inverseMatrix(const MatrixType &A);
 template<typename MatrixType>
 MatrixType gaussInverseMatrix(const MatrixType& A);
 
-template<class MatrixType>
-MatrixType krawczykInverse(const MatrixType& A);
-
 }} // namespace capd::matrixAlgorithms
 
-#endif // _CAPD_MATRIXALGORITHMS_FLOATMATRIXALGORITHMS_H_ 
+#endif // _CAPD_MATRIXALGORITHMS_FLOATMATRIXALGORITHMS_H_
 
 /// @}

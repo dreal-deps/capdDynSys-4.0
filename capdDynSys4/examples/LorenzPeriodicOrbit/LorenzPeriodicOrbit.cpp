@@ -134,7 +134,7 @@ bool provePeriodicOrbit(capd3::IPoincareMap& pm, interval X[], int dim)
 
 // ----------------------------------- MAIN ----------------------------------------
 
-int main(int argc, char* argv[])
+int main()
 {
   int order = 11;
   double tolerance = 1e-7;

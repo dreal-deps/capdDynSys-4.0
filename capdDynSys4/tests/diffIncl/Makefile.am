@@ -4,7 +4,7 @@ check_PROGRAMS=	diffInclTest
 TESTS=${check_PROGRAMS}
 
 diffInclTest_SOURCES=diffInclTest.cpp
-diffInclTest_CXXFLAGS=${capdDynSys_CFLAGS} 
+diffInclTest_CXXFLAGS= ${AM_CXXFLAGS} ${capdDynSys_CFLAGS} 
 diffInclTest_libs=${capdDynSys_LIBS} 
 #${capdExt_LIBS}
 diffInclTest_LDADD=${diffInclTest_libs}

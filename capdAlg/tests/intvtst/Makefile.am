@@ -11,11 +11,11 @@ intvtst_SOURCES=intvtst.cpp
 divtst_libs=${capdAlg_LIBS} ${capdExt_LIBS}
 divtst_LDADD=${divtst_libs}
 divtst_DEPENDENCIES=${filter %.a %.la,${divtst_libs}}
-divtst_CXXFLAGS=${capdintervals_CFLAGS} ${capdExt_CFLAGS} ${capdExt_CFLAGS}
+divtst_CXXFLAGS= ${AM_CXXFLAGS} ${capdintervals_CFLAGS} ${capdExt_CFLAGS} ${capdExt_CFLAGS}
 intvtst_libs=${capdAlg_LIBS} ${capdExt_LIBS}
 intvtst_LDADD=${intvtst_libs}
 intvtst_DEPENDENCIES=${filter %.a %.la,${intvtst_libs}}
-intvtst_CXXFLAGS=${capdintervals_CFLAGS} ${capdExt_CFLAGS} ${capdExt_CFLAGS}
+intvtst_CXXFLAGS= ${AM_CXXFLAGS} ${capdintervals_CFLAGS} ${capdExt_CFLAGS} ${capdExt_CFLAGS}
 
 # ioTest_SOURCES=ioTest.cpp
 # ioTest_libs=${capdAlg_LIBS} ${capdExt_LIBS}

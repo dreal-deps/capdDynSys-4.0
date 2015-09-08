@@ -5,7 +5,7 @@ TESTS=${check_PROGRAMS}
 
 
 runTests_SOURCES=runTests.cpp HighOrderTest.cpp
-runTests_CXXFLAGS=${capdDynSys_CFLAGS} ${BOOST_CPPFLAGS}
+runTests_CXXFLAGS= ${AM_CXXFLAGS} ${capdDynSys_CFLAGS} ${BOOST_CPPFLAGS}
 runTests_libs=${capdDynSys_LIBS} ${BOOST_UNIT_TEST_FRAMEWORK_LIBS}
 runTests_LDFLAGS=${BOOST_UNIT_TEST_FRAMEWORK_LDFLAGS}
 runTests_LDADD=${runTests_libs}

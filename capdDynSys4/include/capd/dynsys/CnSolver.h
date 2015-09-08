@@ -24,6 +24,8 @@
 #include "capd/vectalg/Norm.h"
 #include "capd/dynsys/CnDynSys.h"
 #include "capd/dynsys/BasicCnSolver.h"
+#include "capd/diffAlgebra/C2TimeJet.h"
+#include "capd/diffAlgebra/CnTimeJet.h"
 
 namespace capd{
 namespace dynsys{
@@ -48,6 +50,9 @@ public:
   typedef typename MapType::FunctionType FunctionType;
   typedef typename BaseTaylor::JetType JetType;
   typedef typename MatrixType::size_type size_type;
+  typedef diffAlgebra::C1TimeJet<MatrixType> C1TimeJetType;
+  typedef diffAlgebra::C2TimeJet<MatrixType> C2TimeJetType;
+  typedef diffAlgebra::CnTimeJet<MatrixType,0> CnTimeJetType;
 
 //  typedef typename SeriesContainerType::Multipointer Multipointer;
 //  typedef typename SeriesContainerType::Multiindex Multiindex;
@@ -162,6 +167,17 @@ public:
   void computeRemainderCoefficients(ScalarType t, const VectorType& x);
   void computeRemainderCoefficients(ScalarType t, const VectorType& x, const MatrixType& M);
 
+  virtual void computeRemainder(ScalarType t, const VectorType& xx, VectorType& o_enc, VectorType& o_rem);
+  virtual void computeRemainder(ScalarType t, const VectorType& xx, C1TimeJetType& o_enc, C1TimeJetType& o_rem);
+  virtual void computeRemainder(ScalarType t, const VectorType& xx, C2TimeJetType& o_enc, C2TimeJetType& o_rem);
+  template<class JetT>
+  void computeRemainder(ScalarType t, const VectorType& xx, JetT& o_enc, JetT& o_rem);
+
+  void sumTaylorSeries(C1TimeJetType& o_phi);
+  void sumTaylorSeries(C2TimeJetType& o_phi);
+  template<class JetT>
+  void sumTaylorSeries(JetT& o_phi);
+
   using BaseTaylor::getVectorField;
   using BaseTaylor::setOrder;
   using BaseTaylor::getOrder;
@@ -171,9 +187,17 @@ public:
   using BaseTaylor::getCurrentTime;
   using BaseTaylor::getCurve;
 
+  // @override
+  void computeTimeStep(const ScalarType& t, const VectorType& x){
+    this->m_step = this->isStepChangeAllowed()
+        ? this->getStepControl().computeNextTimeStep(*this,t,x)
+        : capd::min(this->m_fixedTimeStep,this->getMaxStep());
+  }
+
 protected:
+  void setInitialCondition(ScalarType t, const VectorType& x, const VectorType& xx);
   // TimeRange is base for all types of sets and nonrigorous CxCoeff
-  void saveCurrentSet(const capd::diffAlgebra::TimeRange<ScalarType>& set){
+  void saveCurrentSet(const capd::diffAlgebra::TimeRange<ScalarType>& /*set*/){
   }
 
   void saveCurrentSet(capd::dynset::C1Set<MatrixType>& set){
@@ -187,12 +211,6 @@ protected:
     this->setInitJet(set.currentSet());
   }
 
-  // @override
-  void computeTimeStep(const ScalarType& t, const VectorType& x){
-    this->m_step = this->isStepChangeAllowed()
-        ? this->getStepControl().computeNextTimeStep(*this,t,x)
-        : capd::min(this->m_fixedTimeStep,this->getMaxStep());
-  }
   void operator=(const CnSolver&){}
   CnSolver(const CnSolver& t) : BaseTaylor(t){}
 

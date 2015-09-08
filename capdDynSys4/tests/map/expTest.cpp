@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE(xexp)
 
 using capd::autodiff::Node;
 
-void _f(Node t, Node in[], int dimIn, Node out[], int dimOut, Node params[], int noParams)
+void _f(Node /*t*/, Node in[], int /*dimIn*/, Node out[], int /*dimOut*/, Node /*params*/[], int /*noParams*/)
 {
   out[0] = exp(1-in[0]*in[1]*(in[0]-in[1]));
 }

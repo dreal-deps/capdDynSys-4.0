@@ -148,7 +148,7 @@ done < <(${CAPD_UTILS}/capd_full_log.sh ${CAPD_SRC_ROOT} | sort)
 update_version
 
 #it is required by debian package builder to have exact last version number
-echo -en "capd (${major}.${minor}.${patch}) stable; urgency=low\n\n  * Automatic ChangeLog. Patch ${major}.${minor}.${patch}\n\n -- Automatic <no_email@noemail.com>  $(date +'%a, %d %b %Y %T %z')\n\n" | cat - ${CAPD_SRC_ROOT}/ChangeLog > ${CAPD_SRC_ROOT}/ChangeLog.tmp && mv ${CAPD_SRC_ROOT}/ChangeLog.tmp ${CAPD_SRC_ROOT}/ChangeLog
+echo -en "capd (${major}.${minor}.${patch}-1) stable; urgency=low\n\n  * Automatic ChangeLog. Patch ${major}.${minor}.${patch}\n\n -- Automatic <no_email@noemail.com>  $(date +'%a, %d %b %Y %T %z')\n\n" | cat - ${CAPD_SRC_ROOT}/ChangeLog > ${CAPD_SRC_ROOT}/ChangeLog.tmp && mv ${CAPD_SRC_ROOT}/ChangeLog.tmp ${CAPD_SRC_ROOT}/ChangeLog
 
 
 echo "Saving ${major}.${minor}.${patch} ${current}:${revision}:${age}"

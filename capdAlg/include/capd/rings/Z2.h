@@ -127,7 +127,7 @@ class Z2{
       return inp;
     }
 
-    friend inline bool isDivisible(Z2 a, Z2 b){
+  friend inline bool isDivisible(Z2 /*a*/, Z2 b){
       return b.val!=0;
     }
 

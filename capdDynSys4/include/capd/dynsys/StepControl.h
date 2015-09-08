@@ -58,12 +58,12 @@ public:
       m_maxStep(1.e+100)
   {}
 
-  StepControlInterface(const StepControlType& stepControl) :
-    m_stepControl(stepControl),
-    m_onOffStepControl(true),
-    m_absoluteTolerance(power(10, -TypeTraits<Scalar>::numberOfDigits()-3)),
-    m_relativeTolerance(power(10, -TypeTraits<Scalar>::numberOfDigits()-3)),
-    m_maxStep(1.e+100)
+  StepControlInterface(const StepControlType& stepControl) 
+    : m_stepControl(stepControl),
+      m_onOffStepControl(true),
+      m_absoluteTolerance(power(10, -TypeTraits<Scalar>::numberOfDigits()-3)),
+      m_relativeTolerance(power(10, -TypeTraits<Scalar>::numberOfDigits()-3)),
+      m_maxStep(1.e+100)
   {}
 
   void turnOnStepControl() {
@@ -74,8 +74,7 @@ public:
     m_onOffStepControl = false;
   }
 
-  void onOffStepControl(bool _onOffStepControl)
-  {
+  void onOffStepControl(bool _onOffStepControl) {
     this->m_onOffStepControl = _onOffStepControl;
   }
 
@@ -87,8 +86,7 @@ public:
     m_stepControl = stepControl;
   }
 
-  bool isStepChangeAllowed() const
-  {
+  bool isStepChangeAllowed() const {
     return m_onOffStepControl;
   }
 
@@ -115,6 +113,15 @@ public:
   void setMaxStep(Scalar maxStep){
     m_maxStep = maxStep;
   }
+  
+  template <class Solver, class SetType>
+  inline static
+  double getEffectiveTolerance(Solver& solver, const SetType& s) {
+    return capd::max(
+            solver.getAbsoluteTolerance(),
+            solver.getRelativeTolerance()*toDouble(rightBound(solver.getCoeffNorm(0,s.degree())))
+    );
+  }
 
 protected:
   StepControlType m_stepControl;
@@ -129,17 +136,14 @@ template <class StepControlT>
 class NoStepControlInterface{
 public:
   typedef StepControlT StepControlType;
-  NoStepControlInterface(){
-  }
+  NoStepControlInterface(){}
   NoStepControlInterface(const StepControlType& stepControl) :
     m_stepControl(stepControl){
   }
 
-  void turnOnStepControl() {
-  }
+  void turnOnStepControl() {}
 
-  void turnOffStepControl() {
-  }
+  void turnOffStepControl() {}
 
   const StepControlType& getStepControl() const {
     return m_stepControl;
@@ -155,14 +159,9 @@ public:
   }
 
   ///
-  void onOffStepControl(bool _onOffStepControl){
-  }
-
-  void setAbsoluteTolerance(double tol){
-  }
-
-  void setRelativeTolerance(double tol){
-  }
+  void onOffStepControl(bool /*_onOffStepControl*/){}
+  void setAbsoluteTolerance(double /*tol*/){}
+  void setRelativeTolerance(double /*tol*/){}
 protected:
   StepControlType m_stepControl;
 };
@@ -174,12 +173,12 @@ class NoStepControl {
 public:
 
   template <class DS, class SetType>
-  typename DS::ScalarType computeNextTimeStep(DS& dynamicalSystem, typename DS::ScalarType const& t, const SetType&, const typename DS::ScalarType& maxStep) const{
+  typename DS::ScalarType computeNextTimeStep(DS& dynamicalSystem, typename DS::ScalarType const& /*t*/, const SetType&, const typename DS::ScalarType& maxStep) const{
     return capd::min(dynamicalSystem.getStep(),maxStep);
   }
 
   template <class DS,class SetType>
-  typename DS::ScalarType getFirstTimeStep(DS& dynamicalSystem, const SetType&, typename DS::ScalarType const& t, const typename DS::ScalarType& maxStep) const {
+  typename DS::ScalarType getFirstTimeStep(DS& dynamicalSystem, const SetType&, typename DS::ScalarType const& /*t*/, const typename DS::ScalarType& maxStep) const {
     return capd::min(dynamicalSystem.getStep(),maxStep);
   }
 
@@ -187,7 +186,7 @@ public:
     return 1e-20;
   }
   template <class DS,class SetType>
-  void init(DS& dynamicalSystem, typename DS::ScalarType const& t, const SetType&) const {
+  void init(DS& /*dynamicalSystem*/, typename DS::ScalarType const& /*t*/, const SetType&) const {
   }
 };
 
@@ -213,12 +212,12 @@ public:
   explicit FixedStepControl(const ScalarType & timeStep = ScalarType(1./1024.)) : m_timeStep(timeStep){
   }
   template <class DS, class SetType>
-  typename DS::ScalarType computeNextTimeStep(DS& dynamicalSystem, typename DS::ScalarType const& t, const SetType&, const typename DS::ScalarType& maxStep) const{
+  typename DS::ScalarType computeNextTimeStep(DS& /*dynamicalSystem*/, typename DS::ScalarType const& /*t*/, const SetType&, const typename DS::ScalarType& maxStep) const{
     return capd::min(m_timeStep, maxStep);
   }
 
   template <class DS,class SetType>
-  void init(DS& dynamicalSystem, typename DS::ScalarType const& t, const SetType&) const {
+  void init(DS& /*dynamicalSystem*/, typename DS::ScalarType const& /*t*/, const SetType&) const {
   }
 
   double getMinStepAllowed() const { // here it does not matter what is the minimal time step
@@ -284,15 +283,12 @@ public:
   {}
 
   template <class Solver, class SetType>
-  typename Solver::ScalarType computeNextTimeStep(Solver& solver, typename Solver::ScalarType const& t, const SetType& s) const {
+  typename Solver::ScalarType computeNextTimeStep(Solver& solver, typename Solver::ScalarType const& /*t*/, const SetType& s) const {
 
     return computeNextStep(
         solver,
         m_numberOfTerms,
-        capd::max(
-            solver.getAbsoluteTolerance(),
-            solver.getRelativeTolerance()*toDouble(rightBound(solver.getCoeffNorm(0,s.degree())))
-            ),
+        Solver::getEffectiveTolerance(solver,s),
         m_minTimeStep,
         s.degree()
      );
@@ -317,8 +313,9 @@ public:
     ScalarType I(Float(0.),h);
     x = x+I*solver.getVectorField()(currentTime+I,x);
     solver.computeRemainderCoefficients(currentTime+I,x);
+    solver.adjustTimeStep(h);
   }
-
+  
   Real getMinStepAllowed() const
   {
     return m_minTimeStep;
@@ -339,17 +336,13 @@ public:
   }
 
   template <class Solver, class SetType>
-  typename Solver::ScalarType computeNextTimeStep(Solver& solver, typename Solver::ScalarType const& t, const SetType& s) const {
-    double tol = capd::max(
-        solver.getAbsoluteTolerance(),
-        solver.getRelativeTolerance()*toDouble(rightBound(solver.getCoeffNorm(0,s.degree())))
-        );
-
+  typename Solver::ScalarType computeNextTimeStep(Solver& solver, typename Solver::ScalarType const& /*t*/, const SetType& s) const {
+    double tol = Solver::getEffectiveTolerance(solver,s);
     return computeNextStep(solver,m_numberOfTerms, tol, m_minTimeStep,s.degree());
   }
 
   template <class Solver,class SetType>
-  void init(Solver& solver, typename Solver::ScalarType const& t, const SetType&) const {
+  void init(Solver& solver, typename Solver::ScalarType const& /*t*/, const SetType&) const {
     solver.clearCoefficients();
   }
 
@@ -380,8 +373,7 @@ public:
   typename Solver::ScalarType computeNextTimeStep(Solver& solver, typename Solver::ScalarType const& t,const SetType& _x) const {
     typedef typename Solver::ScalarType ScalarType;
     typename Solver::VectorType x(_x);
-    Real setSize = toDouble(maxDiam(x).rightBound());
-    Real eps = solver.getAbsoluteTolerance() + solver.getRelativeTolerance()*setSize;
+    Real eps = Solver::getEffectiveTolerance(solver,_x);
     double factor =  capd::min(Real(1.),solver.getOrder()/-log(eps));
     ScalarType optStep = solver.getStep()/factor * Real(1.5);
     solver.adjustTimeStep(optStep);
@@ -404,7 +396,7 @@ public:
   }
 
   template <class Solver, class SetType>
-  void init(Solver& solver, typename Solver::ScalarType const& t, const SetType& s) const {
+  void init(Solver& solver, typename Solver::ScalarType const& /*t*/, const SetType& s) const {
     typedef typename Solver::ScalarType ScalarType;
     typedef typename Solver::VectorType VectorType;
     typedef typename Solver::MatrixType MatrixType;

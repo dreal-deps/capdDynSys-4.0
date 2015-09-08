@@ -6,9 +6,9 @@
 
 // Copyright (C) 2000-2005 by the CAPD Group.
 //
-// This file constitutes a part of the CAPD library, 
+// This file constitutes a part of the CAPD library,
 // distributed under the terms of the GNU General Public License.
-// Consult  http://capd.ii.uj.edu.pl/ for details. 
+// Consult  http://capd.ii.uj.edu.pl/ for details.
 
 #ifndef _CAPD_DYNSET_C0FLOWBALLSET_HPP_
 #define _CAPD_DYNSET_C0FLOWBALLSET_HPP_
@@ -16,6 +16,7 @@
 #include <stdexcept>
 #include "capd/dynset/C0FlowballSet.h"
 #include "capd/vectalg/Norm.hpp"
+#include "capd/vectalg/Vector_Interval.hpp"
 #include "capd/matrixAlgorithms/floatMatrixAlgorithms.hpp"
 
 namespace capd{

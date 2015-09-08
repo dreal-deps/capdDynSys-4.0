@@ -14,6 +14,7 @@
 #include "capd/auxil/minmax.h"
 #include "capd/vectalg/lib.h"
 #include "capd/matrixAlgorithms/floatMatrixAlgorithms.hpp"
+#include "capd/vectalg/Matrix_Interval.hpp"
 
 using namespace capd;
 
@@ -53,4 +54,3 @@ template IMatrix capd::matrixAlgorithms::invLowerTriangleMatrix<IMatrix>(const I
 template IMatrix capd::matrixAlgorithms::invUpperTriangleMatrix<IMatrix>(const IMatrix&);
 template IMatrix capd::matrixAlgorithms::inverseMatrix<IMatrix>(const IMatrix&);
 template IMatrix capd::matrixAlgorithms::gaussInverseMatrix<IMatrix>(const IMatrix&);
-template IMatrix capd::matrixAlgorithms::krawczykInverse<IMatrix>(const IMatrix&);

@@ -7,17 +7,18 @@
 #include "capd/intervals/lib.h"
 #include "capd/vectalg/Vector.hpp"
 #include "capd/vectalg/Matrix.hpp"
+#include "capd/vectalg/Matrix_Interval.hpp"
 
 using namespace capd::vectalg;
 using capd::DInterval;
 
 // the template class Matrix has three parameters - type which is stored in a matrix, number of rows and number of columns
 // template class Matrix<typename ScalarType,int rows, int cols>
-// if both arguments rows and cols are greater than zero, the matrix is represented as an internal one-dimensional array 
+// if both arguments rows and cols are greater than zero, the matrix is represented as an internal one-dimensional array
 // with suitable indexing
 // if rows or cols is equal to zero, the matrix has a pointer to allocated array
 
-// the following lines define new names for four dimensional vectors 
+// the following lines define new names for four dimensional vectors
 typedef Vector<double,4> DVector4D;
 typedef Vector<DInterval,4> IVector4D;
 
@@ -60,7 +61,7 @@ int main(int, char**)
 
       std::cout << "\n\nHow to create an array of matrices\n--------------------------------\n\n";
 
-      // when one needs create an array of matrices which have undefined size at compilation time, 
+      // when one needs create an array of matrices which have undefined size at compilation time,
       // the following solution is available.
       DMatrix *tab = new (2,4) DMatrix[10];
       // which means that tab contains an adress of a table of ten matrices, each of size 2x4
@@ -77,7 +78,7 @@ int main(int, char**)
 // --------------------------------- indexing ------------------------------------------------------------
 
       std::cout << "\n\nIndexing\n--------------------------------\n\n";
-      
+
       // one can change or access a coefficient in matrix by using of operator() or iterators
       std::cout << "operator() : \n";
       for(int i=1;i<=(int)P.numberOfRows();++i)
@@ -95,23 +96,23 @@ int main(int, char**)
 
       std::cout << "\n\nRows and columns of matrices as vectors\n--------------------------------\n\n";
       // the rows and columns of a matrix can be seen as vectors
-      // the vectalg module provides two classes RowVector and ColumnVector which 
+      // the vectalg module provides two classes RowVector and ColumnVector which
       // can be use as a reference to rows and columns of matrices. Objects of these classes have not their own memory
       // but only a pointer to a proper coefficient in a matrix.
-      // These classes has almost the same properties as class Vector (iterators, indexing, normalization, etc), hence they can be used as vectors in 
+      // These classes has almost the same properties as class Vector (iterators, indexing, normalization, etc), hence they can be used as vectors in
       // generic algorithms
       std::cout << "Reference to first row of matrix Q: " << Q.row(0) << std::endl;
       std::cout << "Reference to first column of matrix Q: " << Q.column(0) << std::endl;
       Q.row(0).normalize();
       std::cout << "After normalization of first row of matrix Q:" << std::endl;
       std::cout << "Q=" << Q << std::endl;
-      
+
 
 // ---------------------------- iterators -------------------------------------------------------------
 
       std::cout << "\n\nContainerIterators\n--------------------------------\n\n";
 
-      // class Matrix provides two iterators - low level for container for coefficients 
+      // class Matrix provides two iterators - low level for container for coefficients
       // and MatrixIterator which is usefull for matrix algorithms
       // The following can be used for printing all coefficients in a matrix
       // functions begin and end return low level iterators for container
@@ -124,7 +125,7 @@ int main(int, char**)
       }
 
       // in a similar way are defined const iterators for constant objects
-      
+
       DMatrix::const_iterator p = P.begin(), k = P.end();
       std::cout << "\nCoefficients in constant matrix:\n";
       while(p!=k)
@@ -138,18 +139,18 @@ int main(int, char**)
       std::cout << "\n\nMatrixIterators\n--------------------------------\n\n";
    // class Matrix provides a MatrixIterator for manipulating on coefficients in a matrix
    // the following operations are available
-   
-   
+
+
    MatrixIterator<DMatrix> i = P.beginMatrix();
    std::cout << "value pointed by iterator in matrix P: " << (*i) << std::endl;
    i.moveToNextRow();
    std::cout << "value pointed by iterator after moving to next row: " << (*i) << std::endl;
    i.moveToNextColumn();
    std::cout << "value pointed by iterator after moving to next column: " << (*i) << std::endl;
-   
+
 
 // --------------------------------- basic operations on matrices ---------------------------------------------
-      
+
       std::cout << "\n\nBasic operation on matrices\n--------------------------------\n\n";
       // the following operations on matrices are available
       DMatrix R = Transpose(Q);
@@ -176,7 +177,7 @@ int main(int, char**)
       std::cout << DMatrix::Identity(4) << std::endl;
 
 // --------------------------------- operations for interval matrices only -------------------------------------
-   
+
       std::cout << "\n\nOperations for interval matrices only\n--------------------------------\n\n";
       DInterval d1[] = {DInterval(-1.,1.), DInterval(2.,2.), DInterval(3.,3.1), DInterval(4.,4.1)};
       IMatrix v1(2,2,d1);
@@ -185,7 +186,7 @@ int main(int, char**)
       // center of a matrix
       std::cout << "midMatrix(v1) = " << midMatrix(v1) << std::endl;
 
-      // splitting: v2 = v1-midMatrix(v1) and v1 = midMatrix(v1). This operation is given by function 
+      // splitting: v2 = v1-midMatrix(v1) and v1 = midMatrix(v1). This operation is given by function
       split(v1,v2);
       std::cout << "\nafter calling split(v1,v2) we get\n";
       std::cout << "v1=" << v1 << std::endl;

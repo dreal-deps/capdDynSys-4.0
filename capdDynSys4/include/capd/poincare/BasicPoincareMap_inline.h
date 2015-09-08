@@ -201,6 +201,21 @@ inline void BasicPoincareMap<SolverT, FunT>::onOffStepControl(bool sc)
   m_solver.onOffStepControl(sc);
 }
  
+// -----------------------------------------------------------------------------------------
+
+template <typename SolverT, typename FunT>
+inline void BasicPoincareMap<SolverT, FunT>::setMaxReturnTime(double maxReturnTime)
+{
+  this->m_maxReturnTime = maxReturnTime;
+}
+ 
+// -----------------------------------------------------------------------------------------
+
+template <typename SolverT, typename FunT>
+inline void BasicPoincareMap<SolverT, FunT>::setBlowUpMaxNorm(double blowUpMaxNorm)
+{
+  this->m_blowUpMaxNorm = blowUpMaxNorm;
+}
 
 }}
 

@@ -29,7 +29,7 @@ void defaultLoggerExample()
 }
 
 
-int main(int argc, char *argv[])
+int main(int /*argc*/, char */*argv*/[])
 {
 
   INIT_CAPD_LOGGER;

@@ -58,7 +58,7 @@ BOOST_AUTO_TEST_CASE(xlog)
 
 using capd::autodiff::Node;
 
-void _f(Node t, Node in[], int dimIn, Node out[], int dimOut, Node params[], int noParams)
+void _f(Node /*t*/, Node in[], int /*dimIn*/, Node out[], int /*dimOut*/, Node /*params*/[], int /*noParams*/)
 {
   out[0] = log(
         1 + in[0]*(in[0] + sqr(in[1]) )

@@ -360,7 +360,7 @@ int z=0;
 void TexWriter::writeFixInterval(
     const std::deque<int> & dl,
     const std::deque<int> & dr,
-    int p,
+    int /*p*/,
     int l_sign,
     int intDigits,
     int len
@@ -452,7 +452,7 @@ void TexWriter::writeFixInterval(
 void TexWriter::writeTxtInterval(
     const std::deque<int> & dl,
     const std::deque<int> & dr,
-    int p,
+    int /*p*/,
     int l_sign,
     int intDigits,
     int len

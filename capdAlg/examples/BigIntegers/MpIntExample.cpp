@@ -21,7 +21,7 @@
 using namespace std;
 using namespace capd;
 
-int main(int argc, char **argv) {
+int main(int, char **) {
   int dim = 4;
   MpZMatrix A(dim, dim),
            Q(dim, dim), Q_1(dim, dim),

@@ -22,6 +22,7 @@ capd/auxil/config.h \
 capd/auxil/debuger.h \
 capd/auxil/embeddingDim.h \
 capd/auxil/handleUnexpectedTerminate.h \
+capd/auxil/ignoreUnused.h \
 capd/auxil/logger_deprecated.h \
 capd/auxil/memSize.h \
 capd/auxil/minmax.h \

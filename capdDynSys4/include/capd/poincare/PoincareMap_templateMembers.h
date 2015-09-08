@@ -224,7 +224,7 @@ void PoincareMap<SolverT,FunT>::approachSection(T & theSet, T & setAfterSection)
   typedef typename ScalarType::BoundType BoundType;
   // maximal distance is sectionFactor * size of the set in the direction perpendicular to the section
   BoundType maxDistance = diam(abs(setPosition*Grad)).rightBound()*this->m_sectionFactor;
-  BoundType approxDistance = (abs((*this->m_section)(setPosition))).leftBound();
+  BoundType approxDistance = (abs(this->getSign(theSet))).leftBound();
   
   ScalarType stepFactor = (1.0 - maxDistance/approxDistance/10.0);
   ScalarType lastStep = oneStepReturnTime.left()*stepFactor;
@@ -236,7 +236,7 @@ void PoincareMap<SolverT,FunT>::approachSection(T & theSet, T & setAfterSection)
   while(maxNumberOfTries-- > 0){
     this->m_solver.setMaxStep(lastStep);
     this->m_solver(theSet, tempSet);
-    check = (*this->m_section)(tempSet);
+    check = this->getSign(tempSet);
     if(sign * check >0){
       theSet = tempSet;
       break;
@@ -342,9 +342,9 @@ void PoincareMap<SolverT,FunT>::approachSectionByTryAndError(T & theSet){
 /// @param[out] oneStepReturnTime      bound for the return time in relative to current time of theSet
 /// @param[out] bound                  bound for the intersection of the trajectories with Poincare section
 /// @returns        true               if succeed
-template <typename DS, typename FunT>
+template <typename SolverT, typename FunT>
 template<typename T>
-bool PoincareMap<DS,FunT>::crossSection(T theSet, ScalarType& oneStepReturnTime, VectorType& bound)
+bool PoincareMap<SolverT,FunT>::crossSection(T theSet, ScalarType& oneStepReturnTime, VectorType& bound)
 {
 // theSet is very close to the section
 // we compute an approximate time needed to cross the section
@@ -362,11 +362,12 @@ bool PoincareMap<DS,FunT>::crossSection(T theSet, ScalarType& oneStepReturnTime,
   T temp = theSet;
   
   // Last time step can mispredict 
-  ScalarType maxStepBackup = this->m_solver.getMaxStep();
-  this->m_solver.setMaxStep(this->m_crossSectionTimeStep);
-  this->m_solver(theSet);
-  this->m_solver.setMaxStep(maxStepBackup);
-
+  {
+    SaveStepControl<SolverT> ssc(this->m_solver);
+    this->m_solver.setMaxStep(this->m_crossSectionTimeStep);
+    this->m_solver(theSet);
+  }
+  
   bound = theSet.getLastEnclosure();
   this->checkTransversability(theSet, bound);
   check = this->getSign(theSet);

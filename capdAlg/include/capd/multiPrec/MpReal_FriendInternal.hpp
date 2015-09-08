@@ -16,7 +16,9 @@
 // Consult  http://capd.ii.uj.edu.pl/ for details.
 
 
+
 inline friend MpReal abs(const MpReal& r, MpReal::RoundingMode rnd= MpReal::getDefaultRndMode()) {
+  capd::auxil::ignoreUnused(rnd);
   if(compare(r,0)>=0)
     return r; // changes the precision of r
   // if getDefaultPrecision() != prec of r

@@ -6,6 +6,7 @@
 #include <iostream>
 #include "capd/intervals/lib.h"
 #include "capd/vectalg/Vector.hpp"
+#include "capd/vectalg/Vector_Interval.hpp"
 
 using capd::DInterval;
 
@@ -13,7 +14,7 @@ using capd::DInterval;
 // if capacity is greater than zero, vector is represented as an internal array of given length
 // if capacity is equal to zero, the dimension of a vector must be set during creation of an object.
 
-// the following lines define new names for four dimensional vectors 
+// the following lines define new names for four dimensional vectors
 typedef capd::vectalg::Vector<double,4> DVector4D;
 typedef capd::vectalg::Vector<DInterval,4> IVector4D;
 

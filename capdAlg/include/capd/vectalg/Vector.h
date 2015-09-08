@@ -28,7 +28,6 @@
 #include "capd/auxil/minmax.h"
 #include "capd/basicalg/power.h"
 #include "capd/vectalg/Container.h"
-#include "capd/vectalg/iobject.h"
 #include "capd/settings/compilerSetting.h"
 
 namespace capd{
@@ -46,47 +45,6 @@ std::ostream& operator<<(std::ostream& out, const Vector<Scalar,dim>& v);
 
 template<typename Scalar, __size_type dim>
 std::istream& operator>>(std::istream& inp, Vector<Scalar,dim>& v);
-
-// ---------------------------------------------------------------- //
-// general algorithms for vectors and matrices
-
-template<typename IVector>
-inline
-IVector leftVector(const IVector& u)
-{
-  return leftObject<IVector>(u);
-}
-
-template<typename IVector>
-inline
-IVector rightVector(const IVector& u)
-{
-  return rightObject<IVector>(u);
-}
-
-template<typename IVector>
-typename IVector::ScalarType maxDiam(const IVector&);
-
-template<typename IVector>
-IVector intervalBall(const IVector&, const typename IVector::ScalarType &r);
-
-template<typename IVector>
-typename IVector::ScalarType solveAffineInclusion(const IVector&,const IVector&,const IVector&);
-
-template<typename IVector>
-typename IVector::ScalarType solveAffineInclusion(const IVector&,const IVector&,const IVector&,int&);
-
-template<typename IVector>
-IVector intervalHull(const IVector&, const IVector&);
-
-template<typename IVector>
-IVector midVector(const IVector&);
-
-template<typename IVector>
-IVector diam(const IVector&);
-
-template<typename IVector>
-IVector intersection(const IVector&, const IVector&);
 
 
 //########################### Vector template ################################//

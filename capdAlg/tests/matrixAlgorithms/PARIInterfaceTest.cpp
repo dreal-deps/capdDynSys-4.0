@@ -215,7 +215,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(PARISmithFormMpTest, Fixture, SmithFixtures)
   typedef typename Fixture::MatrixType MatrixType;
   Fixture fixture;
 
-  for (int caseIdx = 0; caseIdx < fixture.matrices_matrix.size(); ++caseIdx) {
+  for (size_t caseIdx = 0; caseIdx < fixture.matrices_matrix.size(); ++caseIdx) {
     const MpMatrix matrixA = promote(fixture.matrices_matrix[caseIdx]);
     MpMatrix matrixB = matrixA;
     const int m=matrixA.numberOfRows();

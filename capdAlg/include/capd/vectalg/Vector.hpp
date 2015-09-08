@@ -23,7 +23,6 @@
 #include "capd/basicalg/power.h"
 #include "capd/vectalg/Container.hpp"
 #include "capd/vectalg/Vector.h"
-#include "capd/vectalg/Vector_Interval.hpp"
 #include "capd/vectalg/algebraicOperations.hpp"
 
 namespace capd{

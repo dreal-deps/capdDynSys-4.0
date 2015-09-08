@@ -71,6 +71,7 @@ void polygon(int coords[],int nPoints,int color)
       locCoords[i+i]=coords[i+i+1];
    }
    rootFrm->polygon(locCoords,nPoints,color);
+   free(locCoords);
 }
 void polygonFill(int coords[],int nPoints,int color,int pattern)
 {
@@ -81,7 +82,8 @@ void polygonFill(int coords[],int nPoints,int color,int pattern)
       locCoords[i+i+1]=coords[i+i];
       locCoords[i+i]=coords[i+i+1];
    }
-   rootFrm->polygonFill(locCoords,nPoints,color);
+   rootFrm->polygonFill(locCoords,nPoints,color,pattern);
+   free(locCoords);
 }
 void arc(int leftTopPixelRow,int leftTopPixelColumn,
    int rightBottomPixelRow,int rightBottomPixelColumn,

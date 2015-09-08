@@ -106,7 +106,7 @@ public:
   void computeCoefficients(const VectorType& x, const MatrixType& M, size_type order);
   void computeCoefficients(ScalarType t, const VectorType& x, const MatrixType& M, size_type order);
 
-  VectorType enclosure(const ScalarType& t, const VectorType& x){
+  VectorType enclosure(const ScalarType& /*t*/, const VectorType& /*x*/){
     throw std::logic_error("BasicFadTaylor::enclosure - cannot compute enclosure, this is a nonrigorous solver. Implementation only for satisfying an required interface of StepControl");
   }
   void adjustTimeStep(const ScalarType& newStep); ///< sets time step but does not change step control settings (compare setStep)

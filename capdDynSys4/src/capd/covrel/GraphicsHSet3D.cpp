@@ -16,7 +16,7 @@
 
 #include "capd/covrel/GraphicsHSet3D.h"
 #include "capd/matrixAlgorithms/floatMatrixAlgorithms.hpp"
-
+#include "capd/vectalg/Vector_Interval.hpp"
 #include "capd/krak/coord3d.h"
 
 using namespace capd::matrixAlgorithms;

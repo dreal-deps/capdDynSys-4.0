@@ -5,4 +5,4 @@ logger_SOURCES=logger.cpp Example.h
 logger_libs=${capdauxil_LIBS}
 logger_LDADD=${logger_libs}
 logger_DEPENDENCIES=${filter %.a %.la,${logger_libs}}
-logger_CXXFLAGS=${capdauxil_CFLAGS}
+logger_CXXFLAGS= ${AM_CXXFLAGS} ${capdauxil_CFLAGS}

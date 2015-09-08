@@ -42,7 +42,7 @@ public:
   }
 
   template<class Matrix, class Vector>
-  void reorganize(Matrix& B, Matrix& invB, Vector& r, Matrix& C, Vector& r0) const
+  void reorganize(Matrix& B, Matrix& invB, Vector& r, Matrix& /*C*/, Vector& /*r0*/) const
   {
     Matrix Q = B;
     capd::matrixAlgorithms::orthonormalize(Q, r);
@@ -91,7 +91,7 @@ public:
   }
 
   template<class Matrix>
-  void reorganizeC1(Matrix& B, Matrix& invB, Matrix& R, Matrix& C, Matrix& rR0) const
+  void reorganizeC1(Matrix& B, Matrix& invB, Matrix& R, Matrix& /*C*/, Matrix& /*rR0*/) const
   {
     Matrix Q = B;
     capd::matrixAlgorithms::orthonormalize(Q, R);

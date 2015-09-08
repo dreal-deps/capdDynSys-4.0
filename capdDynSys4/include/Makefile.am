@@ -148,6 +148,7 @@ capd/dynset/reorganization/NoReorganization.h \
 capd/dynset/reorganization/QRReorganization.h \
 capd/dynset/reorganization/SwapReorganization.h \
 capd/dynset/typedefs.h \
+capd/dynsys/approveRemainder.h \
 capd/dynsys/BasicC2Solver.h \
 capd/dynsys/BasicC2Solver.hpp \
 capd/dynsys/BasicCnSolver.h \

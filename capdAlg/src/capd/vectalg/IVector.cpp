@@ -18,6 +18,7 @@
 #include "capd/vectalg/ColumnVector.hpp"
 #include "capd/vectalg/RowVector.hpp"
 #include "capd/intervals/lib.h"
+#include "capd/vectalg/Vector_Interval.hpp"
 
 namespace capd{
   namespace vectalg{

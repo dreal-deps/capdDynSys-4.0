@@ -57,25 +57,6 @@ void FadCurve<MatrixT>::clearCoefficients()
     }
 }
 
-template<class MatrixT>
-void FadCurve<MatrixT>::derivative(FadCurve& result) const
-{
-  const size_type dim = this->dimension();
-  const size_type order = this->getOrder();
-  for(size_type i=0;i<dim;++i)
-    for(size_type r=0;r<=order;++r)
-    {
-      result.centerCoefficient(i,r) = Real(r+1)*this->centerCoefficient(i,r+1);
-      result.remainderCoefficient(i,r) = Real(r+1)*this->remainderCoefficient(i,r+1);
-      result.coefficient(i,r) = Real(r+1)*this->coefficient(i,r+1);
-      for(size_type j=0;j<dim;++j)
-      {
-        result.coefficient(i,j,r) = Real(r+1)*this->coefficient(i,j,r+1);
-        result.remainderCoefficient(i,j,r) = Real(r+1)*this->remainderCoefficient(i,j,r+1);
-      }
-    }
-}
-
 ///@}
 }} // namespace capd::diffAlgebra
 

@@ -2,6 +2,10 @@
 
 set -e
 
+if ! [ -e capdDynSys4 ]; then
+  ln -s capdDynSys capdDynSys4 # it is required in Doxyfile
+fi
+
 (cd capdMake/docs && doxygen Doxyfile)
 
 (cd capdDynSys/docs && make doc)

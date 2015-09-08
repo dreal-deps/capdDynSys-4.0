@@ -72,6 +72,7 @@ protected:
 ///  
 ///   @author Tomasz Kapela   @date 11-01-2006
 //////////////////////////////////////////////////////////////////////////////
+
 template <class T>
 void ignore_unused(T&) {} 
 

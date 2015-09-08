@@ -15,7 +15,8 @@ m4_include([../capdMake/make/configure_common_mpfr.ac])
 m4_include([../capdMake/make/configure_common_pari.ac])
 m4_include([../capdMake/make/configure_common_cxx11.ac])
 
-CXXFLAGS="${CAPD_CXXFLAGS_CXX11} ${CXXFLAGS}" # only for capd compilation, do not have to add it to capd<module>_CFLAGS.
+CAPD_AM_CXXFLAGS="${CAPD_CXXFLAGS_CXX11} ${CAPD_AM_CXXFLAGS}" # only for capd compilation, do not have to add it to capd<module>_CFLAGS.
+AC_SUBST([CAPD_AM_CXXFLAGS])
 
 AS_IF([test "x$HAVE_PARI" = "xyes"],
 [

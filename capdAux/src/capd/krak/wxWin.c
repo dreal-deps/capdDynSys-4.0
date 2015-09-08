@@ -234,7 +234,7 @@ const wxChar *defaultStatusText =
 static wxCriticalSection memSection;
 
 // should the drawing be updated on every key/mouse check? after drawing?
-static bool refreshOn = true, updateKey = false, updateDraw = false;
+static bool refreshOn = true, updateKey = false, updateDraw = true;
 
 // show the information about mouse position and keys pressed?
 static bool showInfo = false;
@@ -795,7 +795,7 @@ void KrakFrame::OnChar (wxKeyEvent& event)
 
 // --------------------------------------------------
 
-void KrakFrame::OnSize (wxSizeEvent& event)
+void KrakFrame::OnSize (wxSizeEvent& WXUNUSED(event))
 {
    // of no background brush is allocated, the frame is not
    // initialized yet, so no reaction to the size event is necessary

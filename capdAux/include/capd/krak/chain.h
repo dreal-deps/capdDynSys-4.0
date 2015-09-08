@@ -168,7 +168,7 @@ inline void capd::krak::link::bind(void)
    }
 }
 
-inline void capd::krak::link::operator=(capd::krak::link &a_link)
+inline void capd::krak::link::operator=(capd::krak::link & /*a_link*/)
 {
    capd::krak::errorExit("Do not assign a link to a link");
 }

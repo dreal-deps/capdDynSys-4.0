@@ -17,6 +17,7 @@
 #include <vector>
 #include "capd/basicalg/TypeTraits.h"
 #include "capd/diffAlgebra/ParametricCurve.h"
+#include "capd/vectalg/Vector_Interval.hpp"
 
 /**
  * This file defines class that represents parametric curve in \f$R^n\f$.

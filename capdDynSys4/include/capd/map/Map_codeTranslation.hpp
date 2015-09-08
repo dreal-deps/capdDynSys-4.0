@@ -58,7 +58,7 @@ void Map<MatrixT>::generateHeaderFile(const char className[], const char userNam
 // #####################################################################
 
 template<typename MatrixT>
-void Map<MatrixT>::generateCppFile(const char className[], const char userNamespace[], const char relativePath[], size_type maxTimeOrder) const{
+void Map<MatrixT>::generateCppFile(const char className[], const char userNamespace[], const char relativePath[], size_type /*maxTimeOrder*/) const{
   std::ostringstream fullPath;
 
   fullPath << relativePath << "/" << className << ".cpp";

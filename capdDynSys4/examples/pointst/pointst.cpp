@@ -41,18 +41,20 @@ void initGraphics() {
 }
 
 // -----------------------------------------------------------------
+
 int main(int, char *[]) {
   initGraphics();
   try {
     double grid = 30;
     int order = 20;
-    IMap iVectorField = "par:c;var:x,y,z;fun:y,z,1-y-0.5*x^2;";
-    INonlinearSection iSection = "var:x,y,z,d;fun:z;";
+    IMap iVectorField = "var:x,y,z;fun:y,z,1-y-0.5*x^2;";
+    ICoordinateSection iSection(3, 2); // z=0
     IOdeSolver iSolver(iVectorField, order);
     IPoincareMap iPM(iSolver, iSection);
 
-    DMap dVectorField = "par:c;var:x,y,z;fun:y,z,1-y-0.5*x^2;";
-    DNonlinearSection dSection = "var:x,y,z,d;fun:z;";
+    DMap dVectorField = "var:x,y,z;fun:y,z,1-y-0.5*x^2;";
+    // z=0 just to demonstrate another possibility of defining a section
+    DNonlinearSection dSection = "var:x,y,z;fun:z;";
     DOdeSolver dSolver(dVectorField, order);
     DPoincareMap dPM(dSolver, dSection);
 
@@ -73,13 +75,13 @@ int main(int, char *[]) {
     fr << At(7, 20) << "P^2(s)";
     fr << At(26, 26) << "P(s)";
 
-    interval part = interval(iv[1].rightBound() - iv[1].leftBound())/ interval(grid);
+    interval part = interval(iv[1].rightBound() - iv[1].leftBound()) / interval(grid);
 
     for (int i = 0; i < grid; i++) {
-      IVector w(interval(0.),iv[1].leftBound() +  interval(i, i+1) * part, interval(0.));
-      C0HOTripletonSet rec(w);
-      for(int j=0;j<2;++j){
-        w = iPM(rec);
+      IVector w(interval(0.), iv[1].leftBound() + interval(i, i + 1) * part, interval(0.));
+      C0HOTripletonSet set(w);
+      for (int j = 0; j < 2; ++j) {
+        w = iPM(set);
         fr.boxFill(w[0].leftBound(), w[1].leftBound(), w[0].rightBound(), w[1].rightBound(), c);
         fr.box(w[0].leftBound(), w[1].leftBound(), w[0].rightBound(), w[1].rightBound());
       }
@@ -87,19 +89,20 @@ int main(int, char *[]) {
 
     c = GREEN;
     txt.SetFgColor(c);
+    txt.SetBgColor(BLACK);
     txt << "using vector arithmetic and class PoincareMap\n";
     grid *= 30;
 
     for (int i = 0; i <= grid; i++) {
       DVector v(0, 1.5, 0.);
       v[1] += 0.1 * i / grid;
-      for(int j=0;j<2;++j){
+      for (int j = 0; j < 2; ++j) {
         v = dPM(v);
         fr.dot(v[0], v[1], c);
       }
     }
     waitBt();
- } catch (std::exception& e) {
+  } catch (std::exception& e) {
     rootFrame << "\n" << e.what();
     waitBt();
   }

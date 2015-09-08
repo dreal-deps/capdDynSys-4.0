@@ -7,7 +7,7 @@ using namespace std;
 
 // ----------------------------------- MAIN ----------------------------------------
 
-int main(int argc, char* argv[])
+int main()
 {
   cout.precision(17);
   try{

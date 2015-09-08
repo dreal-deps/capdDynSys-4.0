@@ -25,7 +25,7 @@
 using namespace std;
 using namespace capd;
 
-int main(int argc, char **argv) {
+int main(int, char**) {
 
   // TexWriter that will write to screen
 

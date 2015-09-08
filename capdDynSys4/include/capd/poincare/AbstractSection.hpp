@@ -25,7 +25,6 @@ namespace poincare{
 
 template <class MatrixT>
 void AbstractSection<MatrixT>::computeDT(
-      const VectorType& Px,
       const MatrixType& derivativeOfFlow,
       const VectorType& gradientOnPx,
       const ScalarType& denominator,
@@ -57,7 +56,7 @@ AbstractSection<MatrixT>::computeDP(
   VectorType gradientOnPx = this->gradient(Px);
   ScalarType denominator = fieldOnPx*gradientOnPx;
 
-  this->computeDT(Px,derivativeOfFlow,gradientOnPx,denominator,dT);
+  this->computeDT(derivativeOfFlow,gradientOnPx,denominator,dT);
 
   for(size_type i=1;i<=dim;++i)
     for(size_type j=1;j<=dim;++j)
@@ -87,7 +86,7 @@ void AbstractSection<MatrixT>::computeDP(
   ScalarType denominator = fieldOnPx*gradientOnPx;
 
   // here we compute first order derivatives of return time.
-  this->computeDT(Px,derivativeOfFlow,gradientOnPx,denominator,dT);
+  this->computeDT(derivativeOfFlow,gradientOnPx,denominator,dT);
 
   // first derivative of Poincare map
   for(j=0;j<dim;++j)

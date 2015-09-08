@@ -249,7 +249,7 @@ namespace AtanFunTime
   }
 
   template<class T>
-  inline void eval(const unsigned degree, const T* left, T* right, T* result, const unsigned dim, const unsigned order, const unsigned coeffNo)
+  inline void eval(const unsigned /*degree*/, const T* left, T* right, T* result, const unsigned /*dim*/, const unsigned /*order*/, const unsigned coeffNo)
   {
     Atan::evalC0(left,right,result,coeffNo);
   }
@@ -261,7 +261,7 @@ namespace AtanFunTime
   }
 
   template<class T>
-  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* /*right*/, T* result, const unsigned dim, const unsigned order)
+  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* /*right*/, T* result, const unsigned /*dim*/, const unsigned /*order*/)
   {
     if(degree==0)
       *result = atan(*left);
@@ -290,7 +290,7 @@ namespace AtanTime
   }
 
   template<class T>
-  inline void eval(const unsigned degree, const T* left, const T* right, T* result, const unsigned dim, const unsigned order, const unsigned coeffNo)
+  inline void eval(const unsigned /*degree*/, const T* left, const T* right, T* result, const unsigned /*dim*/, const unsigned /*order*/, const unsigned coeffNo)
   {
     evalC0(left,right,result,coeffNo);
   }
@@ -302,7 +302,7 @@ namespace AtanTime
   }
 
   template<class T>
-  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* /*right*/, T* result, const unsigned dim, const unsigned order)
+  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* /*right*/, T* result, const unsigned /*dim*/, const unsigned /*order*/)
   {
     if(degree==0)
       *result = atan(*left);
@@ -321,7 +321,7 @@ namespace AtanConst
   }
 
   template<class T>
-  inline void eval(const unsigned degree, const T* left, const T* right, T* result, const unsigned dim, const unsigned order, const unsigned coeffNo)
+  inline void eval(const unsigned /*degree*/, const T* left, const T* right, T* result, const unsigned /*dim*/, const unsigned /*order*/, const unsigned coeffNo)
   {
     evalC0(left,right,result,coeffNo);
   }
@@ -333,7 +333,7 @@ namespace AtanConst
   }
 
   template<class T>
-  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* /*right*/, T* result, const unsigned dim, const unsigned order)
+  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* /*right*/, T* result, const unsigned /*dim*/, const unsigned /*order*/)
   {
     if(degree==0)
       *result = atan(*left);

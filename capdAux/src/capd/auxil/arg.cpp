@@ -135,10 +135,10 @@ int arguments::analyze (int argc, char *argv [], std::ostream &out)
 			// read the argument's value
 			// unless the value should be ignored
 			int used = 0;
-			if (tab [j] -> get (argflags::ignorevalue))
+			if (tab [j] -> get (argflags::ignorevalue)){
 				if (tab [j] -> get (argflags::hasdefault))
 					tab [j] -> setvalue (NULL, NULL);
-				else;
+      }
 			else
 				used = tab [j] -> setvalue (value,
 					(i < argc - 1) ? argv [i + 1] :

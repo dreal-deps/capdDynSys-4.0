@@ -18,6 +18,7 @@
 //#include "capd/vectalg/iobject.hpp"
 #include "capd/geomset/MatrixAffineSet.h"
 //#include "capd/matrixAlgorithms/floatMatrixAlgorithms.hpp"
+#include "capd/vectalg/Matrix_Interval.hpp"
 
 namespace capd {
 namespace geomset {
@@ -87,5 +88,3 @@ typename MatrixAffineSet<MatrixType>::MatrixType MatrixAffineSet<MatrixType>::af
 } // namespace capd::dynset
 
 #endif // _CAPD_MATRIXAFFINESET_HPP_
-
-

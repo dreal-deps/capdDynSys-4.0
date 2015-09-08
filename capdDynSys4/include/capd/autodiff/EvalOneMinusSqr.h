@@ -156,7 +156,7 @@ namespace OneMinusSqr{
   }
 
   template<class T>
-  void evalCn(const unsigned degree, const T* left, const T* right, T* result, const unsigned dim, const unsigned order, const unsigned coeffNo)
+  void evalCn(const unsigned degree, const T* left, const T* /*right*/, T* result, const unsigned dim, const unsigned order, const unsigned coeffNo)
   {
     using capd::vectalg::Multiindex;
     const unsigned shift = binomial(dim+degree-1,dim);
@@ -247,7 +247,7 @@ namespace OneMinusSqr{
   }
 
   template<class T>
-  inline void evalC1HomogenousPolynomial(const T* left, const T* right, T* result, unsigned dim, unsigned order)
+  inline void evalC1HomogenousPolynomial(const T* left, const T* /*right*/, T* result, unsigned dim, unsigned order)
   {
     const T* leftDer = left + order;
     T* resultDer = result + order;
@@ -256,7 +256,7 @@ namespace OneMinusSqr{
   }
 
   template<class T>
-  inline void evalC2HomogenousPolynomial(const T* left, const T* right, T* result, const unsigned dim, const unsigned order)
+  inline void evalC2HomogenousPolynomial(const T* left, const T* /*right*/, T* result, const unsigned dim, const unsigned order)
   {
     const  T* leftDer = left + order;
     T* resultDer = result + order;
@@ -279,7 +279,7 @@ namespace OneMinusSqr{
   }
 
   template<class T>
-  inline void evalC3HomogenousPolynomial(const T* left, const T* right, T* result, unsigned dim, unsigned order)
+  inline void evalC3HomogenousPolynomial(const T* left, const T* /*right*/, T* result, unsigned dim, unsigned order)
   {
     unsigned i1 = order;
     for(unsigned derNo=0;derNo<dim;++derNo,i1+=order)
@@ -313,7 +313,7 @@ namespace OneMinusSqr{
   }  // evalC3
 
   template<class T>
-  void evalCnHomogenousPolynomial(const unsigned degree, const T* left, const T* right, T* result, const unsigned dim, const unsigned order)
+  void evalCnHomogenousPolynomial(const unsigned degree, const T* left, const T* /*right*/, T* result, const unsigned dim, const unsigned order)
   {
     using capd::vectalg::Multiindex;
     const unsigned shift = binomial(dim+degree-1,dim);
@@ -399,19 +399,19 @@ namespace OneMinusSqrFunTime
   }
 
   template<class T>
-  inline void eval(const unsigned degree, const T* left, const T* right, T* result, const unsigned dim, const unsigned order, const unsigned coeffNo)
+  inline void eval(const unsigned /*degree*/, const T* left, const T* right, T* result, const unsigned /*dim*/, const unsigned /*order*/, const unsigned coeffNo)
   {
     OneMinusSqr::evalC0(left,right,result,coeffNo);
   }
 
   template<class T>
-  inline void evalC0HomogenousPolynomial(const T* left, const T* right, T* result)
+  inline void evalC0HomogenousPolynomial(const T* left, const T* /*right*/, T* result)
   {
     *result = TypeTraits<T>::one()-sqr(*left);
   }
 
   template<class T>
-  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* right, T* result, const unsigned dim, const unsigned order)
+  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* /*right*/, T* result, const unsigned /*dim*/, const unsigned /*order*/)
   {
     if(degree==0)
       *result = TypeTraits<T>::one()-sqr(*left);
@@ -424,7 +424,7 @@ namespace OneMinusSqrFunTime
 namespace OneMinusSqrTime
 {
   template<class T>
-  inline void evalC0(const T* left, const T* right, T* result, const unsigned coeffNo)
+  inline void evalC0(const T* left, const T* /*right*/, T* result, const unsigned coeffNo)
   {
     switch(coeffNo)
     {
@@ -435,19 +435,19 @@ namespace OneMinusSqrTime
   }
 
   template<class T>
-  inline void eval(const unsigned degree, const T* left, const T* right, T* result, const unsigned dim, const unsigned order, const unsigned coeffNo)
+  inline void eval(const unsigned /*degree*/, const T* left, const T* right, T* result, const unsigned /*dim*/, const unsigned /*order*/, const unsigned coeffNo)
   {
     evalC0(left,right,result,coeffNo);
   }
 
   template<class T>
-  inline void evalC0HomogenousPolynomial(const T* left, const T* right, T* result)
+  inline void evalC0HomogenousPolynomial(const T* left, const T* /*right*/, T* result)
   {
     *result = TypeTraits<T>::one()-sqr(*left);
   }
 
   template<class T>
-  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* right, T* result, const unsigned dim, const unsigned order)
+  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* /*right*/, T* result, const unsigned /*dim*/, const unsigned /*order*/)
   {
     if(degree==0)
       *result = TypeTraits<T>::one()-sqr(*left);
@@ -459,7 +459,7 @@ namespace OneMinusSqrTime
 namespace OneMinusSqrConst
 {
   template<class T>
-  inline void evalC0(const T* left, const T* right, T* result, const unsigned coeffNo)
+  inline void evalC0(const T* left, const T* /*right*/, T* result, const unsigned coeffNo)
   {
     if(coeffNo)
     {}
@@ -468,20 +468,20 @@ namespace OneMinusSqrConst
   }
 
   template<class T>
-  inline void eval(const unsigned degree, const T* left, const T* right, T* result, const unsigned dim, const unsigned order, const unsigned coeffNo)
+  inline void eval(const unsigned degree, const T* left, const T* /*right*/, T* result, const unsigned /*dim*/, const unsigned /*order*/, const unsigned coeffNo)
   {
     if(degree==0 and coeffNo==0)
       *result = TypeTraits<T>::one()-sqr(*left);
   }
 
   template<class T>
-  inline void evalC0HomogenousPolynomial(const T* left, const T* right, T* result)
+  inline void evalC0HomogenousPolynomial(const T* left, const T* /*right*/, T* result)
   {
     *result = TypeTraits<T>::one()-sqr(*left);
   }
 
   template<class T>
-  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* right, T* result, const unsigned dim, const unsigned order)
+  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, const T* /*right*/, T* result, const unsigned /*dim*/, const unsigned /*order*/)
   {
     if(degree==0)
       *result = TypeTraits<T>::one()-sqr(*left);

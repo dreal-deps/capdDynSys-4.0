@@ -1,3 +1,4 @@
+include ${capdMake}/make/common_programs_makefile.mkf
 
 check_PROGRAMS=AffineSet C0Pped2SetTest Rect2SetTest \
                CoordReorganization    FactorReorganization\
@@ -5,7 +6,7 @@ check_PROGRAMS=AffineSet C0Pped2SetTest Rect2SetTest \
 
 TESTS=${check_PROGRAMS}
 
-AM_CXXFLAGS = ${capdDynSys_CFLAGS} ${BOOST_CPPFLAGS}
+CAPD_AM_CXXFLAGS+=${capdDynSys_CFLAGS} ${BOOST_CPPFLAGS}
 LDADD=${capdDynSys_LIBS} ${BOOST_UNIT_TEST_FRAMEWORK_LIBS}
 LDFLAGS+=${BOOST_UNIT_TEST_FRAMEWORK_LDFLAGS}
 

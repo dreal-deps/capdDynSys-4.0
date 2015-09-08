@@ -61,18 +61,6 @@ void BasicCurve<MatrixT>::setOrder(size_type order) {
 }
 
 template<class MatrixT>
-void BasicCurve<MatrixT>::derivative(BasicCurve& result) const {
-  for(size_type i=0;i<=this->m_order;++i){
-    result.m_coefficientsAtCenter[i] = Real(i+1)*this->m_coefficientsAtCenter[i+1];
-    result.m_coefficients[i] = Real(i+1)*this->m_coefficients[i+1];
-    result.m_remainderCoefficients[i] = Real(i+1)*this->m_remainderCoefficients[i+1];
-
-    result.m_matrixCoefficients[i] = ScalarType(i+1)*this->m_matrixCoefficients[i+1];
-    result.m_matrixRemainderCoefficients[i] = ScalarType(i+1)*this->m_matrixRemainderCoefficients[i+1];
-  }
-}
-
-template<class MatrixT>
 BasicCurve<MatrixT>::~BasicCurve(){
   this->deallocate();
 }

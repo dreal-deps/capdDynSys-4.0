@@ -10,7 +10,7 @@ int WinMain (HINSTANCE hI, HINSTANCE hPI, LPSTR lpszCmd, int nCS)
 
 #endif
 
-int mainEntry (int argc, char *argv [])
+int mainEntry (int /*argc*/, char */*argv*/ [])
 {
   throw std::runtime_error("Not implemented");
 }

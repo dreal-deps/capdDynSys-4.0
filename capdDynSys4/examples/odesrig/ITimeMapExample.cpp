@@ -10,7 +10,7 @@ using capd::autodiff::Node;
 * @param out is an array of dependent variables, i.e. out = f(in)
 * @param params - parameters of the map. Here we assume that mu=params[0] is a relative mass of Jupiter
 */
-void pcr3bpVectorField(Node t, Node in[], int dimIn, Node out[], int dimOut, Node params[], int noParams)
+void pcr3bpVectorField(Node /*t*/, Node in[], int /*dimIn*/, Node out[], int /*dimOut*/, Node params[], int /*noParams*/)
 {
   // Try to factorize expression as much as possible.
   // Usually we have to define some intermediate quantities.

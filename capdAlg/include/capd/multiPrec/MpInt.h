@@ -24,7 +24,7 @@
 #ifndef _CAPD_MULTIPREC_MPINT_H_
 #define _CAPD_MULTIPREC_MPINT_H_
 
-
+#include <cstddef>
 #include <gmpxx.h>
 #include <gmp.h>
 #include <stdexcept>

@@ -59,7 +59,6 @@ public:
   using BaseCurve::dimension;
 
   void clearCoefficients();
-  void derivative(BasicC2Curve& out) const;
 
   using BaseCurve::centerCoefficient;
   using BaseCurve::coefficient;
@@ -71,8 +70,12 @@ public:
   const ScalarType& coefficient(size_type i, size_type j, size_type c, size_type k) const;
   const ScalarType& remainderCoefficient(size_type i, size_type j, size_type c, size_type k) const;
 
+  using BaseCurve::getCoefficientsAtCenter;
+  using BaseCurve::getCoefficients;
+  using BaseCurve::getRemainderCoefficients;
 
-protected:
+  using BaseCurve::getMatrixCoefficients;
+  using BaseCurve::getMatrixRemainderCoefficients;
 
   HessianType* getHessianCoefficients();
   HessianType* getHessianRemainderCoefficients();
@@ -86,15 +89,11 @@ protected:
   const HessianType& getHessianCoefficients(size_type p) const;
   const HessianType& getHessianRemainderCoefficients(size_type p) const;
 
+protected:
+
   HessianType* m_hessianCoefficients;
   HessianType* m_hessianRemainderCoefficients;
 
-  using BaseCurve::getCoefficientsAtCenter;
-  using BaseCurve::getCoefficients;
-  using BaseCurve::getRemainderCoefficients;
-
-  using BaseCurve::getMatrixCoefficients;
-  using BaseCurve::getMatrixRemainderCoefficients;
 
   void c2Allocate();
   void c2Deallocate();

@@ -88,7 +88,7 @@ public:
 // memory allocation
   static void* operator new[](size_t sizeOfData, size_type);
   static void* operator new[](size_t sizeOfData);
-  static void setDefaultDimension(size_type newDefaultDimension){}
+  static void setDefaultDimension(size_type){}
   static size_type size() {return capacity;}
 
 protected:

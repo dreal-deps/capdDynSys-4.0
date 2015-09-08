@@ -5,5 +5,5 @@ floatMatrixAlgExample_SOURCES=floatMatrixAlgExample.cpp
 floatMatrixAlgExample_libs=${capdintervals_LIBS}
 floatMatrixAlgExample_LDADD=${floatMatrixAlgExample_libs}
 floatMatrixAlgExample_DEPENDENCIES=${filter %.a %.la,${floatMatrixAlgExample_libs}}
-floatMatrixAlgExample_CXXFLAGS=${capdintervals_CFLAGS}
+floatMatrixAlgExample_CXXFLAGS= ${AM_CXXFLAGS} ${capdintervals_CFLAGS}
 

@@ -103,7 +103,7 @@ public:
     return m_vField->dimension();
   }
 
-  VectorType enclosure(const ScalarType& t, const VectorType& x){
+  VectorType enclosure(const ScalarType& /*t*/, const VectorType& /*x*/){
     throw std::logic_error("BasicTaylor::enclosure - cannot compute enclosure, this is a nonrigorous solver. Implementation only for satisfying an required interface of StepControl");
   }
   void adjustTimeStep(const ScalarType& newStep); ///< sets time step but does not change step control settings (compare setStep)
@@ -124,8 +124,8 @@ protected:
     );
   void operator=(const BasicSolver&) {
   } /// we do not allow copying of objects
-  BasicSolver(const BasicSolver &) 
-    : capd::dynsys::StepControlInterface<StepControlT,ScalarType>(this->m_stepControl),
+  BasicSolver(const BasicSolver & solver) 
+    : capd::dynsys::StepControlInterface<StepControlT,ScalarType>(solver.getStepControl()),
       SolutionCurve(0.,0.,1,1,1)
   { } /// we do not allow copying of objects
 

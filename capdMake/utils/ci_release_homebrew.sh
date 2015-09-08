@@ -21,7 +21,7 @@ fi
 dist_archive=${files[0]}
 version=$(echo $dist_archive | sed 's/capd.*-\(.*\)\.tar\.gz/\1/')
 
-cp ../capdMake/osx/capd.rb.in capd.rb
+cp ./capdMake/osx/capd.rb.in capd.rb
 sed -i.bac "s/src_SHA1_PLACEHOLDER/$(gsha1sum ${dist_archive}  | cut -f1 -d' ')/" capd.rb
 sed -i.bac "s|src_URL_PLACEHOLDER|file://${PWD}/${dist_archive}|" capd.rb
 sed -i.bac "s|VERSION_PLACEHOLDER|${version}|" capd.rb

@@ -19,7 +19,7 @@
 #include "capd/vectalg/Vector.hpp"
 #include "capd/invset/CubicalMap.h"
 #include "capd/invset/Graph.h"
-#include "capd/auxil/logger_deprecated_20141101.h"
+#include "capd/auxil/logger_deprecated.h"
 
 namespace capd{
 namespace invset{

@@ -63,7 +63,7 @@ bool checkConeCondition(IPoincareMap& pm, double y1, double y2, int N) {
   return result;
 }
 
-int main(int argc, char* argv[]) {
+int main() {
   cout << boolalpha;
   try {
     int order = 20;

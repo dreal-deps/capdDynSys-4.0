@@ -24,10 +24,10 @@
 
 #include "capd/dynsys/Solver.h"
 #include "capd/dynsys/SolverException.h"
-
 #include "capd/dynsys/DynSys.hpp"
 #include "capd/dynsys/BasicSolver.hpp"
 #include "capd/dynsys/enclosure.hpp"
+#include "capd/dynsys/approveRemainder.h"
 
 namespace capd{
 namespace dynsys{
@@ -57,7 +57,7 @@ Solver<MapType,StepControlType,CurveType>::Phi(const ScalarType& t, const Vector
   VectorType result(v.dimension());
   this->setCurrentTime(t);
   this->computeCoefficientsAtCenter(v,this->getOrder());
-  this->sumTaylorSeries(result,this->getCoefficientsAtCenter(),this->getOrder());
+  BaseTaylor::sumTaylorSeries(result,this->getCoefficientsAtCenter(),this->getOrder());
   return result;
 }
 
@@ -67,7 +67,7 @@ template<typename MapType, typename StepControlType,typename CurveType>
 typename Solver<MapType, StepControlType,CurveType>::MatrixType
 Solver<MapType, StepControlType,CurveType>::JacPhi(const ScalarType& t, const VectorType &iv)
 {
-  this->computeCoefficients(t,iv,this->getOrder());
+  BaseTaylor::computeCoefficients(t,iv,this->getOrder());
 
   // the summation of the Taylor series
   MatrixType* matrixCoeff = this->getMatrixCoefficients();
@@ -157,27 +157,11 @@ void Solver<MapType,StepControlType,CurveType>::encloseC0Map(
       MatrixType& o_jacPhi
   )
 {
-  int order = this->getOrder();
-  MatrixType* matrixCoeff = this->getMatrixCoefficients();
-  VectorType* center = this->getCoefficientsAtCenter();
-
-  // here we compute all the coefficients for phi(t) and DPhi(t)
-  this->setCurrentTime(t);
-  this->computeCoefficientsAtCenter(x,order);
-  this->computeCoefficients(xx,order);
-  this->computeTimeStep(t,xx);
-
-  // in the following function the time step can be adjusted
-  o_rem = this->Remainder(t,xx,o_enc);
-
-  o_phi = center[order];
-  o_jacPhi = matrixCoeff[order];
-  for(int i=order-1;i>=0;--i)
-  {
-    capd::vectalg::multiplyAssignObjectScalarAddObject(o_jacPhi,this->m_step,matrixCoeff[i]);
-    capd::vectalg::multiplyAssignObjectScalarAddObject(o_phi,this->m_step,center[i]);
-  }
+  this->computePhiCoefficients(t,x,xx);
+  capd::diffAlgebra::C1TimeJet<MatrixType> phi(&o_phi,&o_jacPhi);
+  capd::dynsys::computeAndApproveRemainder(*this,t,xx,phi,o_rem,o_enc);
 }
+
 
 //###########################################################//
 
@@ -194,28 +178,12 @@ void Solver<MapType,StepControlType,CurveType>::encloseC1Map(
       MatrixType& o_jacEnc
   )
 {
-  int order = this->getOrder();
-  MatrixType* matrixCoeff = this->getMatrixCoefficients();
-  VectorType* center = this->getCoefficientsAtCenter();
+  capd::diffAlgebra::C1TimeJet<MatrixType> phi(&o_phi,&o_jacPhi);
+  capd::diffAlgebra::C1TimeJet<MatrixType> rem(&o_rem,&o_jacRem);
+  capd::diffAlgebra::C1TimeJet<MatrixType> enc(&o_enc,&o_jacEnc);
 
-  // here we compute all the coefficients for phi(t) and DPhi(t)
-  this->setCurrentTime(t);
-  this->computeCoefficientsAtCenter(x,order);
-  this->computeCoefficients(xx,order);
-  this->computeTimeStep(t,xx);
-
-  // in the following function the time step can be adjusted
-  o_enc = this->enclosure(t,xx);
-  o_jacEnc = this->jacEnclosure(t,o_enc);
-  this->JacRemainder(t,o_enc,o_jacEnc,o_rem,o_jacRem);
-
-  o_phi = center[order];
-  o_jacPhi = matrixCoeff[order];
-  for(int i=order-1;i>=0;--i)
-  {
-    capd::vectalg::multiplyAssignObjectScalarAddObject(o_jacPhi,this->getStep(),matrixCoeff[i]);
-    capd::vectalg::multiplyAssignObjectScalarAddObject(o_phi,this->getStep(),center[i]);
-  }
+  this->computePhiCoefficients(t,x,xx);
+  capd::dynsys::computeAndApproveRemainder(*this,t,xx,phi,rem,enc);
 }
 
 //###########################################################//

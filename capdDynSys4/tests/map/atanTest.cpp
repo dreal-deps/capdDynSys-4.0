@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE(xatan)
 
 using capd::autodiff::Node;
 
-void _f(Node t, Node in[], int dimIn, Node out[], int dimOut, Node params[], int noParams)
+void _f(Node /*t*/, Node in[], int /*dimIn*/, Node out[], int /*dimOut*/, Node /*params*/[], int /*noParams*/)
 {
   out[0] = 2*atan(in[0]*in[1]/(1+sqrt(1+sqr(in[0]*in[1]))));
 }

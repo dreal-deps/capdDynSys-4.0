@@ -30,7 +30,7 @@ const char fileContents[] =
 "   [destination]                                                         \n"
 "   directory = C:\\Temp";
            
-int main (int argc, char *argv [])
+int main (int /*argc*/, char */*argv*/ [])
 {
     // we should init capd logger to debug ConfigFileReader 
     // INIT_CAPD_LOGGER;

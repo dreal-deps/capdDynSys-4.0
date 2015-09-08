@@ -316,7 +316,7 @@ ScalarType& Sqrt1mx2Node<ScalarType>::operator()(int i){
 
 /// sqrtx2m1 = sqrt(x^2-1)
 template<typename ScalarType>
-ScalarType& Sqrtx2m1Node<ScalarType> ::operator()(int i){
+ScalarType& Sqrtx2m1Node<ScalarType> ::operator()(int /*i*/){
   throw std::logic_error("Sqrtx2m1Node<ScalarType> ::operator()(int i) - not implemented!");
 }
 

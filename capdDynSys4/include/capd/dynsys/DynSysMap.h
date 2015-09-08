@@ -15,6 +15,7 @@
 
 #ifndef  _CAPD_DYNSYS_DYNSYSMAP_H_
 #define  _CAPD_DYNSYS_DYNSYSMAP_H_
+#include <stdexcept>
 #include "capd/dynsys/DynSys.hpp"
 
 namespace capd{
@@ -47,44 +48,44 @@ public:
     }
 
     /// value of a map for a point iv
-	  VectorType Phi(const ScalarType& t, const VectorType &iv){
+	  VectorType Phi(const ScalarType& /*t*/, const VectorType &iv){
 		return (*pMap)(iv);
 	  }
 	  /// value of a map for a point iv
-	  VectorType operator()(const ScalarType& t, const VectorType &iv){
+	  VectorType operator()(const ScalarType& /*t*/, const VectorType &iv){
 	  	return (*pMap)(iv);
 	  }
 
 	  /// derivative of a map in a point iv
-	  MatrixType JacPhi(const ScalarType& t, const VectorType &iv){
+	  MatrixType JacPhi(const ScalarType& /*t*/, const VectorType &iv){
 		  return (*pMap)[iv];
 	  }
 	  /// derivative of a map in a point iv
 	  MatrixType operator[](const VectorType &iv){
-	  		  return (*pMap)[iv];
+      return (*pMap)[iv];
 	  }
 	  /// value and derivative of a map in a point iv
-	  VectorType operator()(const ScalarType& t, const VectorType &iv, MatrixType & derivative){
-	  	  	return (*pMap)(iv, derivative);
+	  VectorType operator()(const ScalarType& /*t*/, const VectorType &iv, MatrixType & derivative){
+      return (*pMap)(iv, derivative);
 	  }
 	  /// it computes image of the set (in give representation) using set.move function
 	  template <typename SetType>
 	  SetType & operator()(SetType & set) {
-		    set.move(*this);
-	        return set;
+      set.move(*this);
+      return set;
 	  }
 
-	  VectorType & operator()(const ScalarType& t, VectorType &iv) {
-	        return (*pMap)(iv);
+	  VectorType & operator()(const ScalarType& /*t*/, VectorType &iv) {
+      return (*pMap)(iv);
 	  }
 	  /// because we have explicit formula for a map not only numerical method
 	  /// the remainder term is equal to zero
-	  VectorType Remainder(const ScalarType& t, const VectorType &iv, VectorType &enc){
+	  VectorType Remainder(const ScalarType& /*t*/, const VectorType &iv, VectorType &/*enc*/){
 		  VectorType zero(iv.dimension());
 		  return zero;
 	  }
 	  virtual void encloseC0Map(
-	      const ScalarType& t,
+	      const ScalarType& /*t*/,
 	      const VectorType& x,
 	      const VectorType& xx,
 	      VectorType& o_phi,
@@ -98,14 +99,14 @@ public:
 	    o_jacPhi = (*pMap)[xx];
 	  }
 	  /// empty implemented - throws exception on use
-	  ScalarType Lipschitz(const ScalarType& t, const VectorType &iv, NormType &n){
-		  throw "DynSysMap::Lipschitz should not be used!";
+	  ScalarType Lipschitz(const ScalarType& /*t*/, const VectorType &/*iv*/, NormType &/*n*/){
+		  throw std::logic_error("DynSysMap::Lipschitz should not be used!");
 		  return ScalarType(0.0);
 	  }
 
-	  VectorType enclosure(const ScalarType& t, const VectorType& x){
-      throw "DynSysMap::enclosure should not be used!";
-      return x;
+	  VectorType enclosure(const ScalarType& /*t*/, const VectorType& x){
+            throw std::logic_error("DynSysMap::enclosure should not be used!");
+            return x;
 	  }
 
 	  /// returns name of the class (for backward compatibility)

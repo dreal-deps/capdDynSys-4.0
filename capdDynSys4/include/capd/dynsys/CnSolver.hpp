@@ -23,6 +23,7 @@
 #include "capd/dynsys/CnSolver_phi.hpp"
 #include "capd/dynsys/CnSolver_enclosure.hpp"
 #include "capd/dynsys/CnSolver_remainder.hpp"
+#include "capd/dynsys/approveRemainder.h"
 
 namespace capd{
 namespace dynsys{
@@ -31,6 +32,22 @@ template<typename MapT, typename StepControlT, typename CurveT>
 CnSolver<MapT,StepControlT,CurveT>::CnSolver(MapT& vectorField, size_type order, const StepControlType& stepControl)
   : BasicCnSolver<MapType,StepControlT,CurveT>(vectorField,order,stepControl){}
 
+// ####################################################################
+
+template<typename MapType,typename StepControlT, typename CurveT>
+void CnSolver<MapType,StepControlT,CurveT>::setInitialCondition(ScalarType t, const VectorType& x, const VectorType& xx)
+{
+  this->setCurrentTime(t);
+
+  for(size_type i=0;i<this->dimension();++i){
+    this->getCoefficientsAtCenter()[0][i] = x[i];
+    this->coefficient(i,0) = xx[i];
+    for(size_type j=0;j<this->dimension();++j) {
+      this->coefficient(i,j,0) =
+          (i==j) ? TypeTraits<ScalarType>::one() : TypeTraits<ScalarType>::zero();
+    }
+  }
+}
 
 // ####################################################################
 
@@ -50,58 +67,20 @@ void CnSolver<MapType,StepControlT,CurveT>::encloseC2Map(
     HessianType& o_hessianEnc
   )
 {
-  this->setCurrentTime(t);
-
-  const size_type order = this->getOrder();
-  // set initial condition
-  VectorType* center = this->getCoefficientsAtCenter();
-  //unsigned i,j,c;
-  size_type i,j,c;
-
-  for(i=0;i<this->dimension();++i)
-  {
-    center[0][i] = x[i];
-    this->coefficient(i,0) = xx[i];
-    for(j=0;j<this->dimension();++j)
-    {
-      this->coefficient(i,j,0) =
-          (i==j) ? TypeTraits<ScalarType>::one() : TypeTraits<ScalarType>::zero();
-      for(c=j;c<this->dimension();++c)
+  this->setInitialCondition(t,x,xx);
+  for(size_type i=0;i<this->dimension();++i)
+    for(size_type j=0;j<this->dimension();++j)
+      for(size_type c=j;c<this->dimension();++c)
         this->coefficient(i,j,c,0) = TypeTraits<ScalarType>::zero();
-    }
-  }
 
-  this->m_vField->computeODECoefficients(center,order);
-  this->m_vField->computeODECoefficients(this->getCoefficients(),2,order);
-  this->computeTimeStep(t,xx);
+  this->m_vField->computeODECoefficients(this->getCoefficientsAtCenter(),this->getOrder());
+  this->m_vField->computeODECoefficients(this->getCoefficients(),2,this->getOrder());
 
-  o_enc = this->enclosure(t,xx);
-  this->c2Enclosure(o_enc,o_jacEnc,o_hessianEnc);
-  this->c2Remainder(o_enc,o_jacEnc,o_hessianEnc,o_rem,o_jacRem,o_hessianRem);
+  capd::diffAlgebra::C2TimeJet<MatrixType> phi(&o_phi,&o_jacPhi,&o_hessianPhi);
+  capd::diffAlgebra::C2TimeJet<MatrixType> rem(&o_rem,&o_jacRem,&o_hessianRem);
+  capd::diffAlgebra::C2TimeJet<MatrixType> enc(&o_enc,&o_jacEnc,&o_hessianEnc);
 
-  for(i=0;i<this->dimension();++i)
-  {
-    o_phi[i] = center[order][i];
-    for(j=0;j<this->dimension();++j)
-    {
-      o_jacPhi(i+1,j+1) = this->coefficient(i,j,order);
-      for(c=j;c<this->dimension();++c)
-        o_hessianPhi(i,j,c) = this->coefficient(i,j,c,order);
-    }
-  }
-  for(int r=order-1;r>=0;--r)
-  {
-    for(i=0;i<this->dimension();++i)
-    {
-      o_phi[i] = o_phi[i]*this->m_step + center[r][i];
-      for(j=0;j<this->dimension();++j)
-      {
-        o_jacPhi(i+1,j+1) = o_jacPhi(i+1,j+1)*this->m_step + this->coefficient(i,j,r);
-        for(c=j;c<this->dimension();++c)
-          o_hessianPhi(i,j,c) = o_hessianPhi(i,j,c)*this->m_step + this->coefficient(i,j,c,r);
-      }
-    }
-  }
+  capd::dynsys::computeAndApproveRemainder(*this,t,xx,phi,rem,enc);
 }
 
 // ####################################################################
@@ -119,47 +98,15 @@ void CnSolver<MapType,StepControlT,CurveT>::encloseC1Map(
     MatrixType& o_jacEnc
   )
 {
-  this->setCurrentTime(t);
+  this->setInitialCondition(t,x,xx);
+  this->m_vField->computeODECoefficients(this->getCoefficientsAtCenter(),this->getOrder());
+  this->m_vField->computeODECoefficients(this->getCoefficients(),1,this->getOrder());
 
-  const size_type order = this->getOrder();
-  // set initial condition
-  VectorType* center = this->getCoefficientsAtCenter();
-  size_type i,j;
+  capd::diffAlgebra::C1TimeJet<MatrixType> phi(&o_phi,&o_jacPhi);
+  capd::diffAlgebra::C1TimeJet<MatrixType> rem(&o_rem,&o_jacRem);
+  capd::diffAlgebra::C1TimeJet<MatrixType> enc(&o_enc,&o_jacEnc);
 
-  for(i=0;i<this->dimension();++i)
-  {
-    center[0][i] = x[i];
-    this->coefficient(i,0) = xx[i];
-    for(j=0;j<this->dimension();++j)
-    {
-      this->coefficient(i,j,0) =
-          (i==j) ? TypeTraits<ScalarType>::one() : TypeTraits<ScalarType>::zero();
-    }
-  }
-
-  this->m_vField->computeODECoefficients(center,order);
-  this->m_vField->computeODECoefficients(this->getCoefficients(),1,order);
-  this->computeTimeStep(t,xx);
-
-  o_enc = this->enclosure(t,xx);
-  o_jacEnc = this->jacEnclosure(t,o_enc);
-  this->JacRemainder(t,o_enc,o_jacEnc,o_rem,o_jacRem);
-
-  for(i=0;i<this->dimension();++i)
-  {
-    o_phi[i] = center[order][i];
-    for(j=0;j<this->dimension();++j)
-      o_jacPhi(i+1,j+1) = this->coefficient(i,j,order);
-  }
-  for(int r=order-1;r>=0;--r)
-  {
-    for(i=0;i<this->dimension();++i)
-    {
-      o_phi[i] = o_phi[i]*this->m_step + center[r][i];
-      for(j=0;j<this->dimension();++j)
-        o_jacPhi(i+1,j+1) = o_jacPhi(i+1,j+1)*this->m_step + this->coefficient(i,j,r);
-    }
-  }
+  capd::dynsys::computeAndApproveRemainder(*this,t,xx,phi,rem,enc);
 }
 
 // ####################################################################
@@ -175,45 +122,56 @@ void CnSolver<MapType,StepControlT,CurveT>::encloseC0Map(
     MatrixType& o_jacPhi
   )
 {
-  this->setCurrentTime(t);
+  this->setInitialCondition(t,x,xx);
+  this->m_vField->computeODECoefficients(this->getCoefficientsAtCenter(),this->getOrder());
+  this->m_vField->computeODECoefficients(this->getCoefficients(),1,this->getOrder());
+    
+  capd::diffAlgebra::C1TimeJet<MatrixType> phi(&o_phi,&o_jacPhi);
+  capd::dynsys::computeAndApproveRemainder(*this,t,xx,phi,o_rem,o_enc);
+}
 
-  const size_type order = this->getOrder();
-  // set initial condition
-  VectorType* center = this->getCoefficientsAtCenter();
+// ####################################################################
+
+template<typename MapType,typename StepControlT, typename CurveT>
+void CnSolver<MapType,StepControlT,CurveT>::sumTaylorSeries(C1TimeJetType& o_phi)
+{
   size_type i,j;
-
-  for(i=0;i<this->dimension();++i)
-  {
-    center[0][i] = x[i];
-    this->coefficient(i,0) = xx[i];
+  const int order = this->getOrder();
+  for(i=0;i<this->dimension();++i){
+    o_phi.vector()[i] = this->getCoefficientsAtCenter()[order][i];
     for(j=0;j<this->dimension();++j)
-    {
-      this->coefficient(i,j,0) =
-          (i==j) ? TypeTraits<ScalarType>::one() : TypeTraits<ScalarType>::zero();
-    }
+      o_phi.matrix()(i+1,j+1) = this->coefficient(i,j,order);
   }
-
-  this->m_vField->computeODECoefficients(center,order);
-  this->m_vField->computeODECoefficients(this->getCoefficients(),1,order);
-  this->computeTimeStep(t,xx);
-
-  o_rem = this->Remainder(t,xx,o_enc);
-
-  for(i=0;i<this->dimension();++i)
-  {
-    o_phi[i] = center[order][i];
-    for(j=0;j<this->dimension();++j)
-      o_jacPhi(i+1,j+1) = this->coefficient(i,j,order);
-  }
-  for(int r=order-1;r>=0;--r)
-  {
-    for(i=0;i<this->dimension();++i)
-    {
-      o_phi[i] = o_phi[i]*this->m_step + center[r][i];
+  
+  for(int r=order-1;r>=0;--r){
+    for(i=0;i<this->dimension();++i){
+      o_phi.vector()[i] = o_phi.vector()[i]*this->m_step + this->getCoefficientsAtCenter()[r][i];
       for(j=0;j<this->dimension();++j)
-        o_jacPhi(i+1,j+1) = o_jacPhi(i+1,j+1)*this->m_step + this->coefficient(i,j,r);
+        o_phi.matrix()(i+1,j+1) = o_phi.matrix()(i+1,j+1)*this->m_step + this->coefficient(i,j,r);
     }
   }
+}
+
+// ####################################################################
+
+template<typename MapType,typename StepControlT, typename CurveT>
+void CnSolver<MapType,StepControlT,CurveT>::sumTaylorSeries(C2TimeJetType& o_phi)
+{
+  size_type i,j,c;
+  const int order = this->getOrder();
+
+  this->sumTaylorSeries(static_cast<C1TimeJetType&>(o_phi)); 
+ 
+  for(i=0;i<this->dimension();++i)
+    for(j=0;j<this->dimension();++j)
+      for(c=j;c<this->dimension();++c)
+        o_phi.hessian()(i,j,c) = this->coefficient(i,j,c,order);
+
+  for(int r=order-1;r>=0;--r)
+    for(i=0;i<this->dimension();++i)
+      for(j=0;j<this->dimension();++j)
+        for(c=j;c<this->dimension();++c)
+          o_phi.hessian()(i,j,c) = o_phi.hessian()(i,j,c)*this->m_step + this->coefficient(i,j,c,r);
 }
 
 // ####################################################################

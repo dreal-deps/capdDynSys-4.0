@@ -20,6 +20,7 @@
 #include "capd/dynset/C0TripletonSet.h"
 #include "capd/matrixAlgorithms/floatMatrixAlgorithms.hpp"
 #include "capd/vectalg/algebraicOperations.hpp"
+#include "capd/vectalg/Matrix_Interval.hpp"
 
 namespace capd {
 namespace dynset {

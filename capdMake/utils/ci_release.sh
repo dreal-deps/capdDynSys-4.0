@@ -30,11 +30,13 @@ function do_relese_build() {
 
     echo "Detected $CORES CPU cores"
 
-
-    if [ -z "$NODE_NAME" ]; then
-        NODE_NAME="jenkins-slave-noname"
+    if [ -z "${TARGET_HOST}" ]; then
+        echo "Please set TARGET_HOST, e.g. ubuntu_14.04" >& 2
+        exit 1
     fi
-    simple_node_name=$(echo $NODE_NAME  | sed 's/jenkins-slave-\([a-zA-Z0-9_]*\)-[0-9]*$/\1/')
+
+    echo "TARGET_HOST=${TARGET_HOST}"
+
     mkdir build_result
 
     # it doesn't work with mxe and release build (without autoreconf), why??
@@ -60,7 +62,7 @@ function do_relese_build() {
    if [ "$mxe_build" = "yes" ]; then
        BIN_NAME=$(make package_version | grep package_version | sed 's/package_version=\(.*\)/\1/')-dev-winows-mxe
    else
-       BIN_NAME=$(make package_version | grep package_version | sed 's/package_version=\(.*\)/\1/')-dev-${simple_node_name}-$(uname -m)
+       BIN_NAME=$(make package_version | grep package_version | sed 's/package_version=\(.*\)/\1/')-dev-${TARGET_HOST}-$(uname -m)
    fi
 
    make install-strip DESTDIR=$PWD/$BIN_NAME
@@ -73,19 +75,26 @@ function do_relese_build() {
        mv $BIN_NAME.tar.gz build_result/
    fi
 
-   mathematica_build=(capdRedHom/programs/apiRedHom-mathematica/capdRedHomM-*.zip)
 
-   if [ -e "${mathematica_build}" ]; then
-       mathematica_build_dist=$(basename $(echo "$mathematica_build" | sed "s/\(.*\).zip/\1-${simple_node_name}.zip/"))
-       cp $mathematica_build build_result/$mathematica_build_dist
-   fi
+
+# We have mathematica in binary archive (prefix/libexec/capdredhom), do not need it here
+#   mathematica_build=(capdRedHom/programs/apiRedHom-mathematica/capdRedHomM-*.zip)
+
+#   if [ -e "${mathematica_build}" ]; then
+#       mathematica_build_dist=$(basename $(echo "$mathematica_build" | sed "s/\(.*\).zip/\1-${TARGET_HOST}.zip/"))
+#       cp $mathematica_build build_result/$mathematica_build_dist
+#   fi
 }
 
 #it is quite difficult to set PATH for jenkins-slave started by launchd on OSX.
 export PATH=/usr/local/bin:$PATH
 source "$(dirname $0)/ci_configure_flags.sh"
+source "$(dirname $0)/ci_funcs.sh"
+source "$(dirname $0)/ci_target_host.sh"
 
 export WITHOUT_CAPD_EXAMPLES=true
+
+
 
 env
 
@@ -98,29 +107,5 @@ else
   mxe_build="no"
 fi
 
-
-files=(*.tar.gz)
-
-if [ "1" != "${#files[*]}" ]; then
-   echo "ERROR: Found more than one file"
-   exit 1
-fi
-
-dist_archive=${files[0]}
-
-tar xzf ${dist_archive}
-
-dirs=(*/)
-
-if [ "1" != "${#dirs[*]}" ]; then
-   echo "ERROR: Found more than one directory"
-   exit 1
-fi
-
-dist=${dirs[0]}
-
-cd $dist
+go_to_dist
 do_relese_build
-
-cd ..
-mv $dist/build_result ./

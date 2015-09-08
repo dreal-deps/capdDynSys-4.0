@@ -8,7 +8,9 @@ AS_IF([test "$with_mathematica" == "auto"],[
              [$PATH:/Applications/Mathematica.app/Contents/MacOS/:/usr/local/Wolfram/Mathematica/10.0/Contents/Linux])
  AS_IF([test -n "$MATHEMATICA_SCRIPT"],[
 
+  rm -f conftest.$ac_ext
   echo 'Print[[$InstallationDirectory]]' > conftest.$ac_ext
+  cat conftest.$ac_ext # for debug, somehow MathematicaScript hangs
 
   mathematica_install_dir=`$MATHEMATICA_SCRIPT -script conftest.$ac_ext`
   AS_IF([test -e "$mathematica_install_dir"],[
@@ -16,6 +18,8 @@ AS_IF([test "$with_mathematica" == "auto"],[
     mathematica_path="$mathematica_install_dir"
 
     echo 'Print[[$SystemID]]' > conftest.$ac_ext
+    cat conftest.$ac_ext # for debug, somehow MathematicaScript hangs
+
     mathematica_system_id=`$MATHEMATICA_SCRIPT -script conftest.$ac_ext`
     AC_SUBST(mathematica_system_id)
    ], [

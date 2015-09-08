@@ -73,21 +73,6 @@ void BasicCnCurve<MatrixT>::setOrder(size_type order) {
 }
 
 template<class MatrixT>
-void BasicCnCurve<MatrixT>::derivative(BasicCnCurve& result) const {
-  throw std::logic_error("BasicCnCurve<MatrixT>::derivative not implemented");
-  /*
-  for(int i=0;i<=this->m_order;++i){
-    result.m_coefficientsAtCenter[i] = Real(i+1)*this->m_coefficientsAtCenter[i+1];
-    result.m_coefficients[i] = Real(i+1)*this->m_coefficients[i+1];
-    result.m_remainderCoefficients[i] = Real(i+1)*this->m_remainderCoefficients[i+1];
-
-    result.m_matrixCoefficients[i] = ScalarType(i+1)*this->m_matrixCoefficients[i+1];
-    result.m_matrixRemainderCoefficients[i] = ScalarType(i+1)*this->m_matrixRemainderCoefficients[i+1];
-  }
-*/
-}
-
-template<class MatrixT>
 BasicCnCurve<MatrixT>::~BasicCnCurve(){
   this->deallocate();
 }

@@ -6,7 +6,7 @@ set -e
 export PATH=/usr/local/bin:$PATH
 
 source "$(dirname $0)/ci_configure_flags.sh"
-export CXXFLAGS="-s"
+
 env
 
     if [ $(uname) == 'Darwin' ]; then
@@ -21,7 +21,7 @@ env
 
 function do_config() {
    rm -fr lib/* bin/*
-   ./configure --prefix $PWD/install/ || ( autoreconf -fi && ./configure --prefix $PWD/install/ )
+   ./configure --prefix $PWD/install/ CXXFLAGS="-Os -s" || ( autoreconf -fi && ./configure --prefix $PWD/install/ CXXFLAGS="-Os -s" ) #optimize size because Debian Whezzy linker cannot handle big files
 }
 
 function do_make() {
@@ -32,4 +32,4 @@ function do_make() {
 }
 
 
-do_make all
+do_make check

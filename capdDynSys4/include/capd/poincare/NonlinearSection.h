@@ -83,7 +83,7 @@ public:
   }
 
   using AbstractSection<MatrixT>::computeDT; // virtual function
-  void computeDT(const JetType& Px, const JetType& vfOnPx, JetType& dT, size_type) const
+  void computeDT(const JetType& /*Px*/, const JetType& /*vfOnPx*/, JetType& /*dT*/, size_type) const
   {
      throw std::runtime_error("NonlinearSection::computeDT is not implemented for jets");
   }

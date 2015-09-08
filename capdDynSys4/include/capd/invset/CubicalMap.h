@@ -20,7 +20,7 @@
 #include <vector>
 #include <fstream>
 #include "capd/vectalg/iobject.hpp"
-#include "capd/auxil/logger_deprecated_20141101.h"
+#include "capd/auxil/logger_deprecated.h"
 #include "capd/invset/Scope.h"
 
 namespace capd {

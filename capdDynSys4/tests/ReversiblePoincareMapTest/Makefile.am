@@ -5,7 +5,7 @@ TESTS=${check_PROGRAMS}
 
 
 ReversiblePoincareMapTest_SOURCES=ReversiblePoincareMapTest.cpp
-ReversiblePoincareMapTest_CXXFLAGS=${capdDynSys_CFLAGS} ${BOOST_CPPFLAGS}
+ReversiblePoincareMapTest_CXXFLAGS= ${AM_CXXFLAGS} ${capdDynSys_CFLAGS} ${BOOST_CPPFLAGS}
 ReversiblePoincareMapTest_libs=${capdDynSys_LIBS} ${BOOST_UNIT_TEST_FRAMEWORK_LIBS}
 ReversiblePoincareMapTest_LDFLAGS=${BOOST_UNIT_TEST_FRAMEWORK_LDFLAGS}
 ReversiblePoincareMapTest_LDADD=${ReversiblePoincareMapTest_libs}

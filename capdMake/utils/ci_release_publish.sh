@@ -9,6 +9,7 @@ version=$(echo $src_file | sed 's/.*capd.*-\(.*\)\.tar\.gz/\1/')
 
 sf_url="http://sourceforge.net/projects/capd/files/${version}"
 
+mkdir -p python bin src
 
 cat - > bin/README.md <<EOF
 This folder contains compiled CAPD.
@@ -41,9 +42,16 @@ Enjoy!
 
 EOF
 
+
 mv -n capd-release-osx/*/* bin/
 mv -n capd-release-osx-bottle/*/* bin/
-mv -n capd-release-linux/*/* bin/
+mv -n capd-release-linux*/*/* bin/
+
+for deb_dir in capd-release-deb-docker/*; do
+    system=$(echo $deb_dir | sed 's/.*docker_image=capd-api-\(.*\),.*/\1/')
+    mkdir -p bin/${system}
+    mv -n ${deb_dir}/* bin/${system}/
+done
 
 
 cp ./capdMake/osx/capd.rb.in bin/capd.rb

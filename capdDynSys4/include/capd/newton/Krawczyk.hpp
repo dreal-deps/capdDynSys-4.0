@@ -10,12 +10,13 @@
 // distributed under the terms of the GNU General Public License.
 // Consult  http://capd.wsb-nlu.edu.pl/ for details.
 
-#ifndef _CAPD_NEWTON_KRAWCZYK_HPP_ 
-#define _CAPD_NEWTON_KRAWCZYK_HPP_ 
+#ifndef _CAPD_NEWTON_KRAWCZYK_HPP_
+#define _CAPD_NEWTON_KRAWCZYK_HPP_
 
 #include <stdexcept>
 #include "capd/newton/Krawczyk.h"
 #include "capd/matrixAlgorithms/floatMatrixAlgorithms.hpp"
+#include "capd/vectalg/Matrix_Interval.hpp"
 
 namespace capd{
 namespace newton{
@@ -162,8 +163,8 @@ typename MapType::VectorType Krawczyk<MapType>::KrawczykOperator (
 
 
 template <typename MapType>
-typename MapType::VectorType KrawczykOperator (const typename MapType::VectorType& x0,  
-                                               const typename MapType::VectorType& X, 
+typename MapType::VectorType KrawczykOperator (const typename MapType::VectorType& x0,
+                                               const typename MapType::VectorType& X,
                                                MapType &F)
 {
 
@@ -199,4 +200,4 @@ typename MapType::VectorType KrawczykOperator (const typename MapType::VectorTyp
 
 }} // end namespace capd::newton
 
-#endif // _CAPD_NEWTON_KRAWCZYK_HPP_ 
+#endif // _CAPD_NEWTON_KRAWCZYK_HPP_

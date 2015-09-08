@@ -100,7 +100,7 @@ public :
     return "C1HOSet";
   }
 
-  void move(DynSysType& solver){
+  void move(DynSysType& /*solver*/){
     throw std::logic_error("C1HOSet: cannot move HO-type sets via abstract C0DynSys.");
   }
 

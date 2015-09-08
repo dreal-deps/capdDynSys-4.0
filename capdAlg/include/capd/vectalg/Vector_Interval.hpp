@@ -21,6 +21,49 @@
 namespace capd{
 namespace vectalg{
 
+// ---------------------------------------------------------------- //
+// general algorithms for vectors and matrices
+
+template<typename IVector>
+inline
+IVector leftVector(const IVector& u)
+{
+  return leftObject<IVector>(u);
+}
+
+template<typename IVector>
+inline
+IVector rightVector(const IVector& u)
+{
+  return rightObject<IVector>(u);
+}
+
+template<typename IVector>
+typename IVector::ScalarType maxDiam(const IVector&);
+
+template<typename IVector>
+IVector intervalBall(const IVector&, const typename IVector::ScalarType &r);
+
+template<typename IVector>
+typename IVector::ScalarType solveAffineInclusion(const IVector&,const IVector&,const IVector&);
+
+template<typename IVector>
+typename IVector::ScalarType solveAffineInclusion(const IVector&,const IVector&,const IVector&,int&);
+
+template<typename IVector>
+IVector intervalHull(const IVector&, const IVector&);
+
+template<typename IVector>
+IVector midVector(const IVector&);
+
+template<typename IVector>
+IVector diam(const IVector&);
+
+template<typename IVector>
+IVector intersection(const IVector&, const IVector&);
+
+
+
 //---------------  definitions for class intervalVector only -------------------//
 
 template<typename IVectorType>

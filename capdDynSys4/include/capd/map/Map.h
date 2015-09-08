@@ -164,7 +164,17 @@ public:
    * @param noParam - number of parameters
   */
   template<typename Function>
-  void reset(Function f, int dimIn, int dimOut, int noParam, size_type degree=1);
+  void reset(Function f, int dimIn, int dimOut, int noParam, size_type degree);
+
+  /**
+   * parses expression from given routine. It does not change actual maximal degree of jets that moght be propagated by this map.
+   * @param f - routine that defines function, its signature is: void (NodeType time, NodeType in[], int dimIn, NodeType out[], int dimOut, NodeType param[], int noParam)
+   * @param dimIn - number of input variables (dimension of domain)
+   * @param dimOut - number of output variables (dimension of codomain)
+   * @param noParam - number of parameters
+  */
+  template<typename Function>
+  void reset(Function f, int dimIn, int dimOut, int noParam);
 
   ImageVectorType operator()(const VectorType& u) const;                             ///< evaluates map at a given vector.
   ImageVectorType operator()(ScalarType t, const VectorType& u) const;               ///< evaluates at a given vector and for given time
@@ -305,7 +315,17 @@ void Map<MatrixT>::reset(Function f, int dimIn, int dimOut, int noParam, size_ty
 {
   this->clean();
   BaseFunction::reset(f,dimIn,dimOut,noParam);
-  this->realloc(this->m_degree);
+  this->realloc(degree);
+}
+
+// ------------------------------------------------------------------------------
+
+template<typename MatrixT>
+template<typename Function>
+inline
+void Map<MatrixT>::reset(Function f, int dimIn, int dimOut, int noParam)
+{
+  this->reset(f,dimIn,dimOut,noParam,this->m_degree);
 }
 
 // -----------------------------------------------------------------------

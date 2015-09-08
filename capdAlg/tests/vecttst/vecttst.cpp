@@ -9,9 +9,9 @@
 
 // Copyright (C) 2000-2005 by the CAPD Group.
 //
-// This file constitutes a part of the CAPD library, 
+// This file constitutes a part of the CAPD library,
 // distributed under the terms of the GNU General Public License.
-// Consult  http://capd.wsb-nlu.edu.pl/ for details. 
+// Consult  http://capd.wsb-nlu.edu.pl/ for details.
 
 #include <fstream>
 #include <stdexcept>
@@ -19,6 +19,7 @@
 #include "capd/vectalg/Vector.hpp"
 #include "capd/vectalg/Matrix.hpp"
 #include "capd/vectalg/Norm.hpp"
+#include "capd/vectalg/Vector_Interval.hpp"
 
 const int DIM = 3;
 using capd::interval;

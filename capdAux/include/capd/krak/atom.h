@@ -45,26 +45,26 @@ public:
    virtual ~atom(){}
    virtual atom *copy(void) = 0 ;
    virtual capd::krak::frstring descriptor(void) = 0 ;
-   virtual void put(std::ostream &s){}
+   virtual void put(std::ostream & /*s*/){}
    int virtual operator<=(atom &a2);
    int virtual operator>=(atom &a2);
    int virtual operator==(atom &a2);
 };//end class atom
 }} // the end of the namespace capd::krak
 
-inline int capd::krak::atom::operator<=(capd::krak::atom &a2)
+inline int capd::krak::atom::operator<=(capd::krak::atom & /*a2*/)
 {
    capd::krak::errorExit("Do not call functions from class atom");
    return 1;
 }
 
-inline int capd::krak::atom::operator>=(capd::krak::atom &a2)
+inline int capd::krak::atom::operator>=(capd::krak::atom & /*a2*/)
 {
    capd::krak::errorExit("Do not call functions from class atom");
    return 1;
 }
 
-inline int capd::krak::atom::operator==(capd::krak::atom &a2)
+inline int capd::krak::atom::operator==(capd::krak::atom & /*a2*/)
 {
    capd::krak::errorExit("Do not call functions from class atom");
    return 1;

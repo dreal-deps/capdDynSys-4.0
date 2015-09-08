@@ -24,7 +24,6 @@
 #include "capd/auxil/minmax.h"
 #include "capd/vectalg/Matrix.h"
 
-#include "capd/vectalg/Matrix_Interval.hpp"
 #include "capd/vectalg/RowVector.hpp"
 #include "capd/vectalg/ColumnVector.hpp"
 #include "capd/vectalg/Vector.hpp"

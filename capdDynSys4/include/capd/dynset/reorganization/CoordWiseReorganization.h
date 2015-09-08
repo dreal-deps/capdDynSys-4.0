@@ -6,15 +6,16 @@
 
 // Copyright (C) 2000-2005 by the CAPD Group.
 //
-// This file constitutes a part of the CAPD library, 
+// This file constitutes a part of the CAPD library,
 // distributed under the terms of the GNU General Public License.
-// Consult  http://capd.ii.uj.edu.pl/ for details. 
+// Consult  http://capd.ii.uj.edu.pl/ for details.
 
 #ifndef _CAPD_DYNSET_COORDWISEREORGANIZATION_H_
 #define _CAPD_DYNSET_COORDWISEREORGANIZATION_H_
 
 #include "capd/dynset/reorganization/FactorPolicy.h"
 #include "capd/dynset/DefaultPolicy.h"
+#include "capd/vectalg/Vector_Interval.hpp"
 
 namespace capd{
 namespace dynset{
@@ -84,7 +85,7 @@ public:
  void reorganize(Matrix& B, Matrix& invB, Vector& r, Matrix& C, Vector& r0) const {
     typedef typename Vector::ScalarType ScalarType;
     typedef Vector VectorType;
-     
+
     // index of coordinate with biggest diameter in r
      int rIndex = findBiggestCoord(diam(r));
        // index of coordinate in r0 and column in C which will be replaced
@@ -105,7 +106,7 @@ public:
      r[rIndex]= ScalarType(0.0);
   }
 
-//  
+//
   template<class SetType>
   bool isReorganizationNeeded(const SetType & result) const{
     typedef typename SetType::ScalarType ScalarType;
@@ -125,7 +126,7 @@ public:
     }
     return false;
   }
-  
+
   template<class Matrix, class Vector>
   bool reorganizeIfNeeded(Matrix& B, Matrix& invB, Vector& r, Matrix& C, Vector& r0) const
   {

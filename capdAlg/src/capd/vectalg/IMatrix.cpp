@@ -16,6 +16,8 @@
 #include "capd/vectalg/Dimension.h"
 #include "capd/vectalg/Vector.hpp"
 #include "capd/vectalg/Matrix.hpp"
+#include "capd/vectalg/Matrix_Interval.hpp"
+#include "capd/vectalg/Vector_Interval.hpp"
 
 namespace capd{
   namespace vectalg{
@@ -188,4 +190,13 @@ template Matrix<capd::DInterval, CAPD_DEFAULT_DIMENSION, CAPD_DEFAULT_DIMENSION>
 
 template Matrix<capd::DInterval, CAPD_DEFAULT_DIMENSION, CAPD_DEFAULT_DIMENSION> divideObjectScalar<>(Matrix<capd::DInterval, CAPD_DEFAULT_DIMENSION, CAPD_DEFAULT_DIMENSION> const&, capd::DInterval const&);
 
+
 }}  // end of namespace capd::vectalg
+
+namespace capd{
+namespace matrixAlgorithms{
+
+  template vectalg::Matrix<capd::DInterval, CAPD_DEFAULT_DIMENSION, CAPD_DEFAULT_DIMENSION> krawczykInverse<vectalg::Matrix<capd::DInterval, CAPD_DEFAULT_DIMENSION, CAPD_DEFAULT_DIMENSION> >(const vectalg::Matrix<capd::DInterval, CAPD_DEFAULT_DIMENSION, CAPD_DEFAULT_DIMENSION>&);
+
+}
+}

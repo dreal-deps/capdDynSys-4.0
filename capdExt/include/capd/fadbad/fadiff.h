@@ -35,6 +35,9 @@
 namespace fadbad
 {
 
+template<class T> 
+inline void __ignore_unused(const T&){}
+
 template <typename T, unsigned int N=0>
 class FTypeName // STACK-BASED
 {
@@ -218,19 +221,20 @@ public:
 			m_size = val.m_size;
 			m_diff = new T[m_size];
 		}
-		else
+		else    
 		{
 			USER_ASSERT(m_size==val.m_size,"derivative vectors not of same size "<<m_size<<","<<val.m_size);
 		}
 	}
 	void setDepend(const FTypeName<T>& val1, const FTypeName<T>& val2)
 	{
+                __ignore_unused(val2);
 		USER_ASSERT(val1.m_size==val2.m_size,"derivative vectors not of same size "<<val1.m_size<<","<<val2.m_size);
 		INTERNAL_ASSERT(val1.m_size>0,"lhs-input is not a dependent variable")
 		INTERNAL_ASSERT(val2.m_size>0,"rhs-input is not a dependent variable")
 		if (m_size==0)
 		{
-			m_size=val1.m_size;
+			m_size = val1.m_size;
 			m_diff = new T[m_size];
 		}
 		else

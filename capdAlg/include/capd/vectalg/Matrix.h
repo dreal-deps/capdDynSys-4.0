@@ -58,9 +58,6 @@ std::ostream &operator<<(std::ostream&, const Matrix<Scalar,rows,cols>&);
 template<typename Scalar, __size_type rows,__size_type cols>
 std::istream &operator>>(std::istream&, Matrix<Scalar,rows,cols>&);
 
-template<typename IMatrixType>
-IMatrixType midMatrix(const IMatrixType& v);
-
 // ########################################################################### //
 
 template<typename Scalar, __size_type rows, __size_type cols>

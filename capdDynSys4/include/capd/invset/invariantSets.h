@@ -16,7 +16,7 @@
 #ifndef _CAPD_INVSET_INVARIANTSETS_H_
 #define _CAPD_INVSET_INVARIANTSETS_H_
 #include "capd/invset/Scope.h"
-#include "capd/auxil/logger_deprecated_20141101.h"
+#include "capd/auxil/logger_deprecated.h"
 namespace capd{
 namespace invset{
 template<typename GraphT>

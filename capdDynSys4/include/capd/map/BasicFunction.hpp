@@ -220,6 +220,34 @@ void BasicFunction<Scalar>::setParameter(size_type d, const Scalar& value)
 // ------------------------------------------------------------------------------
 
 template<typename Scalar>
+typename BasicFunction<Scalar>::ScalarType 
+BasicFunction<Scalar>::getParameter(size_type d) const
+{
+  using namespace capd::autodiff;
+  const size_type vars = this->m_var.size();
+  if(this->m_indexOfFirstParam + d +1< vars)
+    return this->m_dag(VarNo(this->m_indexOfFirstParam+d+1),CoeffNo(0));
+  throw std::runtime_error("BasicFunction::getParameter: incorrect index of parameter");
+}
+
+/* _________________________________________________________________ */
+
+template<typename Scalar>
+typename BasicFunction<Scalar>::ScalarType 
+BasicFunction<Scalar>::getParameter(const std::string &name) const
+{
+  using namespace capd::autodiff;
+  for(unsigned i=this->m_indexOfFirstParam;i<this->m_var.size();++i)
+  {
+    if(this->m_var[i]!=name) continue;
+    return this->m_dag(VarNo(i),CoeffNo(0));
+  }
+  throw std::runtime_error("BasicFunction::getParameter: udfeined name of parameter.");  
+}
+
+// ------------------------------------------------------------------------------
+
+template<typename Scalar>
 void BasicFunction<Scalar>::setParameters(const Scalar* values, size_type d)
 {
   using namespace capd::autodiff;

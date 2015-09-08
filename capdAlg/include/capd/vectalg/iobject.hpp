@@ -21,7 +21,7 @@
 #include "capd/basicalg/doubleFun.h"
 #include "capd/auxil/minmax.h"
 #include "capd/basicalg/TypeTraits.h"
-#include "capd/intervals/IComplex.h"
+//#include "capd/intervals/IComplex.h"
 #include "capd/vectalg/iobject.h"
 
 namespace capd{

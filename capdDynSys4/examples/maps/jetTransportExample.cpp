@@ -17,7 +17,7 @@ using capd::autodiff::Node;
  * @param out is an array of dependent variables, i.e. out = f(in)
  * @param params - parameters of the map.
  */
-void _f(Node t, Node in[], int dimIn, Node out[], int dimOut, Node params[], int noParams)
+void _f(Node /*t*/, Node in[], int /*dimIn*/, Node out[], int /*dimOut*/, Node /*params*/[], int/* noParams*/)
 {
   Node d = sqr(in[0])+sqr(in[1]);
   out[0] = (sqr(in[0])+in[1])/d;

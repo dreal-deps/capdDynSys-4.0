@@ -65,15 +65,6 @@ void BasicC2Curve<MatrixT>::setOrder(size_type order) {
 }
 
 template<class MatrixT>
-void BasicC2Curve<MatrixT>::derivative(BasicC2Curve& result) const {
-  BaseCurve::derivative(result);
-  for(size_type i=0;i<=this->m_order;++i){
-    result.m_hessianCoefficients[i] = ScalarType(i+1)*this->m_hessianCoefficients[i+1];
-    result.m_hessianRemainderCoefficients[i] = ScalarType(i+1)*this->m_hessianRemainderCoefficients[i+1];
-  }
-}
-
-template<class MatrixT>
 BasicC2Curve<MatrixT>::~BasicC2Curve(){
   this->c2Deallocate();
 }

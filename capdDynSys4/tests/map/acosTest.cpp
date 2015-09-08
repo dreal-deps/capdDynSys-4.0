@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(xacos)
 
 using capd::autodiff::Node;
 
-void _f(Node t, Node in[], int dimIn, Node out[], int dimOut, Node params[], int noParams)
+void _f(Node /*t*/, Node in[], int /*dimIn*/, Node out[], int /*dimOut*/, Node params[], int /*noParams*/)
 {
   out[0] = params[0]-acos(-in[0]*in[1]);
 }

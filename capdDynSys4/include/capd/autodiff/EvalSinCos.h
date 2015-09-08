@@ -534,7 +534,7 @@ namespace SinConst{
   }
 
   template<class T>
-  inline void eval(const unsigned degree, const T* left, T* right, T* result, const unsigned dim, const unsigned order, const unsigned coeffNo)
+  inline void eval(const unsigned /*degree*/, const T* left, T* right, T* result, const unsigned /*dim*/, const unsigned /*order*/, const unsigned coeffNo)
   {
     evalC0(left,right,result,coeffNo);
   }
@@ -547,7 +547,7 @@ namespace SinConst{
   }
 
   template<class T>
-  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, T* right, T* result, const unsigned dim, const unsigned order)
+  inline void evalHomogenousPolynomial(const unsigned degree, const T* left, T* right, T* result, const unsigned /*dim*/, const unsigned /*order*/)
   {
     if(degree==0)
     {
@@ -575,7 +575,7 @@ namespace SinTime{
   }
 
   template<class T>
-  inline void eval(const unsigned degree, const T* left, T* right, T* result, const unsigned dim, const unsigned order, const unsigned coeffNo)
+  inline void eval(const unsigned /*degree*/, const T* left, T* right, T* result, const unsigned /*dim*/, const unsigned /*order*/, const unsigned coeffNo)
   {
     evalC0(left,right,result,coeffNo);
   }
@@ -603,7 +603,7 @@ namespace SinFunTime{
   }
 
   template<class T>
-  inline void eval(const unsigned degree, const T* left, T* right, T* result, const unsigned dim, const unsigned order, const unsigned coeffNo)
+  inline void eval(const unsigned /*degree*/, const T* left, T* right, T* result, const unsigned /*dim*/, const unsigned /*order*/, const unsigned coeffNo)
   {
     Sin::evalC0(left,right,result,coeffNo);
   }

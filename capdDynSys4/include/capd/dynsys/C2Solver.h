@@ -23,6 +23,7 @@
 #include "capd/dynsys/Solver.h"
 #include "capd/dynsys/C2DynSys.h"
 #include "capd/dynsys/BasicC2Solver.h"
+#include "capd/diffAlgebra/C2TimeJet.h"
 
 namespace capd{
 namespace dynsys{
@@ -49,6 +50,7 @@ public:
   typedef Solver<MapT,StepControlT,CurveT> BaseTaylor;
   typedef CurveT SolutionCurve;
   typedef typename MatrixType::size_type size_type;
+  typedef diffAlgebra::C2TimeJet<MatrixType> C2TimeJetType;
 
   C2Solver(MapType& vectorField, size_type order);
 
@@ -76,6 +78,10 @@ public:
         MatrixType& o_jacRem,
         HessianType& o_hessianRem
     );
+  virtual void computeRemainder(ScalarType t, const VectorType& xx, C2TimeJetType& o_enc, C2TimeJetType& o_rem);
+  using BaseTaylor::computeRemainder;
+  
+  void sumTaylorSeries(C2TimeJetType& o_phi);
 
   ScalarType getStep() const{
     return BaseC2Taylor::getStep();
@@ -113,7 +119,7 @@ public:
     BaseTaylor::setCurrentTime(a_time);
   }
 
-  const ScalarType& getCurrentTime(const ScalarType& a_time) const
+  const ScalarType& getCurrentTime() const
   {
     return BaseTaylor::getCurrentTime();
   }

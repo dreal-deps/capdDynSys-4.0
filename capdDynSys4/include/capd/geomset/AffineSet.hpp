@@ -19,6 +19,7 @@
 #include "capd/vectalg/iobject.hpp"
 #include "capd/geomset/AffineSet.h"
 #include "capd/matrixAlgorithms/floatMatrixAlgorithms.hpp"
+#include "capd/vectalg/Matrix_Interval.hpp"
 
 #include <sstream>
 

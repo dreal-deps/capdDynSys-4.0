@@ -122,7 +122,7 @@ public:
   /// TODO
 //  void clearCoefficients();
 
-  VectorType enclosure(const ScalarType& t, const VectorType& x){
+  VectorType enclosure(const ScalarType& /*t*/, const VectorType& /*x*/){
     throw std::logic_error("BasicCnTaylor::enclosure - cannot compute enclosure, this is a nonrigorous solver. Implementation only for satisfying an required interface of StepControl");
   }
   void adjustTimeStep(const ScalarType& newStep); ///< sets time step but does not change step control settings (compare setStep)
@@ -134,7 +134,10 @@ protected:
   typename Multiindex::IndicesSet m_listIndices;
 
   void operator=(const BasicCnSolver&){}
-  BasicCnSolver(const BasicCnSolver& s) : CurveT(0,0,1,1,1){}
+  BasicCnSolver(const BasicCnSolver& s) 
+    : capd::dynsys::StepControlInterface<StepControlT,typename MapT::ScalarType>(s.getStepControl()), 
+      CurveT(0,0,1,1,1)
+  {}
 
   void setInitialCondition(const JetType& coeff);
   void computeTimeStep(const VectorType& v);

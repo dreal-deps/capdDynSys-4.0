@@ -59,6 +59,8 @@ public:
   void setParameter(const std::string &name, const ScalarType& value); ///< sets new value of a parameter. If parameter not found there is no effect.
   void setParameters(const Scalar* values, size_type d);                ///< simultaneously sets values of many parameters. It is assumed that given vector contains values of subsequent parameters.
 
+  ScalarType getParameter(size_type d) const;
+  ScalarType getParameter(const std::string& name) const;
   void setCurrentTime(const ScalarType& a_time) const;  ///< sets actual value of variable that represents time in an ODE.
   const ScalarType& getCurrentTime() const;             ///< returns actual value of variable that represents time in an ODE
   void differentiateTime() const;                       ///< sets first derivative of time with respect to time equal to 1
