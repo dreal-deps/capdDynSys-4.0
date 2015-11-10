@@ -19,6 +19,7 @@
 #include "capd/intervals/IntervalTraits.h"
 #include <iostream>
 #include <cstdio>
+#include <limits>
 
 namespace capd{
 namespace intervals{
@@ -450,11 +451,15 @@ Interval< T_Bound, T_Rnd> operator /(const Interval< T_Bound, T_Rnd>& A_iv1,
       T_Rnd::roundUp();
       right = A_iv1.m_right / A_iv2.m_left;
     }
+  } else if (A_iv1.m_left == 0.0 && A_iv1.m_right == 0.0) {
+      left = 0.0;
+      right = 0.0;
+  } else {  //  (??) (-+)
+    // throw IntervalError<T_Bound>("Interval Error *** Possible division by zero.",
+    //                              A_iv2.m_left, A_iv2.m_right);
+    left  = -std::numeric_limits<T_Bound>::infinity();
+    right =  std::numeric_limits<T_Bound>::infinity();
   }
-  else //  (??) (-+)
-    throw IntervalError<T_Bound>("Interval Error *** Possible division by zero.",
-                                  A_iv2.m_left, A_iv2.m_right);
-
   checkInterval(" operator* ", left, right);
   return (Interval< T_Bound, T_Rnd>(left, right));
 
