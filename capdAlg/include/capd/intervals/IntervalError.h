@@ -53,10 +53,12 @@ public:
     std::ostringstream str;
     str << "Interval error: " << std::runtime_error::what() 
         << "\n   left=" << m_left << "  right=" << m_right;
-    return str.str().c_str();
+    m_temp_buf = str.str();
+    return m_temp_buf.c_str();
   }
 
-protected: 
+protected:
+  mutable std::string m_temp_buf;
   T_Bound  m_left, 
            m_right;
 };  // IntervalError
