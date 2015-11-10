@@ -289,14 +289,14 @@ Interval< T_Bound, T_Rnd> power(const Interval< T_Bound, T_Rnd> &a, const Interv
 template < typename T_Bound, typename T_Rnd>
 Interval< T_Bound, T_Rnd> sqrt(const Interval< T_Bound, T_Rnd> &x)
 {
-  if( x.leftBound() < 0 )
-    throw IntervalError<T_Bound>(" sqrt(x): Interval x must be nonnegative. \n", x.leftBound(), x.leftBound());
+  if( x.rightBound() < 0 )
+    throw IntervalError<T_Bound>(" sqrt(x): Interval x must be nonnegative. \n", x.leftBound(), x.rightBound());
 
 // Strange: needed for T_Bound=double, declaration outside the function causes errors in gcc 4.2.1
 using std::sqrt;
 
   T_Rnd::roundDown();
-  T_Bound l = sqrt(x.leftBound());
+  T_Bound l = sqrt(std::max(0.0, x.leftBound()));
 
   T_Rnd::roundUp();
   T_Bound r = sqrt(x.rightBound());
