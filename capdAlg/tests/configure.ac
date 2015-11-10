@@ -14,6 +14,7 @@ top_capd_build=./../..
 m4_include([../../capdMake/make/configure_common.ac])
 AM_INIT_AUTOMAKE(capd_automake_init_options)
 m4_include([../../capdMake/make/configure_common_mpfr.ac])
+m4_include([../../capdMake/make/configure_common_cxx11.ac])
 
 boost_optional=yes
 m4_include([../../capdMake/make/configure_common_boost.ac])
@@ -25,6 +26,8 @@ AC_CONFIG_FILES([intvtst/Makefile])
 AC_CONFIG_FILES([matrixAlgorithms/Makefile])
 AC_CONFIG_FILES([vecttst/Makefile])
 AC_CONFIG_FILES([mptests/Makefile])
+AC_CONFIG_FILES([basicalg/Makefile])
+
 
 AC_PROG_CXX
 LT_INIT

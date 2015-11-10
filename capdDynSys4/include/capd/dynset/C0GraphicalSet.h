@@ -31,109 +31,81 @@ namespace dynset{
 ///    void show(C0Set & set)
 ///  which can e.g. draws on a screen or logs the set position to a file.
 //////////////////////////////////////////////////////////////////////////////////
-template<typename MatrixT, typename OutputT>
-class C0GraphicalSet : public C0Set<MatrixT>{
+  
+template<typename BaseSetT, typename OutputT>
+class C0GraphicalSet : public BaseSetT{
 public:
-  typedef MatrixT MatrixType;
-  typedef typename MatrixType::RowVectorType VectorType;
+  typedef BaseSetT BaseSet;
+  typedef typename BaseSet::MatrixType MatrixType;
+  typedef typename BaseSet::VectorType VectorType;
   /// @}
   typedef typename MatrixType::ScalarType ScalarType;
   typedef capd::vectalg::Norm<VectorType,MatrixType> NormType;
-  typedef capd::dynset::C0Set<MatrixType> SetType;
+  typedef typename BaseSet::SetType SetType;
+  typedef typename C0Set<MatrixType>::DynSysType DynSysType;
   typedef OutputT Output;
 
-  C0GraphicalSet(SetType * pSet, Output * output)
-    : SetType(VectorType(*pSet),VectorType(*pSet),pSet->getCurrentTime()),
-      m_set(pSet), m_output(output)
-  {}
-
-  C0GraphicalSet(SetType & set, Output & output)
-    : SetType(VectorType(set),VectorType(set),set.getCurrentTime()),
-      m_set(&set), m_output(&output)
-  {}
-  C0GraphicalSet(const C0GraphicalSet &c){
-    m_set = c.m_set->clone();
+  C0GraphicalSet(const BaseSet & set, Output * output = 0)
+    : BaseSet(set),  
+      m_output(output) {
+  }
+  
+  C0GraphicalSet(const BaseSet & set, Output & output)
+    : BaseSet(set),  
+      m_output(&output) {
+  }
+  C0GraphicalSet(const C0GraphicalSet &c) : BaseSet(c){
     m_output = c.m_output;
   }
-  /// Destructor do not delete any objects (they can be shared), it up to user if they are static or dynamic
-  ~C0GraphicalSet(){
+  
+  void move(DynSysType & dynsys){
+    BaseSet::move(dynsys);
+    if(m_output) m_output->show(*this);
   }
 
-  C0Set<MatrixType>* clone(void) {
-    return new C0GraphicalSet(m_set->clone(), m_output);
-  }
-  C0Set<MatrixType>* fresh(void) {
-    return new C0GraphicalSet(m_set->fresh(), m_output);
-  }
-
-  C0Set<MatrixType>* cover(const VectorType& v) {
-    return new C0GraphicalSet(m_set->cover(v), m_output);
+  void move(DynSysType & dynsys, C0GraphicalSet & result){
+    //ResultType* set = dynamic_cast<ResultType*>(m_set);
+    BaseSet::move(dynsys,result);
+    if(m_output) m_output->show(result);
   }
 
-  VectorType center(void) {
-    return m_set->center();
-  }
+//  VectorType affineTransformation(const MatrixType& A, const VectorType& v) const {
+//    return BaseSet::affineTransformation(A, v);
+//  }
 
-  void move(capd::dynsys::DynSys<MatrixType>& dynsys){
-    m_set->move(dynsys);
-    m_output->show(*m_set);
-  }
+//  std::string show(void) const{
+//    return m_set->show();
+//  }
 
-  template<class ResultType>
-  void move(capd::dynsys::DynSys<MatrixType>& dynsys, ResultType& result){
-    ResultType* set = dynamic_cast<ResultType*>(m_set);
-    set->move(dynsys,result);
-    m_output->show(result);
-  }
+//  operator VectorType() const{
+//    return static_cast<VectorType>(*m_set);
+//  }
 
-  VectorType affineTransformation(const MatrixType& A, const VectorType& v) const {
-    return m_set->affineTransformation(A, v);
-  }
-
-  std::string show(void) const{
-    return m_set->show();
-  }
-
-  operator VectorType() const{
-    return static_cast<VectorType>(*m_set);
-  }
-
-  C0GraphicalSet &operator=(const VectorType &v){
-    (*m_set) = v;
+  C0GraphicalSet &operator = (const VectorType &v){
+    this->BaseSet::operator=(v);
     return *this;
   }
-  C0GraphicalSet &operator=(const C0GraphicalSet &S){
-    m_set = S.m_set;
-    m_output = S.m_output;
-    return *this;
-  }
-  SetType & getSet(){
-    return *m_set;
-  }
+
+//  C0GraphicalSet &operator=(const C0GraphicalSet &S){
+//    m_set = S.m_set;
+//    m_output = S.m_output;
+//    return *this;
+//  }
+  
+//  SetType & getSet(){
+//    return *m_set;
+//  }
+  
   Output & getOutput(){
     return *m_output();
   }
-
-  const ScalarType getCurrentTime() const{
-    return m_set->getCurrentTime();
+  Output & setOutput(Output & output){
+    Output * old_output = m_output;
+    m_output = output;
+    return *old_output;
   }
-  ScalarType& refCurrentTime() {
-    return m_set->refCurrentTime();
-  }
-  void setCurrentTime(const ScalarType& t){
-    m_set->setCurrentTime(t);
-  }
-  const VectorType& getLastEnclosure() const{
-    return m_set->getLastEnclosure();
-  }
-
 protected:
-  void setLastEnclosure(const VectorType& enc){
-    m_set->setLastEnclosure(enc);
-  }
-  SetType * m_set;
   Output * m_output;
-
 };
 /// @}
 

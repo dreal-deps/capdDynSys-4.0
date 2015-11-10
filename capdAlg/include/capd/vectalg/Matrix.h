@@ -96,8 +96,9 @@ public:
   Matrix(const Scalar (&data)[dataRows][dataCols]);
 
 #ifdef CAPD_HAVE_CXX11
-   Matrix& operator= (const Matrix&& a);         //move a matrix
-   Matrix(const Matrix&& m);                     // move constructor
+   Matrix& operator= (Matrix&& a) = default;         //move a matrix
+   Matrix(Matrix&& m)= default;                     // move constructor
+   Matrix(std::initializer_list< std::initializer_list<ScalarType> > l);
 #endif
 
 

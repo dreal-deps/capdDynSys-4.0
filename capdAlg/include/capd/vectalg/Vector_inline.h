@@ -100,6 +100,25 @@ template<typename Scalar,__size_type dim>
 inline Vector<Scalar,dim>::Vector(size_type a_Dimension,bool) : ContainerType(a_Dimension,true)
 {}
 
+#ifdef CAPD_HAVE_CXX11
+//template<typename Scalar,__size_type dim>
+//inline Vector<Scalar,dim>::Vector(Vector&& v) : ContainerType(std::move(v)) {
+//}
+//template<typename Scalar,__size_type dim>
+//inline Vector<Scalar,dim> & Vector<Scalar,dim>::operator=(Vector && v) {
+//  ContainerType::operator=(std::move(v));
+//  return *this;
+//}
+template<typename Scalar,__size_type dim>
+inline Vector<Scalar,dim>::Vector(std::initializer_list<ScalarType> l) 
+  : ContainerType(l.size(), false) { 
+  if(l.size() != this->size())
+    throw std::range_error("Vector : initializer list has size different from vector size.");
+  std::copy(l.begin(), l.end(), this->begin());
+}
+#endif
+
+
 template<typename Scalar,__size_type dim>
 inline Vector<Scalar,dim>& Vector<Scalar,dim>::operator+=(const Vector<Scalar,dim>& v){
    return addAssignObjectObject < Vector<Scalar,dim>, Vector<Scalar,dim> > (*this,v);

@@ -31,23 +31,18 @@ namespace vectalg{
   /// Move constructor
 template<typename Scalar>
 Container<Scalar,0>::Container(Container && a_container)
-  : data(a_container.data), capacity(a_container.capacity)
-{
+  : data(a_container.data), capacity(a_container.capacity) {
   a_container.data = 0;
   a_container.capacity = 0;
-//  std::cout << "\n Move constr \n";
 }
 
 template<typename Scalar>
-Container<Scalar,0>& Container<Scalar,0>::operator=(Container&& a_c)
-{
-  if(&a_c != this)
-  {
+Container<Scalar,0>& Container<Scalar,0>::operator=(Container&& a_c) {
+//  Self assigment check removed: it is rare.  
+//  if(&a_c != this) {
     std::swap(capacity, a_c.capacity);
     std::swap(data, a_c.data);
-  }
-
- // std::cout << "\n Move = \n";
+//  }
   return *this;
 }
 #endif

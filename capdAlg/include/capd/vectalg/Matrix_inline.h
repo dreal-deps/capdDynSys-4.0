@@ -186,20 +186,30 @@ inline Matrix<Scalar,rows,cols>& Matrix<Scalar,rows,cols>::operator=(const Matri
 
 
 #ifdef CAPD_HAVE_CXX11
+//
+//template<typename Scalar, __size_type rows,__size_type cols>
+//inline Matrix<Scalar,rows,cols>::Matrix(const Matrix&& a_m)
+//  : ContainerType(a_m) {
+////  : ContainerType(std::forward<ContainerType>(a_m)) {
+//}
+//
+//template<typename Scalar, __size_type rows,__size_type cols>
+//inline Matrix<Scalar,rows,cols>& Matrix<Scalar,rows,cols>::operator=(const Matrix&& a) {
+//  //ContainerType::operator= ( std::forward<ContainerType>(a));
+//  ContainerType::operator= ( static_cast< const ContainerType &&>(a));
+//  return *this;
+//}
 
 template<typename Scalar, __size_type rows,__size_type cols>
-inline Matrix<Scalar,rows,cols>::Matrix(const Matrix&& a_m)
-  : ContainerType(a_m) {
-//  : ContainerType(std::forward<ContainerType>(a_m)) {
-}
-
-template<typename Scalar, __size_type rows,__size_type cols>
-inline Matrix<Scalar,rows,cols>& Matrix<Scalar,rows,cols>::operator=(const Matrix&& a) {
-  //ContainerType::operator= ( std::forward<ContainerType>(a));
-  ContainerType::operator= ( static_cast< const ContainerType &&>(a));
-  return *this;
-}
-
+inline Matrix<Scalar,rows,cols>::Matrix(std::initializer_list< std::initializer_list<ScalarType> > l) 
+  : ContainerType(l.size(), l.begin()->size(), false) {
+    iterator dest = this->begin();
+    for(const auto & v: l){
+      if(v.size() != this->numberOfColumns())
+        throw std::range_error("Matrix constructor: Rows in initializer list do not have equal sizes.");
+      dest = std::copy(v.begin(), v.end(), dest);
+    }
+ }
 
 #endif
 // ----------------------------- indexing ---------------------------------------------

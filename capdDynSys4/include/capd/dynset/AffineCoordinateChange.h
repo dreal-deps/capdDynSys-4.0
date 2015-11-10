@@ -37,7 +37,7 @@ public:
      return m_y0 + m_B * (x - m_x0);
   }
   /// returns derivative of coordinate change
-  MatrixType operator[](const VectorType &x) const{
+  MatrixType operator[](const VectorType & /*x*/) const{
     return m_B;
   }
   AffineCoordinateChange inverse() const {

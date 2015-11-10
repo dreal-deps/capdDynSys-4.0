@@ -10,6 +10,8 @@
 #include "capd/dynset/C0GraphicalSet.h"
 
 using namespace capd;
+using capd::dynset::C0GraphicalSet;
+using capd::dynset::C1GraphicalSet;
 
 template <typename SetType>
 class GraphicalOutput{
@@ -30,9 +32,8 @@ private:
   int m_freqency;
   int m_count;
 };
-typedef capd::dynset::C1GraphicalSet<IMatrix, GraphicalOutput<C1Set> > C1GraphicalSet;
-typedef capd::dynset::C0GraphicalSet<IMatrix, GraphicalOutput<C0Set> > C0GraphicalSet;
 
+typedef GraphicalOutput<C0Set> C0Output;
 
 double minx=-2.6;
 double maxx=2.6;
@@ -126,18 +127,24 @@ std::vector<IVector> getCorners(const IVector &center, const IMatrix &B, const I
 void makeTests(IOdeSolver &T, const IVector & x0)
 {
 
+  GraphicalOutput<C0Set> out0(fr[0], RED);
+  GraphicalOutput<C0Set> out1(fr[1], BLUE);
+  GraphicalOutput<C0Set> out2(fr[2], GREEN);
+  GraphicalOutput<C0Set> out3(fr[3], BLACK);
+  
+  
   fr[0] << "C0GraphicalSet(Intv2Set)";
-  C0GraphicalSet set0(new C0Intv2Set(x0), new GraphicalOutput<C0Set>(fr[0], RED));
+  C0GraphicalSet<C0Intv2Set,C0Output> set0(C0Intv2Set(x0), out0);
 
   fr[1] << "C0GraphicalSet(C0RectSet)";
-  C0GraphicalSet set1(new C0RectSet(x0), new GraphicalOutput<C0Set>(fr[1], BLUE));
+  C0GraphicalSet<C0RectSet,C0Output> set1(C0RectSet(x0), out1);
 
   fr[2] << "C0GraphicalSet(C0Rect2Set)";
-  C0GraphicalSet set2(new C0Rect2Set(x0), new GraphicalOutput<C0Set>(fr[2],GREEN));
+  C0GraphicalSet<C0Rect2Set,C0Output> set2(C0Rect2Set(x0), out2);
 
-  fr[3] << "C1GraphicalSet(C1Rect2Set)";
-  C1GraphicalSet set3(new C1Rect2Set(x0), new GraphicalOutput<C1Set>(fr[3],BLACK));
-
+  fr[3] << "C0GraphicalSet(C0TripletonSet)";
+  C0GraphicalSet<C0TripletonSet,C0Output> set3(C0TripletonSet(x0), out3);
+ 
 
   int s;
   do{

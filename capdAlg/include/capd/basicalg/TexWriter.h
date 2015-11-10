@@ -21,6 +21,7 @@
 #include <deque>
 #include <iostream>
 #include <cassert>
+#include "capd/intervals/lib.h"
 #ifdef __USE_FILIB__
 #include "capd/filib/Interval.h"
 #endif
@@ -30,10 +31,12 @@ namespace capd {
 using capd::rounding::setRounding;
 
 template<typename T>
-std::string printToString(const T & data, int precision){
+std::string printToString(const T & data, int precision, bool fixed = false){
   std::ostringstream buf;
   buf.precision(precision);
-  buf << std::fixed << data;
+  if(fixed) 
+    buf << std::fixed;
+  buf << data;
   return buf.str();
 }
 
@@ -75,6 +78,9 @@ public:
     setEquationSymbol(NoEquation);
     setPlusSymbol(StandardPlus);
   }
+  // Returns number of digits before decimal point in given number n
+  static inline int numberOfDigits(double n){  return abs(n)>1 ? floor( log10( abs( n ) ) ) + 1 : 1; }
+  
   template <typename T>
   T putDigits(std::deque<int> & container, int & sign, T number, int n, int precision);
   void writeSciInterval(const std::deque<int> & dl, const std::deque<int> & dr,
@@ -83,6 +89,9 @@ public:
                         int p, int l_sign, int intDigits, int prec);
   void writeTxtInterval(const std::deque<int> & dl, const std::deque<int> & dr,
                         int p, int l_sign, int intDigits, int prec);
+  template<typename Float>
+  static void computeNumberOfDigitsForInterval(Float & l, Float & r, int prec, FloatStyle style, int & n, int & len, int & exponent);
+ 
   template<typename IntervalType>
   void writeInterval(const IntervalType& intv);
   template <typename VectorType>
@@ -115,7 +124,7 @@ public:
   
   /// Sets style of imaginary symbol i.
   TexWriter &  setISymbol(ImStyle i){
-      iSymbol = (i==ImExplicit)? "\\ii " : "\\mbox{i\\,}";
+      iSymbol = (i!=ImExplicit)? "\\ii " : "\\mbox{i\\,}";
       return *this;
   }
   /// sets imaginary symbol i.
@@ -211,6 +220,7 @@ TexWriter & operator<< (TexWriter & o, const capd::intervals::Interval<T, R> & x
   o.writeInterval(x);
   return o;
 }
+
 #ifdef __USE_FILIB__
 template <typename T, filib::RoundingStrategy R, filib::IntervalMode M>
 TexWriter & operator<< (TexWriter & o, const capd::filib::Interval<T, R, M> & x){
@@ -218,6 +228,12 @@ TexWriter & operator<< (TexWriter & o, const capd::filib::Interval<T, R, M> & x)
   return o;
 }
 #endif
+
+TexWriter & operator<< (TexWriter & o, const capd::DInterval & x){
+  o.writeInterval(x);
+  return o;
+}
+
 template<typename T>
 TexWriter & operator<< (TexWriter & o, const std::complex<T> & x){
   o << x.real();
@@ -228,7 +244,7 @@ TexWriter & operator<< (TexWriter & o, const std::complex<T> & x){
   return o;
 }
 
-template<typename T, int dim>
+template<typename T, capd::vectalg::__size_type dim>
 TexWriter & operator<< (
     TexWriter & o,
     const capd::vectalg::Vector<T, dim> & x){
@@ -241,9 +257,7 @@ inline TexWriter & operator<<(TexWriter & o, std::ostream& (*fn)(std::ostream&))
     return o;
 }
 
-inline int numberOfDigits(int n){
-  return n!=0 ? floor( log10( abs( n ) ) ) + 1 : 0;
-}
+
 
 //inline std::ostream & operator << (std::ostream & o , const std::deque<int> & c){
 //  for(unsigned int i=0; i < c.size(); i++)
@@ -263,26 +277,30 @@ T TexWriter::putDigits(
     std::deque<int> & container,   ///< [out] container where digits will be stored
     int & sign,                    ///< [out] returns sign of number
     T number,                      ///< [in]  number to be parsed
-    int nDecDigits,                ///< [in]  number of decimal digits of a given number to be stored in container
+    int nDecDigits,                ///< [in]  number of decimal digits (before decimal point) of a given number to be stored in container
     int nDigits                    ///< [in]  total number of digits to be stored in container
 ){
 
+//  std::cout << "putDigits  number = " << number << "\n nDecDigits : " << nDecDigits << "\n nDigits : " << nDigits << "\n"; 
+  if(nDecDigits<0 || nDigits<0)
+    throw std::range_error("putDigits: number of digits is negative.");
+  
   sign = (number==0)? 0 : (number < 0)? -1 : 1;
 
   if(sign == -1)
     number = -number;
 
-  int intPart = toInt(number);
-  //std::cout <<"\n number : "<< number <<  "\n  intPart " << intPart;
+  long long intPart = static_cast<long long>(toDouble(number));
+//  std::cout <<"\n number : "<< number <<  "\n  intPart " << intPart;
 
-  number -= intPart;
-  //std::cout <<"\n number : "<< number ;
+  number -= (double)intPart;
+//    std::cout <<"\n number : "<< number ;
 
   int i=0;
   for(; i<nDecDigits; ++i){
     container.push_front(intPart % 10);
     intPart /= 10;
-    //std::cout <<"\n i : "<< i <<  "  intPart " << intPart << " digit " << container[0];
+//    std::cout <<"\n i : "<< i <<  "  intPart " << intPart << " digit " << container[0];
   }
 
   for(; i<nDigits; ++i){
@@ -290,7 +308,7 @@ T TexWriter::putDigits(
     int digit = toInt(number);
     container.push_back(digit);
     number -= digit;
-    //std::cout << "\n i : "<< i <<  "  number " << number << " digit " << container[i];
+//    std::cout << "\n i : "<< i <<  "  number " << number << " digit " << container[i];
   }
   container.resize(nDigits);
   return (nDecDigits<=nDigits)? number : T(1.0);
@@ -526,7 +544,61 @@ void TexWriter::writeTxtInterval(
  }
  out << "]";
 }
-
+/**
+ * For given left and right end of interval and expected precision depending on style chosen
+ * it computes needed total number of digits, number of digits before decimal point. 
+ * Additionally for FloatSci style it returns common exponent and changes endpoints so 
+ * that at least one of them is in the form 1.xxxxxx... (second can be 0.00xxxx)  
+ */
+template<typename Float>
+void TexWriter::computeNumberOfDigitsForInterval(
+    Float & leftEnd, 
+    Float & rightEnd, 
+    int precision, 
+    FloatStyle style,
+    int & numberOfDecDigits, 
+    int & totalNumberOfDigits, 
+    int & exponent
+){
+ 
+  int nl = numberOfDigits(toDouble(leftEnd));
+  int nr = numberOfDigits(toDouble(rightEnd));
+  numberOfDecDigits = std::max(nl, nr);
+  
+  switch(style){
+    case FloatSci:
+      totalNumberOfDigits = precision + 1;
+      if(capd::abs(leftEnd)>=1 || capd::abs(rightEnd)>=1){
+        exponent = numberOfDecDigits - 1;
+        Float divisor = power(Float(10.), exponent);
+        setRounding<Float>(capd::rounding::RoundDown);
+        leftEnd/=divisor;
+        setRounding<Float>(capd::rounding::RoundUp);
+        rightEnd/=divisor;
+        
+      } else {
+        // we determine negative exponent
+        exponent = 0;
+        while(capd::abs(leftEnd)<1 && capd::abs(rightEnd)<1) {
+          --exponent;
+          setRounding<Float>(capd::rounding::RoundDown);
+          leftEnd*=10;
+          setRounding<Float>(capd::rounding::RoundUp);
+          rightEnd*=10;
+          std::cout << "\n e " << exponent << " l " << leftEnd << " r " << rightEnd << "\n";
+        }
+      }
+      numberOfDecDigits=1;
+      break;
+    case FloatFix:
+    case FloatTxt:
+      totalNumberOfDigits = numberOfDecDigits + precision;
+      break;
+    case FloatFix2:
+      totalNumberOfDigits = std::max(numberOfDecDigits, precision);
+      break;
+  }
+}
 template<typename IntervalType>
 void TexWriter::writeInterval(const IntervalType& intv){
 
@@ -537,67 +609,53 @@ void TexWriter::writeInterval(const IntervalType& intv){
     out << printToString(l, out.precision());
     return;
   }
+  bool isNegative = false;
   if(r<=0){
     Float t = r;  r = -l;   l = -t;
-    out << "-";
+    isNegative = true;
   }
-  int nl = numberOfDigits(toInt(l));
-  int nr = numberOfDigits(toInt(r));
-  int n = std::max(nl, nr);
-  int prec = out.precision();
-  int p = 0;
-  int len = 0;
-
-  switch(floatStyle){
-    case FloatSci:
-      len = prec + 1;
-      if(n>0){
-        p = n - 1;
-      } else {
-        // we determine negative exponent
-        while(capd::abs(l)<1 && capd::abs(r)<1) {
-          --p;
-          setRounding<Float>(capd::rounding::RoundDown);
-          l*=10;
-          setRounding<Float>(capd::rounding::RoundUp);
-          r*=10;
-        }
-        n=1;
-      }
-      break;
-    case FloatFix:
-    case FloatTxt:
-      len = n + prec;
-      break;
-    case FloatFix2:
-      len = std::max(n, prec);
-      break;
+//  int nl = numberOfDigits(toInt(l));
+//  int nr = numberOfDigits(toInt(r));
+  
+  int n=0;
+  int len=0;
+  int exponent=0;
+  computeNumberOfDigitsForInterval(l, r, precision(), floatStyle, n, len, exponent);
+  
+  if(n > std::numeric_limits<long long>::digits10 ){
+    out << intv;
+    return;
   }
 
 
   std::deque<int> dl, dr;
   int l_sign, r_sign;
+
   setRounding<Float>(capd::rounding::RoundDown);
   Float l_rem = putDigits(dl, l_sign, l, n, len);
+
   setRounding<Float>(capd::rounding::RoundUp);
   Float r_rem = putDigits(dr, r_sign, r, n, len);
 
   assert(r_sign > 0);
 
+  if(isNegative) 
+    out << "-";
+ 
   if(l_sign < 0 && l_rem != 0)
     roundUp(dl);
   if(r_sign > 0 && r_rem != 0)
     roundUp(dr);
   switch(floatStyle){
     case FloatSci:
-      writeSciInterval(dl, dr, p, l_sign, len );
+      writeSciInterval(dl, dr, exponent, l_sign, len );
       break;
     case FloatFix:
     case FloatFix2:
-      writeFixInterval(dl, dr, p, l_sign, n, len );
+      writeFixInterval(dl, dr, exponent, l_sign, n, len );
       break;
     case FloatTxt:
-      writeTxtInterval(dl, dr, p, l_sign, n, len );
+      writeTxtInterval(dl, dr, exponent, l_sign, n, len );
   }
 }
 

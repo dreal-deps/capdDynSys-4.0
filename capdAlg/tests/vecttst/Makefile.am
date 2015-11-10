@@ -6,6 +6,10 @@ TESTS=matrixMDTest vectMDTest
 if HAVE_BOOST
    check_PROGRAMS+=vectalgTest
    TESTS+=vectalgTest
+if HAVE_CXX11
+    check_PROGRAMS+=C11vectalgTest
+    TESTS+=C11vectalgTest
+endif
 endif
 
 matrixMDTest_SOURCES=matrixMDTest.cpp
@@ -32,3 +36,10 @@ vectalgTest_libs=${capdAlg_LIBS} ${BOOST_UNIT_TEST_FRAMEWORK_LIBS}
 vectalgTest_LDFLAGS=${BOOST_UNIT_TEST_FRAMEWORK_LDFLAGS}
 vectalgTest_LDADD=${vectalgTest_libs}
 vectalgTest_DEPENDENCIES=${filter %.a %.la,${vectalgTest_libs}}
+
+C11vectalgTest_SOURCES=C11vectalgTestMain.cpp C11vectalgInitTest.cpp 
+C11vectalgTest_CXXFLAGS= ${AM_CXXFLAGS} ${capdAlg_CFLAGS} ${BOOST_CPPFLAGS} ${CAPD_CXXFLAGS_CXX11} 
+C11vectalgTest_libs=${capdAlg_LIBS} ${BOOST_UNIT_TEST_FRAMEWORK_LIBS}
+C11vectalgTest_LDFLAGS=${BOOST_UNIT_TEST_FRAMEWORK_LDFLAGS}
+C11vectalgTest_LDADD=${C11vectalgTest_libs}
+C11vectalgTest_DEPENDENCIES=${filter %.a %.la,${C11vectalgTest_libs}}

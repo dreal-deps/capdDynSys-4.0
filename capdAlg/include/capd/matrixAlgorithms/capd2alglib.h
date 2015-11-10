@@ -64,7 +64,7 @@ void computeEigenvalues(const MatrixT & A,
  * 
  * The algorithm finds eigenvalues and eigenvectors of 
  * a general matrix by using the QR algorithm with multiple shifts.
- * @remark Works only for double matrices nad vectors!
+ * @remark Works only for double matrices and vectors!
  * 
  * Input:
  * @param[in] A  square matrix
@@ -176,8 +176,8 @@ std::string eigenvaluesToString(const VectorType & re, const VectorType &im,
  *
  * @param[in] re        matrix of real parts of eigenvectors (as its columns)
  * @param[in] im        matrix of imaginary parts of eigenvectors
- * @param[in] separator string that separates vectors coeficients
- * @param[in] vectorSeparator  string that seperates vectors (default is ,\n)
+ * @param[in] separator string that separates vectors coefficients
+ * @param[in] vectorSeparator  string that separates vectors (default is ,\n)
  *
  * @return    eigenvectors in text format
  */

@@ -46,5 +46,8 @@ function do_deb_build() {
 
 }
 
+
+echo "DEB packaging does not work yet! We need to fix dependencies"
+exit 0
 detect_cores
 do_deb_build

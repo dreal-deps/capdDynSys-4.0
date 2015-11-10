@@ -22,6 +22,7 @@
 
 #include "capd/vectalg/Container.h"
 #include <utility>
+#include "capd/settings/compilerSetting.h"
 
 namespace capd{
 namespace vectalg{
@@ -53,12 +54,12 @@ public:
   inline MatrixContainer(const Dimension&) : Container<Scalar,rows*cols>(1){}
   inline MatrixContainer(const Dimension&,bool) : Container<Scalar,rows*cols>(1,true){}
 #ifdef CAPD_HAVE_CXX11
-  MatrixContainer(MatrixContainer&& v) : ContainerType(std::forward<ContainerType>(v)) {}
-  MatrixContainer & operator=(MatrixContainer && v) {
-     ContainerType::operator= ( std::forward<ContainerType>(v));
-   //  std::cout << "\n v move =";
-    return *this;
-  }
+//  MatrixContainer(MatrixContainer&& v) : ContainerType(std::forward<ContainerType>(v)) {}
+//  MatrixContainer & operator=(MatrixContainer && v) {
+//     ContainerType::operator= ( std::forward<ContainerType>(v));
+//   //  std::cout << "\n v move =";
+//    return *this;
+//  }
 #endif
 
   inline size_type numberOfRows() const {return rows;}
@@ -98,6 +99,7 @@ protected:
 template<typename Scalar>
 class MatrixContainer<Scalar,0,0> : public Container<Scalar,0>
 {
+   typedef Container<Scalar,0> BaseContainerType;
 public:
   typedef Scalar ScalarType;
   typedef typename Container<Scalar,0>::iterator iterator;
@@ -130,6 +132,20 @@ public:
   inline MatrixContainer(const Dimension& d)
     : Container<Scalar,0>(d.first*d.second), m_rows(d.first), m_cols(d.second)
   {}
+  
+#ifdef CAPD_HAVE_CXX11
+  MatrixContainer(MatrixContainer&& v) 
+    : BaseContainerType(std::move(v)){
+    std::swap(m_rows, v.m_rows);
+    std::swap(m_cols, v.m_cols);
+  }
+  MatrixContainer & operator=(MatrixContainer && v) {
+    BaseContainerType::operator=(std::move(v));
+    std::swap(m_rows, v.m_rows);
+    std::swap(m_cols, v.m_cols);
+    return *this;
+  }
+#endif
 
   friend void swap(MatrixContainer<Scalar,0,0>& A_m1, MatrixContainer<Scalar,0,0>& A_m2)
   {

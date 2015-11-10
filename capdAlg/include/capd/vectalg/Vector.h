@@ -78,14 +78,9 @@ public:
   Vector(Iterator begin, Iterator end);
 
 #ifdef CAPD_HAVE_CXX11
-  Vector(Vector&& v) : ContainerType(v) {}
-  Vector & operator=(Vector && v) {
-    ContainerType::operator= ( static_cast< ContainerType &&>(v));
-    return *this;
-  }
-  Vector(std::initializer_list<ScalarType> l) : ContainerType(l.size(), false) {
-    std::copy(l.begin(), l.end(), this->begin());
-  }
+  Vector(Vector&& v) = default;
+  Vector & operator=(Vector && v)= default;
+  Vector(std::initializer_list<ScalarType> l);
 #endif
 
   // assignments - vectors

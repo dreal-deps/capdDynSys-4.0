@@ -39,8 +39,8 @@ int main(int, char**) {
   TexWriter tex(file);
   tex.setEquationSymbol(TexWriter::InlineEquation);
 
-  tex.writeDocumentHeader("\\textheight=24cm \\textwidth=16cm \\oddsidemargin=0.0cm\\evensidemargin=0.0cm");
-  tex << "\\textbf{Examples of the intervals styles}\n";
+  tex.writeDocumentHeader("\\textheight=24cm \\textwidth=16cm \\oddsidemargin=0.0cm\\evensidemargin=0.0cm \\def\\ii{\\mbox{i\\,}}");
+  tex << "\\textbf{Examples of the intervals styles}\\\\\n";
   tex <<
       "\n\\begin{tabular}{|l|l|l|l|}\\hline\n"
       "   FloatSci & FloatSci & FloatFix & floating point style \\\\\n"
@@ -48,16 +48,17 @@ int main(int, char**) {
       "      C     &   Math   &     -    & base style \\\\\n"
       "      +     &          &          & plus style \\\\\\hline \n";
 
-  // We read number n  and then n intervals
-  int n;
-  cout << "How many intervals you will enter : ";
-  cin >> n;
-  for (int k = 0; k < n; ++k) {
+  const int numberOfIntervals = 4;
+  DInterval intervals[numberOfIntervals] = { 
+    DInterval(1.000000001,1.000000042),
+    DInterval(-1.23456789123,-1.23456778912),
+    DInterval(1.23456789123e5,1.23456778912e5),
+    DInterval(1.2345678912345678e12,1.234567789123456e12)
+  };
+  for (int k = 0; k < numberOfIntervals; ++k) {
 
-    DInterval x;
-    cout << "\n " << k+1 << " : ";
-    cin >> x;
-
+    DInterval x = intervals[k];
+    
     cout << x << "\n";
     out << x <<"\n----\n";
 
@@ -70,8 +71,8 @@ int main(int, char**) {
     tex<< " & "<< printToString(x, 16) << " \\\\\\hline\n";
   }
 
-  tex << "\n\\end{tabular}\n\n\n";
-
+  tex << "\n\\end{tabular}\\\\\n\n\n";
+  
   std::complex<DInterval> c(DInterval(14354.32435,14354.3343543543), DInterval(34253.11111,34253.12312));
 
   tex.setEquationSymbol(2) << "\\textbf{Complex numbers style} ";

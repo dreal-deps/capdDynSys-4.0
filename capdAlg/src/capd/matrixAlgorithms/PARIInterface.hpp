@@ -108,26 +108,26 @@ namespace capd
   {
     template<typename Scalar>
     capd::vectalg::Vector<Scalar, 0>
-    PARIInterface::smithForm(const capd::vectalg::Matrix<Scalar, 0, 0>& capdMatrix)
+    PARIInterface::smithForm(const capd::vectalg::Matrix<Scalar, 0, 0>& /*capdMatrix*/)
     {
       throw std::logic_error("Not implemented");
     }
 
     template<typename Scalar>
     capd::vectalg::Vector<Scalar, 0>
-    PARIInterface::smithForm(const capd::vectalg::Matrix<Scalar, 0, 0>& capdMatrix,
-                             capd::vectalg::Matrix<Scalar, 0, 0>& capdU, capd::vectalg::Matrix<Scalar, 0, 0>& capdV)
+    PARIInterface::smithForm(const capd::vectalg::Matrix<Scalar, 0, 0>& /*capdMatrix*/,
+                             capd::vectalg::Matrix<Scalar, 0, 0>& /*capdU*/, capd::vectalg::Matrix<Scalar, 0, 0>& /*capdV*/)
     {
       throw std::logic_error("Not implemented");
     }
 
     template<typename Scalar>
     capd::vectalg::Vector<Scalar, 0>
-    PARIInterface::smithForm(const capd::vectalg::Matrix<Scalar, 0, 0>& capdMatrix,
-                             capd::vectalg::Matrix<Scalar, 0, 0>& capdQ,
-                             capd::vectalg::Matrix<Scalar, 0, 0>& capdQinv,
-                             capd::vectalg::Matrix<Scalar, 0, 0>& capdR,
-                             capd::vectalg::Matrix<Scalar, 0, 0>& capdRinv)
+    PARIInterface::smithForm(const capd::vectalg::Matrix<Scalar, 0, 0>& /*capdMatrix */,
+                             capd::vectalg::Matrix<Scalar, 0, 0>& /*capdQ */,
+                             capd::vectalg::Matrix<Scalar, 0, 0>& /*capdQinv */,
+                             capd::vectalg::Matrix<Scalar, 0, 0>& /*capdR */,
+                             capd::vectalg::Matrix<Scalar, 0, 0>& /*capdRinv */)
     {
       throw std::logic_error("Not implemented");
     }
