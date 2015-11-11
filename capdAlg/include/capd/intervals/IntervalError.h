@@ -75,24 +75,22 @@ protected:
 ///   @author Tomasz Kapela   @date 11-01-2006
 //////////////////////////////////////////////////////////////////////////////
 
-template <class T>
-void ignore_unused(T&) {} 
-
+#ifdef  __DEBUGGING__
 template < typename T_Bound > 
 inline void checkInterval( const char * A_msg,  
                            const T_Bound & A_left, 
                            const T_Bound & A_right)
 {
-#ifdef  __DEBUGGING__
     if( A_left > A_right)
       throw IntervalError<T_Bound>(A_msg, A_left, A_right);
-#else
-    ignore_unused(A_msg);
-    ignore_unused(A_left);
-    ignore_unused(A_right);
-#endif   
 }
-
-}} // namespace capd::intervals 
+#else
+template < typename T_Bound >
+inline void checkInterval( const char *,
+                           const T_Bound &,
+                           const T_Bound &) {
+}
+#endif
+}} // namespace capd::intervals
 
 #endif // _CAPD_INTERVAL_INTERVALERROR_H_ 
