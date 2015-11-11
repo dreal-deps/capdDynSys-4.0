@@ -65,13 +65,17 @@ template < typename T_Bound, typename T_Rnd>
 inline Interval<T_Bound, T_Rnd>::Interval(const char left[], const char right[]){
   m_left = IntervalIOTraits<T_Bound>::readDown(left);
   m_right = IntervalIOTraits<T_Bound>::readUp(right);
+#ifdef  __DEBUGGING__
   checkInterval("constructor ", m_left, m_right);
+#endif
 }
 template < typename T_Bound, typename T_Rnd>
 inline Interval<T_Bound, T_Rnd>::  Interval(const std::string & left, const std::string & right){
 	m_left = IntervalIOTraits<T_Bound>::readDown(left);
 	m_right = IntervalIOTraits<T_Bound>::readUp(right);
+#ifdef  __DEBUGGING__
 	checkInterval("constructor ", m_left, m_right);
+#endif
 }
 /// constructor from any class that can be coverted to BoundType
 template < typename T_Bound, typename T_Rnd>
@@ -83,7 +87,9 @@ Interval<T_Bound, T_Rnd>::Interval
         ( const T_Bound & A_left, const T_Bound & A_right ) 
         : m_left( A_left ), m_right( A_right )
 {
+#ifdef  __DEBUGGING__
    checkInterval("constructor ", m_left, m_right);
+#endif
 }
 
 ///// constructor from any class that can be coverted to BoundType
@@ -119,14 +125,18 @@ template < typename T_Bound, typename T_Rnd>
 inline void Interval<T_Bound, T_Rnd>::setLeftBound(const T_Bound & A_left)
 {
   m_left = A_left;
+#ifdef  __DEBUGGING__
   checkInterval("setLeftBound ", m_left, m_right);
+#endif
 }
 
 template < typename T_Bound, typename T_Rnd> 
 inline void Interval<T_Bound, T_Rnd>::setRightBound(const T_Bound & A_right)
 {
   m_right = A_right;
+#ifdef  __DEBUGGING__
   checkInterval("setRightBound ", m_left, m_right);
+#endif
 }
 
 template < typename T_Bound, typename T_Rnd> 
