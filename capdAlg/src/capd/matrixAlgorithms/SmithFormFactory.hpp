@@ -37,7 +37,7 @@ namespace capd
     {
       typedef Matrix<Scalar, 0, 0> MatrixT;
 
-      SmithForm<MatrixT>* operator()(MatrixT& B, bool computeQ, bool computeQinv, bool computeR, bool computeRinv, bool usePari)
+      SmithForm<MatrixT>* operator()(MatrixT& B, bool computeQ, bool computeQinv, bool computeR, bool computeRinv, bool /*usePari*/)
       {
         return new CAPDSmithForm<MatrixT>(B, computeQ, computeQinv, computeR, computeRinv);
       }

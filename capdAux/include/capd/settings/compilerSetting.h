@@ -62,7 +62,7 @@
 
 
 // the define CAPD_STD_CPP11 renamed
-#if( __cplusplus >= 201103L) and (! defined(__clang__) or (defined(__clang__) and ( (__clang_major__ == 5 and __clang_minor__ >= 1) or (__clang_major__ >= 3))))
+#if( __cplusplus >= 201103L) and (! defined(__clang__) or (defined(__clang__) and ( (__clang_major__ == 5 and __clang_minor__ >= 1) or (__clang_major__ > 5))))
    #define CAPD_HAVE_CXX11
 #endif
 

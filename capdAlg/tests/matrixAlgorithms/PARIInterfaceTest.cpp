@@ -62,9 +62,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(smithFormWithoutMatrices, Fixture, SmithFixtures)
 {
   Fixture fixture;
 
-  PARIInterface pariInterface;
+  PARIInterface& pariInterface = PARIInterface::instance();
 
-  for (int caseIdx = 0; caseIdx < fixture.matrices_matrix.size(); ++caseIdx) {
+  for (size_t caseIdx = 0; caseIdx < fixture.matrices_matrix.size(); ++caseIdx) {
     const ZMatrix& matrixCAPD = fixture.matrices_matrix[caseIdx];
     const ZVector divisors = pariInterface.smithForm(matrixCAPD);
     ZMatrix smithMatrix(matrixCAPD.numberOfRows(), matrixCAPD.numberOfColumns());
@@ -83,9 +83,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(smithFormWithoutMatrices, Fixture, SmithFixtures)
 BOOST_AUTO_TEST_CASE_TEMPLATE(smithFormWithTwoMatrices, Fixture, SmithFixtures)
 {
   Fixture fixture;
-  PARIInterface pariInterface;
+  PARIInterface& pariInterface = PARIInterface::instance();
 
-  for (int caseIdx = 0; caseIdx < fixture.matrices_matrix.size(); ++caseIdx) {
+  for (size_t caseIdx = 0; caseIdx < fixture.matrices_matrix.size(); ++caseIdx) {
     const ZMatrix& matrixCAPD = fixture.matrices_matrix[caseIdx];
     const int m = matrixCAPD.numberOfRows();
     const int n = matrixCAPD.numberOfColumns();
@@ -118,9 +118,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(pariSmithFormMatrices, Fixture, SmithFixtures)
 {
   typedef typename Fixture::MatrixType MatrixType;
   Fixture fixture;
-  PARIInterface pariInterface;
+  PARIInterface& pariInterface = PARIInterface::instance();
 
-  for (int caseIdx = 0; caseIdx < fixture.matrices_matrix.size(); ++caseIdx) {
+  for (size_t caseIdx = 0; caseIdx < fixture.matrices_matrix.size(); ++caseIdx) {
     const MatrixType& matrixA = fixture.matrices_matrix[caseIdx];
     const int m=matrixA.numberOfRows();
     const int n=matrixA.numberOfColumns();
@@ -146,7 +146,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(PARISmithFormTest, Fixture, SmithFixtures)
   typedef typename Fixture::MatrixType MatrixType;
   Fixture fixture;
 
-  for (int caseIdx = 0; caseIdx < fixture.matrices_matrix.size(); ++caseIdx) {
+  for (size_t caseIdx = 0; caseIdx < fixture.matrices_matrix.size(); ++caseIdx) {
     const MatrixType& matrixA = fixture.matrices_matrix[caseIdx];
     MatrixType matrixB = matrixA;
     const int m=matrixA.numberOfRows();
@@ -184,9 +184,9 @@ MpMatrix promote(const ZMatrix& orgData)
 BOOST_AUTO_TEST_CASE_TEMPLATE(smithFormWithMatricesMp, Fixture, SmithFixtures)
 {
   Fixture fixture;
-  PARIInterface pariInterface;
+  PARIInterface& pariInterface = PARIInterface::instance();
 
-  for (int caseIdx = 0; caseIdx < fixture.matrices_matrix.size(); ++caseIdx) {
+  for (size_t caseIdx = 0; caseIdx < fixture.matrices_matrix.size(); ++caseIdx) {
     const ZMatrix& orgData = fixture.matrices_matrix[caseIdx];
     const MpMatrix matrixCAPD = promote(orgData);
     const int m=matrixCAPD.numberOfRows();

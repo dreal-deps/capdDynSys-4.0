@@ -133,8 +133,8 @@ void C0HOSet<BaseSetT>::move(Solver& solver, C0HOSet& result) const
   // we have to recompute coefficients at the image
   split(result.pBound,result.y,result.deltaY);
   ScalarType nextTime =  this->getCurrentTime() + solver.getStep();
-  solver.computePsiCoefficients(nextTime,result.y,result.pBound,q);
-  capd::dynset::computePsi(solver.getPsiCurve(),q,p,-solver.getStep(),result.psiMinus,result.JMinus);
+  solver.computeImplicitCoefficients(nextTime,result.y,result.pBound,q);
+  capd::dynset::computePsi(solver.getImplicitCurve(),q,p,-solver.getStep(),result.psiMinus,result.JMinus);
 
   // solve implicit equations
   result.computeC0HORemainder(p,q);

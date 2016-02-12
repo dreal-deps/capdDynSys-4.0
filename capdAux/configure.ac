@@ -19,6 +19,7 @@ m4_include([../capdMake/make/configure_common_x.ac])
 boost_optional=yes
 m4_include([../capdMake/make/configure_common_boost.ac])
 
+
 AC_CANONICAL_HOST
 echo HOST INFORMATION : $host
 echo "$host_alias X $host_cpu X $host_vendor X  $host_os"
@@ -87,6 +88,7 @@ if test x"$HAVE_BOOST_system" = xyes && test x"$HAVE_BOOST_filesystem" = xyes &&
 else
   AC_MSG_WARN([Cannot find Boost: system or filesystem or regex])
 fi
+
 
 AC_SUBST(capdauxil_CFLAGS)
 AC_SUBST(capdauxil_LIBS)

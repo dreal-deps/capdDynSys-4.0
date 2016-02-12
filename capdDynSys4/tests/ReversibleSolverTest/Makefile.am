@@ -1,12 +1,12 @@
 include ${capdMake}/make/common_programs_makefile.mkf
 
-check_PROGRAMS= ReversibleSolverTest
+check_PROGRAMS= ReversibleODETest
 TESTS=${check_PROGRAMS}
 
 
-ReversibleSolverTest_SOURCES=ReversibleSolverTest.cpp
-ReversibleSolverTest_CXXFLAGS= ${AM_CXXFLAGS} ${capdDynSys_CFLAGS} ${BOOST_CPPFLAGS}
-ReversibleSolverTest_libs=${capdDynSys_LIBS} ${BOOST_UNIT_TEST_FRAMEWORK_LIBS}
-ReversibleSolverTest_LDFLAGS=${BOOST_UNIT_TEST_FRAMEWORK_LDFLAGS}
-ReversibleSolverTest_LDADD=${ReversibleSolverTest_libs}
-ReversibleSolverTest_DEPENDENCIES=${filter %.a %.la,${ReversibleSolverTest_libs}}
+ReversibleODETest_SOURCES = ReversibleODETest.cpp ReversibleSolverTest.cpp FadBadReversibleSolverTest.cpp
+ReversibleODETest_CXXFLAGS= ${AM_CXXFLAGS} ${capdDynSys_CFLAGS} ${BOOST_CPPFLAGS}
+ReversibleODETest_libs=${capdDynSys_LIBS} ${BOOST_UNIT_TEST_FRAMEWORK_LIBS}
+ReversibleODETest_LDFLAGS=${BOOST_UNIT_TEST_FRAMEWORK_LDFLAGS}
+ReversibleODETest_LDADD=${ReversibleODETest_libs}
+ReversibleODETest_DEPENDENCIES=${filter %.a %.la,${ReversibleODETest_libs}}

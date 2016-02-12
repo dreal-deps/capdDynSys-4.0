@@ -15,6 +15,9 @@ m4_include([../capdMake/m4/ax_mpi.m4])
 m4_include([../capdMake/make/configure_common.ac])
 AM_INIT_AUTOMAKE(capd_automake_init_options)
 
+CXX_FLAG_CHECK([-frounding-math], [frounding_math])
+CXX_FLAG_CHECK([-ffloat-store], [ffloat_store])
+
 AC_ARG_WITH([cxsc],
     AS_HELP_STRING([--with-cxsc], [path to cxsc instalation. ]),
     [],
@@ -33,9 +36,9 @@ AS_IF([test "x$with_cxsc" != xno],
 
 AS_IF([test "x$with_cxsc" != xno],
       [AC_MSG_NOTICE([using CXSC intervals])
-      AC_SUBST(filib_CFLAGS, ["-D__USE_CXSC__ -I$with_cxsc/include -frounding-math"])
+      AC_SUBST(filib_CFLAGS, ["-D__USE_CXSC__ -I$with_cxsc/include $CXX_FLAG_frounding_math"])
       AC_SUBST(filib_LIBS, ["-L$with_cxsc/lib -lcxsc"])
-      AC_SUBST(filib_CFLAGS_INSTALL, ["-D__USE_CXSC__ -I$with_cxsc/include -frounding-math"])
+      AC_SUBST(filib_CFLAGS_INSTALL, ["-D__USE_CXSC__ -I$with_cxsc/include $CXX_FLAG_frounding_math"])
       AC_SUBST(filib_LIBS_INSTALL, ["-L$with_cxsc/lib -lcxsc"])])
 
 AS_IF([test "x$with_filib" = xcheck],
@@ -46,19 +49,19 @@ AS_IF([test "x$with_filib" = xyes],
 
 AS_IF([test "x$with_filib" = xinternal],
       [AC_MSG_NOTICE([using internal filib])
-      filib_CFLAGS="-D__USE_FILIB__ -I\${abs_top_srcdir}/filibsrc -I\${abs_top_builddir}/filibsrc -frounding-math -ffloat-store"
+      filib_CFLAGS="-D__USE_FILIB__ -I\${abs_top_srcdir}/filibsrc -I\${abs_top_builddir}/filibsrc $CXX_FLAG_frounding_math $CXX_FLAG_ffloat_store"
       filib_LIBS="\${abs_top_builddir}/filibsrc/libprim/libprim.la"
       AC_SUBST(filib_CFLAGS)
       AC_SUBST(filib_LIBS)
-      AC_SUBST(filib_CFLAGS_INSTALL, ["-D__USE_FILIB__ -I\${prefix}/include -frounding-math"])
+      AC_SUBST(filib_CFLAGS_INSTALL, ["-D__USE_FILIB__ -I\${prefix}/include $CXX_FLAG_frounding_math"])
       AC_SUBST(filib_LIBS_INSTALL, ["-L\${prefix}/lib -lprim"])])
 
 
 AS_IF([test "x$with_filib" != xno && test "x$with_filib" != xinternal],
       [AC_MSG_NOTICE([using external filib])
-      AC_SUBST(filib_CFLAGS, ["-D__USE_FILIB__ -I$with_filib/include -frounding-math -ffloat-store"])
+      AC_SUBST(filib_CFLAGS, ["-D__USE_FILIB__ -I$with_filib/include $CXX_FLAG_frounding_math $CXX_FLAG_ffloat_store"])
       AC_SUBST(filib_LIBS, ["-L$with_filib/lib -lprim"])
-      AC_SUBST(filib_CFLAGS_INSTALL, ["-D__USE_FILIB__ -I$with_filib/include -frounding-math"])
+      AC_SUBST(filib_CFLAGS_INSTALL, ["-D__USE_FILIB__ -I$with_filib/include $CXX_FLAG_frounding_math"])
       AC_SUBST(filib_LIBS_INSTALL, ["-L$with_filib/lib -lprim"])])
 
 AS_IF([test "x$with_cxsc" = xno && test "x$with_filib" = xno],

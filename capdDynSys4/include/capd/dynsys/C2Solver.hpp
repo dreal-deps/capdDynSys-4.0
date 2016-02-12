@@ -100,18 +100,18 @@ void C2Solver<MapType,StepControlT,CurveT>::encloseC2Map(
   MatrixType* matrixCoeff = this->getMatrixCoefficients();
   HessianType* hessianCoeff = this->getHessianCoefficients();
 
-  int order=this->getOrder();
+  const int order=this->getOrder();
   coeff[0] = xx;
   matrixCoeff[0].setToIdentity();
   hessianCoeff[0].clear();
   this->m_vField->computeODECoefficients(coeff,matrixCoeff,hessianCoeff,order);
   this->computeCoefficientsAtCenter(x,order);
   
-  capd::diffAlgebra::C2TimeJet<MatrixType> phi(&o_phi,&o_jacPhi,&o_hessianPhi);
   capd::diffAlgebra::C2TimeJet<MatrixType> rem(&o_rem,&o_jacRem,&o_hessianRem);
   capd::diffAlgebra::C2TimeJet<MatrixType> enc(&o_enc,&o_jacEnc,&o_hessianEnc);
 
-  capd::dynsys::computeAndApproveRemainder(*this,t,xx,phi,rem,enc);
+  capd::dynsys::computeAndApproveRemainder(*this,t,xx,rem,enc);
+  this->sumTaylorSeries(o_phi,o_jacPhi,o_hessianPhi,this->getCoefficientsAtCenter(),matrixCoeff,hessianCoeff,order);
 }
 
 // ####################################################################
@@ -122,24 +122,6 @@ void C2Solver<MapType,StepControlT,CurveT>::computeRemainder(ScalarType t, const
   o_enc.vector() = this->enclosure(t,xx);
   this->c2Enclosure(o_enc.vector(),o_enc.matrix(),o_enc.hessian());
   this->c2Remainder(o_enc.vector(),o_enc.matrix(),o_enc.hessian(),o_rem.vector(),o_rem.matrix(),o_rem.hessian());
-}
-
-// ####################################################################
-
-template<typename MapType,typename StepControlT, typename CurveT>
-void C2Solver<MapType,StepControlT,CurveT>::sumTaylorSeries(C2TimeJetType& o_phi)
-{
-  const int order = this->getOrder();
-  // summation of the Taylor series
-  o_phi.vector() = this->getCoefficientsAtCenter()[order];
-  o_phi.matrix() = this->getMatrixCoefficients()[order];
-  o_phi.hessian() = this->getHessianCoefficients()[order];
-  for(int i = order - 1; i >= 0; --i)
-  {
-    capd::vectalg::multiplyAssignObjectScalarAddObject(o_phi.matrix(),this->getStep(),this->getMatrixCoefficients()[i]);
-    capd::vectalg::multiplyAssignObjectScalarAddObject(o_phi.vector(),this->getStep(),this->getCoefficientsAtCenter()[i]);
-    capd::vectalg::multiplyAssignObjectScalarAddObject(o_phi.hessian(),this->getStep(),this->getHessianCoefficients()[i]);
-  }  
 }
 
 }} // namespace capd::dynsys

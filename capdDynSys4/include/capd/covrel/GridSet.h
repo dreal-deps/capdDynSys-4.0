@@ -29,6 +29,8 @@ template<typename MatrixT>
 class GridSet
 {
 public:
+  GridSet(int dim) : C(dim,dim), r(dim) {}
+
   typedef MatrixT MatrixType;
   typedef typename MatrixType::RowVectorType VectorType;
   typedef typename MatrixType::ScalarType ScalarType;
@@ -68,7 +70,7 @@ public:
     return center.size();
   }
   void resize(size_t newSize){
-    center.resize(newSize);
+    center.resize(newSize,VectorType(r.dimension()));
   }
   /// returns matrix of the coordinate system (columns are its base vectors)
   const MatrixType & coordinateSystem() const{

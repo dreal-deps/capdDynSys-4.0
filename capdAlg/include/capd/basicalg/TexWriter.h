@@ -739,7 +739,7 @@ void TexWriter::writeVector(const VectorType & v){
   if(v.dimension()>0){
     (*this) << v[0];
   }
-  for(int i=1; i<v.dimension(); i++) {
+  for(unsigned i=1; i<v.dimension(); i++) {
     out << vectorSeparator;
     (*this) << v[i];
   }

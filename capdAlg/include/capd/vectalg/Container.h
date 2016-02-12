@@ -113,7 +113,7 @@ public:
   // --- C++11
 #ifdef CAPD_HAVE_CXX11
    Container& operator=(Container&&);
-   Container(Container&&) noexcept;
+   Container(Container&&);
 #endif
   // ------------------------
 

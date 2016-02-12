@@ -49,6 +49,9 @@ public:
   MatrixType JacPhi(const ScalarType& t,const VectorType& iv);
   VectorType enclosure(const ScalarType& t, const VectorType& x);
   VectorType Remainder(const ScalarType& t, const VectorType& iv, VectorType& o_enc);
+
+  void computeTaylorCoefficients(ScalarType t, const VectorType& x, const VectorType& xx);
+
   void encloseC0Map(
       const ScalarType& t,  //< @param[in] current time of ODE
       const VectorType& x0, //< @param[in] an internal point of x, usually center of x

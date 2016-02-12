@@ -173,8 +173,8 @@ public:
   template<class JetT>
   void computeRemainder(ScalarType t, const VectorType& xx, JetT& o_enc, JetT& o_rem);
 
-  void sumTaylorSeries(C1TimeJetType& o_phi);
-  void sumTaylorSeries(C2TimeJetType& o_phi);
+  void sumTaylorSeries(VectorType& o_phi, MatrixType& o_jacPhi);
+  void sumTaylorSeries(VectorType& o_phi, MatrixType& o_jacPhi, HessianType& o_hessianPhi);
   template<class JetT>
   void sumTaylorSeries(JetT& o_phi);
 

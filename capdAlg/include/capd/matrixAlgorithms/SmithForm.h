@@ -21,24 +21,14 @@ namespace capd
   namespace matrixAlgorithms
   {
 
-    template<class MatrixT, typename SqMatrix1T, typename SqMatrix2T>
-    struct SmithFormTraitsBasic
+    template<class MatrixT>
+    struct SmithFormTraits
     {
       typedef typename MatrixT::ScalarType ScalarType;
       typedef typename MatrixT::size_type size_type;
-      typedef MatrixT Matrix;
-      typedef SqMatrix1T SqMatrix1;
-      typedef SqMatrix2T SqMatrix2;
-    };
-
-    template<class MatrixT>
-    struct SmithFormTraits : SmithFormTraitsBasic<MatrixT, void*, void*>
-    {
-      typedef SmithFormTraitsBasic<MatrixT, void*, void*> Basic;
-      typedef typename Basic::Matrix Matrix;
-      typedef typename Basic::ScalarType ScalarType;
-      typedef typename MatrixT::template rebind<ScalarType>::other SqMatrix1;
-      typedef typename MatrixT::template rebind<ScalarType>::other SqMatrix2;
+      typedef typename MatrixT::template rebind<ScalarType>::other Matrix; // remove const!
+      typedef typename MatrixT::template rebind<ScalarType>::other MatrixQ;
+      typedef typename MatrixT::template rebind<ScalarType>::other MatrixR;
     };
 
     template<class MatrixT, typename TraitsT=SmithFormTraits<MatrixT> >
@@ -47,24 +37,24 @@ namespace capd
     public:
       typedef TraitsT Traits;
       typedef typename Traits::Matrix Matrix;
-      typedef typename Traits::SqMatrix1 SqMatrix1;
-      typedef typename Traits::SqMatrix2 SqMatrix2;
+      typedef typename Traits::MatrixQ MatrixQ;
+      typedef typename Traits::MatrixR MatrixR;
 
-      SmithForm(MatrixT& B, bool computeQ, bool computeQinv, bool computeR, bool computeRinv):
+      SmithForm(Matrix& B, bool computeQ, bool computeQinv, bool computeR, bool computeRinv):
         _B(B),
         _m(_B.numberOfRows()), _n(_B.numberOfColumns()),
-        _Q(computeQ ? SqMatrix1::Identity(_m) : SqMatrix1()),
-        _Qinv(computeQinv ? SqMatrix1::Identity(_m) : SqMatrix1()),
-        _R(computeR ? SqMatrix2::Identity(_n) : SqMatrix2()),
-        _Rinv(computeRinv ? SqMatrix2::Identity(_n) : SqMatrix2()),
+        _Q(computeQ ? MatrixQ::Identity(_m) : MatrixQ()),
+        _Qinv(computeQinv ? MatrixQ::Identity(_m) : MatrixQ()),
+        _R(computeR ? MatrixR::Identity(_n) : MatrixR()),
+        _Rinv(computeRinv ? MatrixR::Identity(_n) : MatrixR()),
         _s(0), _t(0)
       {
       }
 
-      const SqMatrix1& getQ() const { return _Q; }
-      const SqMatrix1& getQinv() const { return _Qinv; }
-      const SqMatrix2& getR() const { return _R; }
-      const SqMatrix2& getRinv() const { return _Rinv; }
+      const MatrixQ& getQ() const { return _Q; }
+      const MatrixQ& getQinv() const { return _Qinv; }
+      const MatrixR& getR() const { return _R; }
+      const MatrixR& getRinv() const { return _Rinv; }
 
       const int& getT() const { return _t; }
       const int& getS() const { return _s; }
@@ -75,8 +65,8 @@ namespace capd
     protected:
       MatrixT& _B;
       int _m, _n;
-      SqMatrix1 _Q, _Qinv;
-      SqMatrix2 _R, _Rinv;
+      MatrixQ _Q, _Qinv;
+      MatrixR _R, _Rinv;
       int _s, _t;
     };
 

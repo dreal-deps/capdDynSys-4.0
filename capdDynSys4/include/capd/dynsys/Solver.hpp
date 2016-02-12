@@ -36,7 +36,7 @@ namespace dynsys{
 
 template<typename MapType, typename StepControlType,typename CurveType>
 Solver<MapType, StepControlType,CurveType>::Solver(MapType& vectorField, size_type a_order, const StepControlType& stepControl)
-  : BaseTaylor(vectorField,a_order,stepControl), psiCurve(1.0,1.0,vectorField.dimension(),a_order,vectorField.degree())
+  : BaseTaylor(vectorField,a_order,stepControl), implicitCurve(1.0,1.0,vectorField.dimension(),a_order,vectorField.degree())
 {}
 
 //###########################################################//
@@ -45,7 +45,7 @@ template <typename MapType, typename StepControlType, typename CurveT>
 void Solver<MapType, StepControlType, CurveT>::setOrder(size_type order)
 {
   BaseTaylor::setOrder(order);
-  this->psiCurve.setOrder(order);
+  this->implicitCurve.setOrder(order);
 }
 
 //###########################################################//
@@ -157,9 +157,9 @@ void Solver<MapType,StepControlType,CurveType>::encloseC0Map(
       MatrixType& o_jacPhi
   )
 {
-  this->computePhiCoefficients(t,x,xx);
-  capd::diffAlgebra::C1TimeJet<MatrixType> phi(&o_phi,&o_jacPhi);
-  capd::dynsys::computeAndApproveRemainder(*this,t,xx,phi,o_rem,o_enc);
+  this->computeTaylorCoefficients(t,x,xx);
+  capd::dynsys::computeAndApproveRemainder(*this,t,xx,o_rem,o_enc);
+  this->sumTaylorSeries(o_phi,o_jacPhi,this->getCoefficientsAtCenter(),this->getMatrixCoefficients(),this->getOrder());
 }
 
 
@@ -178,12 +178,12 @@ void Solver<MapType,StepControlType,CurveType>::encloseC1Map(
       MatrixType& o_jacEnc
   )
 {
-  capd::diffAlgebra::C1TimeJet<MatrixType> phi(&o_phi,&o_jacPhi);
   capd::diffAlgebra::C1TimeJet<MatrixType> rem(&o_rem,&o_jacRem);
   capd::diffAlgebra::C1TimeJet<MatrixType> enc(&o_enc,&o_jacEnc);
 
-  this->computePhiCoefficients(t,x,xx);
-  capd::dynsys::computeAndApproveRemainder(*this,t,xx,phi,rem,enc);
+  this->computeTaylorCoefficients(t,x,xx);
+  capd::dynsys::computeAndApproveRemainder(*this,t,xx,rem,enc);
+  this->sumTaylorSeries(o_phi,o_jacPhi,this->getCoefficientsAtCenter(),this->getMatrixCoefficients(),this->getOrder());
 }
 
 //###########################################################//

@@ -21,12 +21,11 @@
 namespace capd{
 namespace dynsys {
 
-template<class Solver, class PhiType, class RemainderType>
+template<class Solver, class RemainderType>
 void computeAndApproveRemainder(
       Solver& solver,
       const typename Solver::ScalarType& t,   //< @param[in] current time of ODE
       const typename Solver::VectorType& xx,  //< @param[in] set to be moved along the trajectories of ODE
-      PhiType& o_phi,                         //< @param[out] bound for the truncated Taylor series of the solution
       RemainderType& o_rem,                   //< @param[out] bound for the error of numerical method over the time step
       RemainderType& o_enc                    //< @param[out] bound for the enclosure over the time step
   )
@@ -40,16 +39,16 @@ void computeAndApproveRemainder(
   // IMPORTANT: this MUST be computed BEFORE call to computeReamainder!
   Real eps = Real(2.)*Solver::getEffectiveTolerance(solver,xx);
 
-  // do not make time step larger than 2x previous step
+  // DW: do not decrease the factor below to 2-3. 
+  // My simulation shows that the restriction in many cases worse the estimations.
+  // The probability of significant reduction of predicted step is rather rare.
   if(!isSingular(solver.getStep()))
-    solver.setMaxStep(capd::min(solver.getMaxStep(),Real(1.5)*solver.getStep()));
+    solver.setMaxStep(capd::min(solver.getMaxStep(),Real(2)*solver.getStep()));
   solver.computeTimeStep(t,xx);
   solver.computeRemainder(t,xx,o_enc,o_rem);
-  
+
   // if changing step is allowed, validate remainder and adjust time step if necessary
   if(solver.isStepChangeAllowed() and !isSingular(solver.getStep())) {
-    const static ScalarType I(TypeTraits<Real>::zero(),TypeTraits<Real>::one());
-
     Real remSize = rightBound(maxWidth((VectorType)o_rem));
     while( remSize > eps and solver.getMaxStep() > solver.getStepControl().getMinStepAllowed() )  {
       solver.adjustTimeStep((solver.getStep()*0.95).leftBound());
@@ -57,10 +56,6 @@ void computeAndApproveRemainder(
       remSize = rightBound(maxWidth((VectorType)o_rem));
     }
   }
-  
-  // after approval of remainder compute phi, jacPhi, etc. 
-  // with aproved time step
-  solver.sumTaylorSeries(o_phi);
 }
 
 }} // namespace capd::dynsys

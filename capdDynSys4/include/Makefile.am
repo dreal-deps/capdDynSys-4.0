@@ -177,11 +177,11 @@ capd/dynsys/FadTaylor.h \
 capd/dynsys/FadTaylor.hpp \
 capd/dynsys/FadTaylorHOE.h \
 capd/dynsys/FadTaylorHOE.hpp \
-capd/dynsys/Linear2d.h \
-capd/dynsys/Linear3d.h \
+capd/dynsys/deprecated/Linear2d.h \
+capd/dynsys/deprecated/Linear3d.h \
 capd/dynsys/Move.h \
-capd/dynsys/OdeNumTaylor.h \
-capd/dynsys/OdeNumTaylor.hpp \
+capd/dynsys/deprecated/OdeNumTaylor.h \
+capd/dynsys/deprecated/OdeNumTaylor.hpp \
 capd/dynsys/OdeTraits.h \
 capd/dynsys/Solver.h \
 capd/dynsys/Solver.hpp \
@@ -189,8 +189,8 @@ capd/dynsys/SolverException.h \
 capd/dynsys/SolverHOE.h \
 capd/dynsys/SolverHOE.hpp \
 capd/dynsys/StepControl.h \
-capd/dynsys/VLin3D.h \
-capd/dynsys/dynsysLib.h \
+capd/dynsys/deprecated/VLin3D.h \
+capd/dynsys/deprecated/dynsysLib.h \
 capd/dynsys/enclosure.h \
 capd/dynsys/enclosure.hpp \
 capd/dynsys/fdlib.h \

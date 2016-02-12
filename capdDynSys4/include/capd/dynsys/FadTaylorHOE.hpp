@@ -96,11 +96,9 @@ void FadTaylorHOE<MapType,StepControlType>::encloseC0Map(
       MatrixType& o_jacPhi
   )
 {
-  this->setCurrentTime(t);
-  this->setInitialCondition(x,this->m_center);
-  this->setInitialCondition(xx,this->m_in);
-  this->computeCoeff(this->m_center,this->m_centerOut,this->getOrder());
-  this->computeCoeff(this->m_in,this->m_out,this->getOrder());
+  // here we compute all the coefficients for phi(t) and DPhi(t)
+  this->computeTaylorCoefficients(t,x,xx);
+
   this->computeTimeStep(t,xx);
 
   capd::dynsys::highOrderEnclosure(t,*this,o_rem,o_enc);
@@ -124,11 +122,9 @@ void FadTaylorHOE<MapType,StepControlType>::encloseC1Map(
       MatrixType& o_jacEnc
   )
 {
-  this->setCurrentTime(t);
-  this->setInitialCondition(xx,this->m_in);
-  this->setInitialCondition(x,this->m_center);
-  this->computeCoeff(this->m_in,this->m_out,this->getOrder());
-  this->computeCoeff(this->m_center,this->m_centerOut,this->getOrder());
+  // here we compute all the coefficients for phi(t) and DPhi(t)
+  this->computeTaylorCoefficients(t,x,xx);
+
   this->computeTimeStep(t,xx);
 
   capd::diffAlgebra::C1TimeJet<MatrixType> rem(&o_rem,&o_jacRem);

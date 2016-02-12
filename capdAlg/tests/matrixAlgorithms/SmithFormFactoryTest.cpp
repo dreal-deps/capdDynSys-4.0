@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(defaultSmithForm, Fixture, SmithFixtures)
   Fixture fixture;
   SmithFormFactory factory(false);
 
-  for (int i = 0; i < fixture.matrices_matrix.size(); ++i) {
+  for (size_t i = 0; i < fixture.matrices_matrix.size(); ++i) {
     Matrix B = fixture.matrices_matrix[i];
     std::auto_ptr<SmithForm<Matrix> > smithForm(factory(B, true, true, true, true));
 
@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(PARISmithFormTest, Fixture, SmithFixtures)
   Fixture fixture;
   SmithFormFactory factory(true);
 
-  for (int i = 0; i < fixture.matrices_matrix.size(); ++i) {
+  for (size_t i = 0; i < fixture.matrices_matrix.size(); ++i) {
     Matrix B = fixture.matrices_matrix[i];
     std::auto_ptr<SmithForm<Matrix> > smithForm(factory(B, true, true, true, true));
 
@@ -120,7 +120,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(defaultSmithFormMp, Fixture, SmithFixtures)
   Fixture fixture;
   SmithFormFactory factory(false);
 
-  for (int i = 0; i < fixture.matrices_matrix.size(); ++i) {
+  for (size_t i = 0; i < fixture.matrices_matrix.size(); ++i) {
     MpMatrix B = promote(fixture.matrices_matrix[i]);
     std::auto_ptr<SmithForm<MpMatrix> > smithForm(factory(B, true, true, true, true));
 
@@ -136,7 +136,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(PARISmithFormMp, Fixture, SmithFixtures)
   Fixture fixture;
   SmithFormFactory factory(true);
 
-  for (int i = 0; i < fixture.matrices_matrix.size(); ++i) {
+  for (size_t i = 0; i < fixture.matrices_matrix.size(); ++i) {
     MpMatrix B = promote(fixture.matrices_matrix[i]);
     std::auto_ptr<SmithForm<MpMatrix> > smithForm(factory(B, true, true, true, true));
 

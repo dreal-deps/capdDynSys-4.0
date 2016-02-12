@@ -28,10 +28,12 @@ namespace capd
     {
       typedef SmithForm<MatrixT, Traits> Base;
     public:
-      typedef typename Base::SqMatrix1 SqMatrix1;
-      typedef typename Base::SqMatrix2 SqMatrix2;
 
-      CAPDSmithForm(MatrixT& B, bool computeQ, bool computeQinv, bool computeR, bool computeRinv):
+      typedef typename Base::Matrix Matrix;
+      typedef typename Base::MatrixQ MatrixQ;
+      typedef typename Base::MatrixR MatrixR;
+
+      CAPDSmithForm(Matrix& B, bool computeQ, bool computeQinv, bool computeR, bool computeRinv):
         Base(B, computeQ, computeQinv, computeR, computeRinv)
       {}
 
@@ -75,7 +77,7 @@ namespace capd
 
       //CAPD_CLASS_LOGGER;
 
-      void moveMinNonzero(MatrixT& B, SqMatrix1& Q,SqMatrix1& Qinv,SqMatrix2& R,SqMatrix2& Rinv,int k){
+      void moveMinNonzero(MatrixT& B, MatrixQ& Q,MatrixQ& Qinv,MatrixR& R,MatrixR& Rinv,int k){
         typedef typename MatrixT::ScalarType ScalarType;
         int m=B.numberOfRows();
         int n=B.numberOfColumns();
@@ -99,7 +101,7 @@ namespace capd
         return true;
       }
 
-      void partSmithForm(MatrixT& B,SqMatrix1& Q,SqMatrix1& Qinv,SqMatrix2& R,SqMatrix2& Rinv,int k){
+      void partSmithForm(MatrixT& B,MatrixQ& Q,MatrixQ& Qinv,MatrixR& R,MatrixR& Rinv,int k){
         typedef typename MatrixT::ScalarType ScalarType;
         int m=B.numberOfRows();
         int n=B.numberOfColumns();

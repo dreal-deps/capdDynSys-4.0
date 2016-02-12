@@ -96,7 +96,7 @@ public:
   template <typename SetType>
   void operator()(SetType& set){
     this->saveCurrentSet(set);
-	  C1SetMove<Solver,SetType>::move(set,*this);
+    C1SetMove<Solver,SetType>::move(set,*this);
   }
   
   /// Computes image of the set (in set's representation) and stores it in the result set.
@@ -105,7 +105,7 @@ public:
   template <typename SetType>
   void operator()(SetType& set, SetType& result){
     this->saveCurrentSet(set);
-	  C1SetMove<Solver,SetType>::move(set, result, *this);
+    C1SetMove<Solver,SetType>::move(set, result, *this);
   }
 
   // the following methods provide an interface for generic algorithms based on an abstract solver
@@ -116,10 +116,8 @@ public:
   virtual void computeRemainder(ScalarType t, const VectorType& xx, VectorType& o_enc, VectorType& o_rem);
   virtual void computeRemainder(ScalarType t, const VectorType& xx, C1TimeJetType& o_enc, C1TimeJetType& o_rem);
 
-  void computePhiCoefficients(ScalarType t, const VectorType& x, const VectorType& xx);
-  void computePsiCoefficients(ScalarType t, const VectorType& x, const VectorType& xx, size_type order);
-
-  void sumTaylorSeries(C1TimeJetType& o_phi);
+  void computeTaylorCoefficients(ScalarType t, const VectorType& x, const VectorType& xx);
+  void computeImplicitCoefficients(ScalarType t, const VectorType& x, const VectorType& xx, size_type order);
   
   ScalarType getCoeffNorm(size_type, size_type degree) const;
   ScalarType getStep() const{
@@ -134,8 +132,8 @@ public:
     BaseTaylor::setCurrentTime(a_time);
   }
 
-  const CurveT& getPsiCurve() const{
-    return psiCurve;
+  const CurveT& getImplicitCurve() const{
+    return implicitCurve;
   }
 
   // @override
@@ -157,9 +155,9 @@ protected:
 
 
   void operator=(const Solver& ){}
-  Solver(const Solver& t) : BaseTaylor(t), psiCurve(0.,0.,1,1,1){}
+  Solver(const Solver& t) : BaseTaylor(t), implicitCurve(0.,0.,1,1,1){}
 
-  CurveT psiCurve; ///< an extra storage for Taylor coefficients used in implicit HO-method
+  CurveT implicitCurve; ///< an extra storage for Taylor coefficients used in implicit HO-method
 };
 
 // --------------- inline definitions -----------------
@@ -236,17 +234,17 @@ void Solver<MapType,StepControlType,CurveType>::computeRemainder(
 //###########################################################//
 
 template<typename MapType, typename StepControlType,typename CurveType>
-inline void Solver<MapType,StepControlType,CurveType>::computePsiCoefficients(
+inline void Solver<MapType,StepControlType,CurveType>::computeImplicitCoefficients(
     ScalarType t, const VectorType& x, const VectorType& xx, size_type order
   )
 {
   this->setCurrentTime(t);
-  VectorType* coeff = this->psiCurve.getCoefficientsAtCenter();
+  VectorType* coeff = this->implicitCurve.getCoefficientsAtCenter();
   coeff[0] = x;
   this->m_vField->computeODECoefficients(coeff,order);
 
-  coeff = this->psiCurve.getCoefficients();
-  MatrixType* matrixCoeff = this->psiCurve.getMatrixCoefficients();
+  coeff = this->implicitCurve.getCoefficients();
+  MatrixType* matrixCoeff = this->implicitCurve.getMatrixCoefficients();
   coeff[0] = xx;
   matrixCoeff[0].setToIdentity();
   this->m_vField->computeODECoefficients(coeff,matrixCoeff,order);
@@ -255,28 +253,13 @@ inline void Solver<MapType,StepControlType,CurveType>::computePsiCoefficients(
 //###########################################################//
 
 template<typename MapType, typename StepControlType,typename CurveType>
-inline void Solver<MapType,StepControlType,CurveType>::computePhiCoefficients(
+inline void Solver<MapType,StepControlType,CurveType>::computeTaylorCoefficients(
     ScalarType t, const VectorType& x, const VectorType& xx
   )
 {
   this->setCurrentTime(t);
   this->computeCoefficientsAtCenter(x,this->getOrder());
   this->computeCoefficients(xx,this->getOrder());
-}
-
-//###########################################################//
-
-template<typename MapType, typename StepControlType,typename CurveType>
-inline void Solver<MapType,StepControlType,CurveType>::sumTaylorSeries(C1TimeJetType& o_phi)
-{
-  const int order=this->getOrder();
-  o_phi.vector() = this->getCoefficientsAtCenter()[order];
-  o_phi.matrix() = this->getMatrixCoefficients()[order];
-  for(int i=order-1;i>=0;--i)
-  {
-    capd::vectalg::multiplyAssignObjectScalarAddObject(o_phi.matrix(),this->getStep(),this->getMatrixCoefficients()[i]);
-    capd::vectalg::multiplyAssignObjectScalarAddObject(o_phi.vector(),this->getStep(),this->getCoefficientsAtCenter()[i]);
-  }
 }
 
 }} // namespace capd::dynsys

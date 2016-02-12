@@ -31,7 +31,6 @@ namespace capd
       static const bool _enabled;
     public:
 
-      PARIInterface();
       virtual ~PARIInterface();
       static bool enabled() { return _enabled; }
 
@@ -50,6 +49,15 @@ namespace capd
 		  capd::vectalg::Matrix<Scalar, 0, 0>& capdQInv,
 		  capd::vectalg::Matrix<Scalar, 0, 0>& capdR,
 		  capd::vectalg::Matrix<Scalar, 0, 0>& capdRInv);
+
+      static PARIInterface& instance()
+      {
+        static PARIInterface instance;
+        return instance;
+      }
+
+    private:
+      PARIInterface();
 
     };
   }

@@ -64,7 +64,24 @@ public:
   using BaseClass::dynamicalSystemEnclosure;
   using BaseClass::getStep;
   using BaseClass::getCurrentTime;
-
+  
+  /// This operator computes image of the set (in given representation) using set.move function, see capd/dynsys/Move.h for details
+  /// This template together with SetTraits prevent usage of various types of jets with incompatible solvers.
+  /// The user will get an exception at runtime with clear message instead of unreadable compiler error.
+  template <typename SetType>
+  void operator()(SetType& set){
+    DiffInclusionSetMove<DiffInclusionCW,SetType>::move(set,*this);
+  }
+  
+  /// Computes image of the set (in set's representation) and stores it in the result set.
+   /// @param[in]  set       C^0 or C^1  set representing initial conditions
+   /// @param[out] result    on return contains image of the set   
+  template <typename SetType>
+  void operator()(SetType& set, SetType& result){
+//    this->saveCurrentSet(set);
+	  DiffInclusionSetMove<DiffInclusionCW,SetType>::move(set, result, *this);
+  }
+  
 protected:
   using BaseClass::m_norm;
   using BaseClass::m_diffIncl;

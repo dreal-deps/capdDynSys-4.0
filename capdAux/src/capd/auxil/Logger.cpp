@@ -323,44 +323,56 @@ bool Logger::isFatalEnabled() const { return true; }
 bool Logger::isTraceEnabled() const { return false; }
 bool Logger::isDebugEnabled() const { return false; }
 
-void Logger::forcedLogInfo(const std::string& msg, const char * const fileName,
-		   const char * const functionName,
-		   int lineNumber)
+void Logger::forcedLogInfo(
+      const std::string& msg, const char * const /*fileName*/,
+      const char * const /*functionName*/,
+      int /*lineNumber*/
+    )
 {
   *static_cast<std::ostream*>(_logger) << "INFO " << _name << ": " << msg << std::endl;
 }
 
-void Logger::forcedLogWarn(const std::string& msg, const char * const fileName,
-		   const char * const functionName,
-		   int lineNumber)
+void Logger::forcedLogWarn(
+      const std::string& msg, const char * const /*fileName*/,
+      const char * const /*functionName*/,
+      int /*lineNumber*/
+    )
 {
   *static_cast<std::ostream*>(_logger) << "WARN " << _name << ": " << msg << std::endl;
 }
 
-void Logger::forcedLogError(const std::string& msg, const char * const fileName,
-		    const char * const functionName,
-		    int lineNumber)
+void Logger::forcedLogError(
+    const std::string& msg, const char * const /*fileName*/,
+    const char * const /*functionName*/,
+    int /*lineNumber*/
+  )
 {
   *static_cast<std::ostream*>(_logger) << "ERROR " << _name << ": " << msg << std::endl;
 }
 
-void Logger::forcedLogFatal(const std::string& msg, const char * const fileName,
-		    const char * const functionName,
-		    int lineNumber)
+void Logger::forcedLogFatal(
+    const std::string& msg, const char * const /*fileName*/,
+    const char * const /*functionName*/,
+    int /*lineNumber*/
+  )
 {
   *static_cast<std::ostream*>(_logger) << "FATAL " << _name << ": " << msg << std::endl;
 }
 
-void Logger::forcedLogTrace(const std::string& msg, const char * const fileName,
-		    const char * const functionName,
-		    int lineNumber)
+void Logger::forcedLogTrace(
+    const std::string& msg, const char * const /*fileName*/,
+    const char * const /*functionName*/,
+    int /*lineNumber*/
+  )
 {
   *static_cast<std::ostream*>(_logger) << "TRACE " << _name << ": " << msg << std::endl;
 }
 
-void Logger::forcedLogDebug(const std::string& msg, const char * const fileName,
-		    const char * const functionName,
-		    int lineNumber)
+void Logger::forcedLogDebug(
+    const std::string& msg, const char * const /*fileName*/,
+    const char * const /*functionName*/,
+    int /*lineNumber*/
+  )
 {
   *static_cast<std::ostream*>(_logger) << "DEBUG " << _name << ": " << msg << std::endl;
 }

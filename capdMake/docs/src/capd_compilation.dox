@@ -4,7 +4,7 @@
 
 \section  capd_compilation_1 Preparing configure script 
 This step is needed if you have a fresh version from the SVN repositories or if you changed one of the \e configure.in files.  
-If you downloaded the CAPD source code from the webpage, this step can be skipped.
+If you downloaded the CAPD source code from the webpage, this step MUST be skipped.
   
 In \e capd directory invoke 
 \code

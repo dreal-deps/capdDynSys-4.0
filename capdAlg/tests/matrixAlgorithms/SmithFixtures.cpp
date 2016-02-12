@@ -19,9 +19,8 @@ using namespace capd::test;
 ExampleWeb::ExampleWeb()
 {
   {
-    long long matrix[3][3] = {{2, 4, 4}, {-6, 6, 12}, {10, -4, -16}};
-    //matrices_matrix.push_back(Matrix<long long, 0, 0>(matrix));
-    matrices_matrix.push_back(Matrix<long long, 0, 0>((long long[3][3]){{2, 4, 4}, {-6, 6, 12}, {10, -4, -16}}));
+    long long smithMatrix[3][3] = {{2, 4, 4}, {-6, 6, 12}, {10, -4, -16}};
+    matrices_matrix.push_back(Matrix<long long, 0, 0>(smithMatrix));
   }
   {
     long long smithMatrix[3][3] = {{2, 0, 0}, {0, 6, 0}, {0, 0, 12}};

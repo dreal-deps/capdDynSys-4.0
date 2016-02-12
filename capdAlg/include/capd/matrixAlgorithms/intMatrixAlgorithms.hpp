@@ -54,9 +54,10 @@ void smithForm(matrix& B,
                sqMatrix2& R, sqMatrix2& Rinv,
                int &s,int &t)
 {
+  DefaultIntMatrixAlgorithms intMatrixAlgorithms;
   typedef typename DefaultIntMatrixAlgorithms::template SmithForm<matrix>::type SmithFormType;
-  SmithFormType smithForm(B, Q.numberOfRows() > 0, Qinv.numberOfRows() > 0,
-                          R.numberOfRows() > 0, Rinv.numberOfRows() > 0);
+  SmithFormType smithForm = intMatrixAlgorithms.smithForm(B, Q.numberOfRows() > 0, Qinv.numberOfRows() > 0,
+                                                          R.numberOfRows() > 0, Rinv.numberOfRows() > 0);
 
   smithForm();
 
@@ -85,7 +86,9 @@ bool solveLinearEquation(const matrix& A,const colVector& b,vector& x)
 	       << cppReprezentation(b, "b", "TYPE"));
   }
 
-  typename DefaultIntMatrixAlgorithms::template SolveLinearEquation<matrix>::type solver(A);
+  DefaultIntMatrixAlgorithms intMatrixAlgorithms;
+  typename DefaultIntMatrixAlgorithms::template SolveLinearEquation<const matrix>::type solver
+    = intMatrixAlgorithms.solveLinearEquation(A);
 
   const bool result = solver(b, x);
 
@@ -121,10 +124,12 @@ void quotientBaseMatrix(
   IntVector& A_orders                      // output: IntVector of finite orders
                                            // of elements of pseudobasis A_U
 ){
-  typename DefaultIntMatrixAlgorithms::template QuotientBaseMatrix<matrix, IntVector>::type quotientBaseMatrix(A_W, A_V);
+  DefaultIntMatrixAlgorithms intMatrixAlgorithms;
+  typedef typename DefaultIntMatrixAlgorithms::template QuotientBaseMatrix<const matrix>::type QuotientBaseMatrix;
+  QuotientBaseMatrix quotientBaseMatrix = intMatrixAlgorithms.quotientBaseMatrix(A_W, A_V);
   quotientBaseMatrix();
   A_U = quotientBaseMatrix.pseudoBasis();
-  A_orders = quotientBaseMatrix.orders();
+  quotientBaseMatrix.getOrders(A_orders);
 }
 /* ------------------------  ------------------------ */
 template<class matrix>

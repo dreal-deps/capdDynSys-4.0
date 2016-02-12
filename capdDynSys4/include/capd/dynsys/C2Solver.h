@@ -80,8 +80,6 @@ public:
     );
   virtual void computeRemainder(ScalarType t, const VectorType& xx, C2TimeJetType& o_enc, C2TimeJetType& o_rem);
   using BaseTaylor::computeRemainder;
-  
-  void sumTaylorSeries(C2TimeJetType& o_phi);
 
   ScalarType getStep() const{
     return BaseC2Taylor::getStep();

@@ -15,6 +15,7 @@ default_top_capd=${srcdir}
 top_capd_build=.
 
 m4_include([capdMake/make/configure_common.ac])
+
 AM_INIT_AUTOMAKE(capd_automake_init_options)
 
 

@@ -19,7 +19,6 @@
 #include "capd/intervals/IntervalTraits.h"
 #include <iostream>
 #include <cstdio>
-#include <limits>
 
 namespace capd{
 namespace intervals{
@@ -63,9 +62,7 @@ __INLINE__ Interval<T_Bound, T_Rnd> & Interval<T_Bound, T_Rnd>::operator +=
   m_left  += A_iv.m_left;
   T_Rnd::roundUp();
   m_right += A_iv.m_right;
-#ifdef  __DEBUGGING__
   checkInterval(" Operator += ", m_left, m_right);
-#endif
   return *this;
 }
 
@@ -83,9 +80,7 @@ __INLINE__ Interval<T_Bound, T_Rnd>& Interval<T_Bound, T_Rnd>::operator -=
   m_left = temp;
   //std::cout << "\n  result :" << *this << "   diam " << diam(*this);
   //std::cout << "  " << (A_iv.m_left == -m_right) << "   " << (A_iv.m_right == m_left);
-#ifdef  __DEBUGGING__
   checkInterval(" Operator -= ", m_left, m_right);
-#endif
   return *this;
 }
 
@@ -190,9 +185,7 @@ __INLINE__  Interval<T_Bound, T_Rnd>& Interval<T_Bound, T_Rnd>::operator *=
       m_left = temp;
     }
   }
-#ifdef  __DEBUGGING__
   checkInterval(" operator *= ", m_left, m_right);
-#endif
   return *this;
 } // operator *=
 
@@ -261,9 +254,7 @@ __INLINE__ Interval<T_Bound, T_Rnd>& Interval<T_Bound, T_Rnd>::operator /=
   else   /// (A_iv.m_left<=0 && A_iv.m_right>=0)
     throw IntervalError<T_Bound>("Error ***  Possible division by zero in operator /=", A_iv.m_left, A_iv.m_right );
 
-#ifdef  __DEBUGGING__
   checkInterval(" Operator *= ", m_left, m_right);
-#endif
   return *this;
 }
 
@@ -396,9 +387,7 @@ Interval< T_Bound, T_Rnd>  operator *(const Interval< T_Bound, T_Rnd>& A_iv1,
         right = t;
     }
   }
-#ifdef  __DEBUGGING__
   checkInterval("Error *** Fatal Interval error in operator*(Interval, Interval) .", left, right);
-#endif
   return Interval< T_Bound, T_Rnd>(left,right);
 } // operator *
 
@@ -461,18 +450,12 @@ Interval< T_Bound, T_Rnd> operator /(const Interval< T_Bound, T_Rnd>& A_iv1,
       T_Rnd::roundUp();
       right = A_iv1.m_right / A_iv2.m_left;
     }
-  } else if (A_iv1.m_left == 0.0 && A_iv1.m_right == 0.0) {
-      left = 0.0;
-      right = 0.0;
-  } else {  //  (??) (-+)
-    // throw IntervalError<T_Bound>("Interval Error *** Possible division by zero.",
-    //                              A_iv2.m_left, A_iv2.m_right);
-    left  = -std::numeric_limits<T_Bound>::infinity();
-    right =  std::numeric_limits<T_Bound>::infinity();
   }
-#ifdef  __DEBUGGING__
-  checkInterval(" operator/ ", left, right);
-#endif
+  else //  (??) (-+)
+    throw IntervalError<T_Bound>("Interval Error *** Possible division by zero.",
+                                  A_iv2.m_left, A_iv2.m_right);
+
+  checkInterval(" operator* ", left, right);
   return (Interval< T_Bound, T_Rnd>(left, right));
 
 } // operator /
@@ -555,9 +538,7 @@ std::istream & bitRead(std::istream & inp, Interval< T_Bound, T_Rnd > &iv){
 			inp >> std::ws;
 			if(inp.get()==']')
 			{
-#ifdef  __DEBUGGING__
 				checkInterval(" bitRead ", ll, rr);
-#endif
 				iv.m_left=ll;
 				iv.m_right=rr;
 				return inp;
@@ -594,9 +575,7 @@ std::istream & hexRead(std::istream & inp, Interval< T_Bound, T_Rnd > &iv){
 			inp >> std::ws;
 			if(inp.get()==']')
 			{
-#ifdef  __DEBUGGING__
 				checkInterval(" bitRead ", ll, rr);
-#endif
 				iv.m_left=ll;
 				iv.m_right=rr;
 				return inp;

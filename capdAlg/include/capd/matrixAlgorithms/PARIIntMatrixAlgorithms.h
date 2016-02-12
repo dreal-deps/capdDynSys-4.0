@@ -28,6 +28,8 @@ namespace capd
 
     struct PARIIntMatrixAlgorithms
     {
+      typedef PARIIntMatrixAlgorithms This;
+
       template<typename Matrix>
       struct SmithForm
       {
@@ -37,14 +39,37 @@ namespace capd
       template<typename Matrix>
       struct SolveLinearEquation
       {
-        typedef matrixAlgorithms::SolveLinearEquation<Matrix, PARIIntMatrixAlgorithms> type;
+        typedef matrixAlgorithms::SolveLinearEquation<Matrix, This> type;
       };
 
-      template<typename Matrix, typename IntVector>
+      template<typename Matrix>
       struct QuotientBaseMatrix
       {
-        typedef matrixAlgorithms::QuotientBaseMatrix<Matrix, IntVector, PARIIntMatrixAlgorithms> type;
+        typedef matrixAlgorithms::QuotientBaseMatrix<Matrix, This> type;
       };
+
+
+      template<typename Matrix>
+      typename SmithForm<Matrix>::type
+      smithForm(Matrix& B, bool computeQ, bool computeQinv, bool computeR, bool computeRinv)
+      {
+        typename SmithForm<Matrix>::type(B, computeQ, computeQinv, computeR, computeRinv);
+      }
+
+      template<typename Matrix>
+      typename SolveLinearEquation<Matrix>::type
+      solveLinearEquation(Matrix& m)
+      {
+        return typename SolveLinearEquation<Matrix>::type(m, *this);
+      }
+
+      template<typename Matrix>
+      typename QuotientBaseMatrix<Matrix>::type
+      quotientBaseMatrix(Matrix& A_W, Matrix& A_V)
+      {
+        return typename QuotientBaseMatrix<Matrix>::type(A_W, A_V, *this);
+      }
+
     };
 
   }

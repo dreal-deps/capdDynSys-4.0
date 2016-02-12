@@ -17,23 +17,25 @@
 #define CAPD_FILE_CAPDALG_MATRIXALGORITHMS_SOLVELINEAREQUATION_H
 
 // #include
+#include <capd/auxil/RemoveConst.h>
 
 namespace capd
 {
   namespace matrixAlgorithms
   {
 
-    template<class matrix, typename Traits>
+    template<class Matrix, typename IntMatrixAlgorithms>
     class SolveLinearEquation
     {
+      typedef typename auxil::RemoveConst<Matrix>::type InternalMatrix;
+      typedef typename IntMatrixAlgorithms::template SmithForm<InternalMatrix>::type SmithForm;
 
     public:
-      explicit SolveLinearEquation(const matrix& A):
+      explicit SolveLinearEquation(Matrix& A, IntMatrixAlgorithms& intMatrixAlgorithms):
         _m(A.numberOfRows()), _n(A.numberOfColumns()),
         _A(A), _B(A), _Qinv(), _R()
       {
-        typedef typename Traits::template SmithForm<matrix>::type SmithForm;
-        SmithForm smithForm(_B, false, true, true, false);
+        SmithForm smithForm = intMatrixAlgorithms.smithForm(_B, false, true, true, false);
         smithForm();
 
         _s = smithForm.getS();
@@ -58,7 +60,7 @@ namespace capd
         }
 
         for(int i=_t+1; i <= _m && result;++i){
-          if(c(i) == typename matrix::ScalarType(0) ){
+          if(c(i) == typename Matrix::ScalarType(0) ){
             if(i<=_n) x(i)=0;
           }else{
             result = false;
@@ -74,8 +76,10 @@ namespace capd
 
     private:
       int _m, _n;
-      const matrix& _A;
-      matrix _B, _Qinv, _R;
+      Matrix& _A;
+      InternalMatrix _B;
+      typename SmithForm::MatrixQ _Qinv;
+      typename SmithForm::MatrixR _R;
       int _s, _t;
     };
 

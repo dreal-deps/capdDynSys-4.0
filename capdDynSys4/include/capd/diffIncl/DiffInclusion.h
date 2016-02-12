@@ -21,7 +21,7 @@
 #include <string>
 #include <map>
 #include "capd/vectalg/Norm.h"
-#include "capd/dynsys/Solver.h"
+#include "capd/dynsys/SolverHOE.h"
 #include "capd/dynsys/enclosure.h"
 #include "capd/dynsys/StepControl.h"
 namespace capd{
@@ -38,8 +38,11 @@ namespace diffIncl{
  *
  * \see capd::diffIncl::DiffInclusionLN, \see capd::diffIncl::DiffInclusionCW
  */
-template<typename MapT, typename DynSysT = capd::dynsys::Solver< typename MapT::MapType > >
-class DiffInclusion  : public capd::dynsys::StepControlInterface<typename DynSysT::StepControlType, typename MapT::ScalarType> {
+//template<typename MapT, typename DynSysT = capd::dynsys::Solver< typename MapT::MapType > >
+template<typename MapT, typename DynSysT = capd::dynsys::SolverHOE< typename MapT::MapType > >
+class DiffInclusion  
+//: public capd::dynsys::StepControlInterface<typename DynSysT::StepControlType, typename MapT::ScalarType> {
+{
 // TODO : check if step control is doubled 
 // DW: yes, it is!
 public:
@@ -53,7 +56,8 @@ public:
   typedef capd::vectalg::Norm<VectorType, MatrixType> NormType;
   typedef DynSysT DynSysType;
   typedef typename DynSysType::SolutionCurve SolutionCurve; 
-
+  typedef typename DynSysT::StepControlType  StepControlType;
+  
   DiffInclusion(   MultiMapType & diffInclusion,               // map of the form f(x)+ g(x,e)
       int order,                            // order for integration
       NormType const & norm                 // norm
@@ -71,9 +75,9 @@ public:
   virtual VectorType enclosure(const ScalarType& t,const VectorType & x);
 
   /// returns RHS of a diff. inclusion
-  const MapType& getField() const;
+  const MapType& getVectorField() const;
   /// returns RHS of a diff. inclusion
-  MapType& getField();
+  MapType& getVectorField();
 
   /// returns order of numerical method
   int getOrder() const;
@@ -84,6 +88,9 @@ public:
   ScalarType getStep() const;
   /// sets currect time step
   void setStep(const ScalarType& newStep);
+  
+  ///< sets time step but does not change step control settings (compare setStep)
+  void adjustTimeStep(const ScalarType& newStep);
 
   /// returns current time
   const ScalarType& getCurrentTime() const;
@@ -107,19 +114,73 @@ public:
   }
   
   void clearCoefficients(){
-     m_dynamicalSystem.clearCoefficients();
-   }
+    m_dynamicalSystem.clearCoefficients();
+  }
 
-   template <class SetType>
-   ScalarType computeNextTimeStep(const SetType& x, const ScalarType& maxStep) {
-     return this->m_stepControl.computeNextTimeStep(*this,x,maxStep);
-   }
+  template <class SetType>
+  ScalarType computeNextTimeStep(const SetType& x, const ScalarType& maxStep) {
+    return m_dynamicalSystem.computeNextTimeStep(*this,x,maxStep);
+  }
 
-   template <class SetType>
-   ScalarType getFirstTimeStep(const SetType& x, const ScalarType& maxStep) {
-     return this->m_stepControl.getFirstTimeStep(*this, x, maxStep);
-   }
+  template <class SetType>
+  ScalarType getFirstTimeStep(const SetType& x, const ScalarType& maxStep) {
+    return m_dynamicalSystem.getFirstTimeStep(*this, x, maxStep);
+  }
 
+  void turnOnStepControl() {
+    m_dynamicalSystem.turnOnStepControl();
+  }
+
+  void turnOffStepControl() {
+   m_dynamicalSystem.turnOffStepControl();
+  }
+
+  void onOffStepControl(bool _onOffStepControl) {
+   m_dynamicalSystem.onOffStepControl(_onOffStepControl);
+  }
+
+  const StepControlType& getStepControl() const {
+    return m_dynamicalSystem.getStepControl();
+  }
+
+  void setStepControl(const StepControlType& stepControl) {
+   m_dynamicalSystem.setStepControl( stepControl);
+  }
+
+  bool isStepChangeAllowed() const {
+    return m_dynamicalSystem.isStepChangeAllowed();
+  }
+
+  void setAbsoluteTolerance(double tol){
+    m_dynamicalSystem.setAbsoluteTolerance(tol);
+  }
+
+  void setRelativeTolerance(double tol){
+   m_dynamicalSystem.setRelativeTolerance(tol);
+  }
+
+  double getAbsoluteTolerance() const{
+    return m_dynamicalSystem.getAbsoluteTolerance();
+  }
+
+  double getRelativeTolerance() const{
+    return m_dynamicalSystem.getRelativeTolerance();
+  }
+
+  ScalarType getMaxStep() const{
+    return m_dynamicalSystem.getMaxStep();
+  }
+
+  void setMaxStep(ScalarType maxStep){
+    m_dynamicalSystem.setMaxStep(maxStep);
+  }
+  
+  template <class Solver, class SetType>
+  inline static
+  double getEffectiveTolerance(Solver & solver, const SetType& s) {
+    return DynSysType::getEffectiveTolerance(solver, s);
+  }
+   
 protected:
   //  void operator=(const DiffInclusion & a_t){}
   // DiffInclusion(const DiffInclusion & diffIncl) : m_norm(m_norm.clone()), m_diffIncl(diffIncl.m_diffIncl){}
@@ -130,16 +191,29 @@ protected:
 };
 
 
+
+template<class T, class SetT
+//  ,bool isSet =  capd::dynset::SetTraits<typename SetT::SetType>::isC0Set
+//             or capd::dynset::SetTraits<typename SetT::SetType>::isC1Set
+           >
+struct DiffInclusionSetMove{
+	  static void move(SetT& set, T& solver){
+		  set.move(solver);
+	  }
+    static void move(SetT& set, SetT& result, T& solver){
+		  set.move(solver, result);
+	  }
+};
 // --------------- inline definitions -----------------
 
 
 template <typename MapT, typename DynSysT>
-inline const MapT& DiffInclusion<MapT, DynSysT>::getField() const {
+inline const MapT& DiffInclusion<MapT, DynSysT>::getVectorField() const {
   return m_diffIncl;
 }
 
 template <typename MapT, typename DynSysT>
-inline MapT & DiffInclusion<MapT, DynSysT>::getField() {
+inline MapT & DiffInclusion<MapT, DynSysT>::getVectorField() {
   return m_diffIncl;
 }
 
@@ -163,6 +237,11 @@ inline typename DiffInclusion<MapT, DynSysT>::ScalarType DiffInclusion<MapT, Dyn
 template <typename MapT, typename DynSysT>
 inline void DiffInclusion<MapT, DynSysT>::setStep(const ScalarType& newStep) {
   m_dynamicalSystem.setStep(newStep);
+}
+
+template <typename MapT, typename DynSysT>
+inline void DiffInclusion<MapT, DynSysT>::adjustTimeStep(const ScalarType& newStep){ ///< sets time step but does not change step control settings (compare setStep)
+  m_dynamicalSystem.adjustTimeStep(newStep);
 }
 
 template <typename MapT, typename DynSysT>

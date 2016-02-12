@@ -234,6 +234,26 @@ AC_SUBST([CAPD_AM_CXXFLAGS], ["${CAPD_CXXFLAGS}"])
 AC_SUBST([CAPD_AM_CPPFLAGS], ["${CAPD_CPPFLAGS}"])
 AC_SUBST([LIBCAPD_LDFLAGS], ["-Wl,-Bstatic"])
 
-
+AC_DEFUN([CXX_FLAG_CHECK],
+[dnl
+  AC_MSG_CHECKING([if $CXX supports $1])
+  AC_LANG_PUSH([C++])
+  ac_saved_cxxflags="$CXXFLAGS"
+  CXXFLAGS="-Werror $1"
+  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])],
+    [
+    AC_MSG_RESULT([yes])
+    CXX_FLAG_$2=$1
+    AC_SUBST([CXX_FLAG_$2])
+    ],
+    [
+    CXX_FLAG_$2=""
+    AC_MSG_WARN([no])
+    ]
+  )
+  CXXFLAGS="$ac_saved_cxxflags"
+  AC_LANG_POP([C++])
+  AM_CONDITIONAL(CXX_FLAG_$2, [ test "x${CXX_FLAG_$2}"!=x ])
+])
 
 #########

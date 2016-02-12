@@ -35,7 +35,7 @@ bool checkCoveringRelation(Map & f, const HSet & N1, const HSet & N2)
 	typedef capd::covrel::GridSet<MatrixType> GridSet;
 	typedef capd::dynset::C0AffineSet<typename GridSet::MatrixType, capd::C0RectPolicies> C0RectSet;
 	capd::dynsys::DynSysMap<Map> dynsys(f);
-	GridSet grid;
+	GridSet grid(2);
 	cout << "\nWe check if image of whole set N1 is spanned across the hset N2\n";
 	N1.gridSet(grid, 1, 1);
 	if(!moveGridAndCheckCondition(dynsys, grid, & capd::covrel::across<HSet,C0RectSet>, N2))

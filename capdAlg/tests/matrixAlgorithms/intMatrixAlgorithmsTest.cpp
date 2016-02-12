@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(capdSmithForm1, Fixture, SmithFixtures)
 {
   Fixture fixture;
 
-  for (int i = 0; i < fixture.matrices_matrix.size(); ++i) {
+  for (size_t i = 0; i < fixture.matrices_matrix.size(); ++i) {
     typename Fixture::MatrixType B = capdSmithForm(fixture.matrices_matrix[i]);
     BOOST_CHECK_EQUAL(fixture.matrices_smithMatrix[i], B);
   }
@@ -79,7 +79,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(smithFormMatrices, Fixture, SmithFixtures)
   typedef typename Fixture::MatrixType MatrixType;
   Fixture fixture;
 
-  for (int caseIdx = 0; caseIdx < fixture.matrices_matrix.size(); ++caseIdx) {
+  for (size_t caseIdx = 0; caseIdx < fixture.matrices_matrix.size(); ++caseIdx) {
     const MatrixType& matrixA = fixture.matrices_matrix[caseIdx];
     MatrixType matrixB = matrixA;
     const int m=matrixA.numberOfRows();
@@ -103,7 +103,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(CAPDSmithFormTest, Fixture, SmithFixtures)
   typedef typename Fixture::MatrixType MatrixType;
   Fixture fixture;
 
-  for (int caseIdx = 0; caseIdx < fixture.matrices_matrix.size(); ++caseIdx) {
+  for (size_t caseIdx = 0; caseIdx < fixture.matrices_matrix.size(); ++caseIdx) {
     const MatrixType& matrixA = fixture.matrices_matrix[caseIdx];
     MatrixType matrixB = matrixA;
     const int m=matrixA.numberOfRows();
@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(capdSolveLinearEquation, Fixture, linearEquation::
 {
   Fixture fixture;
 
-  for (int i = 0; i < fixture.data_le_matrix.size(); ++i) {
+  for (size_t i = 0; i < fixture.data_le_matrix.size(); ++i) {
     typename Fixture::VectorType result;
     typename Fixture::VectorType& rightSide = fixture.data_le_vector[i];
     typename Fixture::MatrixType& matrix = fixture.data_le_matrix[i];
@@ -137,7 +137,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(capdQuotientBaseMatrix, Fixture, quotientBaseMatri
 {
   Fixture fixture;
 
-  for (int i = 0; i < fixture.data_A_U.size(); ++i) {
+  for (size_t i = 0; i < fixture.data_A_U.size(); ++i) {
     typename Fixture::MatrixType result_A_U;
     typename Fixture::VectorType result_A_orders;
 
@@ -157,17 +157,17 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(PARIQuotientBaseMatrix, Fixture, quotientBaseMatri
   Fixture fixture;
   typedef capd::matrixAlgorithms::PARIIntMatrixAlgorithms IntMatrixAlgorithms;
 
-  for (int i = 0; i < fixture.data_A_U.size(); ++i) {
+  for (size_t i = 0; i < fixture.data_A_U.size(); ++i) {
     typename Fixture::MatrixType result_A_U;
     typename Fixture::VectorType result_A_orders;
 
-    typedef typename capd::matrixAlgorithms::DefaultIntMatrixAlgorithms::
-      template QuotientBaseMatrix<typename Fixture::MatrixType,
-                                  typename Fixture::VectorType>::type QuotientBaseMatrix;
-    QuotientBaseMatrix quotientBaseMatrix(fixture.data_A_W[i], fixture.data_A_V[i]);
+    typedef typename capd::matrixAlgorithms::DefaultIntMatrixAlgorithms IntMatrixAlgorithms;
+    typedef typename IntMatrixAlgorithms::template QuotientBaseMatrix<typename Fixture::MatrixType>::type QuotientBaseMatrix;
+    IntMatrixAlgorithms intMatrixAlgorithms;
+    QuotientBaseMatrix quotientBaseMatrix = intMatrixAlgorithms.quotientBaseMatrix(fixture.data_A_W[i], fixture.data_A_V[i]);
     quotientBaseMatrix();
     result_A_U = quotientBaseMatrix.pseudoBasis();;
-    result_A_orders = quotientBaseMatrix.orders();
+    quotientBaseMatrix.getOrders(result_A_orders);
 
     BOOST_CHECK_EQUAL(fixture.data_A_U[i], result_A_U);
     BOOST_CHECK_EQUAL(fixture.data_A_orders[i], result_A_orders);
@@ -179,7 +179,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(cpadInvert, Fixture, SmithFixtures)
   typedef typename Fixture::MatrixType MatrixType;
   Fixture fixture;
 
-  for (int caseIdx = 0; caseIdx < fixture.matrices_matrix.size(); ++caseIdx) {
+  for (size_t caseIdx = 0; caseIdx < fixture.matrices_matrix.size(); ++caseIdx) {
     const MatrixType& matrixA = fixture.matrices_matrix[caseIdx];
     MatrixType matrixB = matrixA;
     const int m=matrixA.numberOfRows();

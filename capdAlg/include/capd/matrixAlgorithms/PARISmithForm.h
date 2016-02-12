@@ -41,8 +41,6 @@ namespace capd
     public:
       typedef typename Base::Traits Traits;
       typedef typename Base::Matrix Matrix;
-      typedef typename Base::SqMatrix1 SqMatrix1;
-      typedef typename Base::SqMatrix2 SqMatrix2;
 
       PARISmithForm(Matrix& B, bool computeQ, bool computeQinv, bool computeR, bool computeRinv):
         Base(B, computeQ, computeQinv, computeR, computeRinv)

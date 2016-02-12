@@ -43,7 +43,8 @@ namespace capd
         CAPD_TRACE("PARISmithForm args: " << cppReprezentation(_B, "B", "TYPE"));
       }
 
-      PARIInterface pari;
+      PARIInterface& pari = PARIInterface::instance();
+
       const capd::vectalg::Vector<Scalar, 0> divisors =
         pari.smithForm(_B, _Q, _Qinv, _R, _Rinv);
 

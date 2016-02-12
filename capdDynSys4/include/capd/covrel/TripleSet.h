@@ -206,7 +206,7 @@ inline bool RightSide(const TripleSet& S, const TripleSet::IntervalVector& v)
 template<typename IMatrix>
 GridSet<IMatrix>& TripleSet::gridLeftEdge(GridSet<IMatrix>& G, size_type grid, size_type d1, size_type d2) const
 {
-  G.center.resize(grid);
+  G.resize(grid);
 
   G.C.setToIdentity();
   G.C[d1][d1] = Iunstable[0];
@@ -240,7 +240,7 @@ GridSet<IMatrix>& TripleSet::gridLeftEdge(GridSet<IMatrix>& G, size_type grid, s
 template<typename IMatrix>
 GridSet<IMatrix>& TripleSet::gridRightEdge(GridSet<IMatrix>& G, size_type grid, size_type d1, size_type d2) const
 {
-  G.center.resize(grid);
+  G.resize(grid);
 
   G.C.setToIdentity();
   G.C[d1][d1] = Iunstable[0];
@@ -274,7 +274,7 @@ GridSet<IMatrix>& TripleSet::gridRightEdge(GridSet<IMatrix>& G, size_type grid, 
 template<typename IMatrix>
 GridSet<IMatrix>& TripleSet::gridBottomEdge(GridSet<IMatrix>& G, size_type grid, size_type d1, size_type d2) const
 {
-  G.center.resize(grid);
+  G.resize(grid);
 
   G.C.setToIdentity();
   G.C[d1][d1] = Iunstable[0];
@@ -309,7 +309,7 @@ GridSet<IMatrix>& TripleSet::gridBottomEdge(GridSet<IMatrix>& G, size_type grid,
 template<typename IMatrix>
 GridSet<IMatrix>& TripleSet::gridTopEdge(GridSet<IMatrix>& G, size_type grid, size_type d1, size_type d2) const
 {
-  G.center.resize(grid);
+  G.resize(grid);
 
   G.C.setToIdentity();
   G.C[d1][d1] = Iunstable[0];
@@ -344,7 +344,7 @@ GridSet<IMatrix>& TripleSet::gridTopEdge(GridSet<IMatrix>& G, size_type grid, si
 template<typename IMatrix>
 GridSet<IMatrix>& TripleSet::gridSet(GridSet<IMatrix>& G, size_type grid1, size_type grid2, size_type d1, size_type d2) const
 {
-  G.center.resize(grid1*grid2);
+  G.resize(grid1*grid2);
 
   G.C.setToIdentity();
   G.C[d1][d1] = Iunstable[0];
@@ -359,13 +359,13 @@ GridSet<IMatrix>& TripleSet::gridSet(GridSet<IMatrix>& G, size_type grid1, size_
   G.r[d1] = Interval(-1,1)/grid1;
   G.r[d2] = Interval(-1,1)/grid2;
 
-  typename GridSet<IMatrix>::VectorType step1, step2;
+  typename GridSet<IMatrix>::VectorType step1(G.C.numberOfRows()), step2(G.C.numberOfRows());
   step1[d1] = s1[0];
   step1[d2] = s1[1];
   step2[d1] = s2[0];
   step2[d2] = s2[1];
 
-  typename GridSet<IMatrix>::VectorType c;
+  typename GridSet<IMatrix>::VectorType c(G.C.numberOfRows());
   c[d1] = corner[0];
   c[d2] = corner[1];
 

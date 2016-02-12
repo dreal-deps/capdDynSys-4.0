@@ -37,17 +37,18 @@ CnSolver<MapType,StepControlT,CurveT>::encloseCnMap(
         JetT& enc
       )
 {
-  size_type i,j;
+  this->getCoefficients()[0].clear();
   this->setInitialCondition(t,x,xx);
   this->m_vField->computeODECoefficients(this->getCoefficients(),phi.degree(),this->getOrder());
   this->m_vField->computeODECoefficients(this->getCoefficientsAtCenter(),this->getOrder());
 
-  capd::dynsys::computeAndApproveRemainder(*this,t,xx,phi,rem,enc);
+  capd::dynsys::computeAndApproveRemainder(*this,t,xx,rem,enc);
 
   VectorType v = this->getCoefficientsAtCenter()[this->getOrder()];
   for(int r = this->getOrder() - 1; r >= 0; --r)
     capd::vectalg::multiplyAssignObjectScalarAddObject(v,this->m_step,this->getCoefficientsAtCenter()[r]);
 
+  this->sumTaylorSeries(phi);
   return v;
 }
 
@@ -57,8 +58,7 @@ template<typename MapType,typename StepControlT, typename CurveT>
 template<class JetT>
 void CnSolver<MapType,StepControlT,CurveT>::sumTaylorSeries(JetT& phi)
 {
-  size_type i,j;
-  for(i=0;i<this->dimension();++i) {
+  for(size_type i=0;i<this->dimension();++i) {
     ScalarType* p = this->getCoefficients()[this->getOrder()].begin(i);
     typename JetT::iterator b = phi.begin(i), e = phi.end(i);
     for(;b!=e;++b,++p)

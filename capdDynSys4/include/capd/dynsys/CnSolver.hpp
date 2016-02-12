@@ -76,11 +76,11 @@ void CnSolver<MapType,StepControlT,CurveT>::encloseC2Map(
   this->m_vField->computeODECoefficients(this->getCoefficientsAtCenter(),this->getOrder());
   this->m_vField->computeODECoefficients(this->getCoefficients(),2,this->getOrder());
 
-  capd::diffAlgebra::C2TimeJet<MatrixType> phi(&o_phi,&o_jacPhi,&o_hessianPhi);
   capd::diffAlgebra::C2TimeJet<MatrixType> rem(&o_rem,&o_jacRem,&o_hessianRem);
   capd::diffAlgebra::C2TimeJet<MatrixType> enc(&o_enc,&o_jacEnc,&o_hessianEnc);
 
-  capd::dynsys::computeAndApproveRemainder(*this,t,xx,phi,rem,enc);
+  capd::dynsys::computeAndApproveRemainder(*this,t,xx,rem,enc);
+  this->sumTaylorSeries(o_phi,o_jacPhi,o_hessianPhi);
 }
 
 // ####################################################################
@@ -102,11 +102,11 @@ void CnSolver<MapType,StepControlT,CurveT>::encloseC1Map(
   this->m_vField->computeODECoefficients(this->getCoefficientsAtCenter(),this->getOrder());
   this->m_vField->computeODECoefficients(this->getCoefficients(),1,this->getOrder());
 
-  capd::diffAlgebra::C1TimeJet<MatrixType> phi(&o_phi,&o_jacPhi);
   capd::diffAlgebra::C1TimeJet<MatrixType> rem(&o_rem,&o_jacRem);
   capd::diffAlgebra::C1TimeJet<MatrixType> enc(&o_enc,&o_jacEnc);
 
-  capd::dynsys::computeAndApproveRemainder(*this,t,xx,phi,rem,enc);
+  capd::dynsys::computeAndApproveRemainder(*this,t,xx,rem,enc);
+  this->sumTaylorSeries(o_phi,o_jacPhi);
 }
 
 // ####################################################################
@@ -126,28 +126,29 @@ void CnSolver<MapType,StepControlT,CurveT>::encloseC0Map(
   this->m_vField->computeODECoefficients(this->getCoefficientsAtCenter(),this->getOrder());
   this->m_vField->computeODECoefficients(this->getCoefficients(),1,this->getOrder());
     
-  capd::diffAlgebra::C1TimeJet<MatrixType> phi(&o_phi,&o_jacPhi);
-  capd::dynsys::computeAndApproveRemainder(*this,t,xx,phi,o_rem,o_enc);
+  capd::dynsys::computeAndApproveRemainder(*this,t,xx,o_rem,o_enc);
+  
+  this->sumTaylorSeries(o_phi,o_jacPhi);
 }
 
 // ####################################################################
 
 template<typename MapType,typename StepControlT, typename CurveT>
-void CnSolver<MapType,StepControlT,CurveT>::sumTaylorSeries(C1TimeJetType& o_phi)
+void CnSolver<MapType,StepControlT,CurveT>::sumTaylorSeries(VectorType& o_phi, MatrixType& o_jacPhi)
 {
   size_type i,j;
   const int order = this->getOrder();
   for(i=0;i<this->dimension();++i){
-    o_phi.vector()[i] = this->getCoefficientsAtCenter()[order][i];
+    o_phi[i] = this->getCoefficientsAtCenter()[order][i];
     for(j=0;j<this->dimension();++j)
-      o_phi.matrix()(i+1,j+1) = this->coefficient(i,j,order);
+      o_jacPhi(i+1,j+1) = this->coefficient(i,j,order);
   }
   
   for(int r=order-1;r>=0;--r){
     for(i=0;i<this->dimension();++i){
-      o_phi.vector()[i] = o_phi.vector()[i]*this->m_step + this->getCoefficientsAtCenter()[r][i];
+      o_phi[i] = o_phi[i]*this->m_step + this->getCoefficientsAtCenter()[r][i];
       for(j=0;j<this->dimension();++j)
-        o_phi.matrix()(i+1,j+1) = o_phi.matrix()(i+1,j+1)*this->m_step + this->coefficient(i,j,r);
+        o_jacPhi(i+1,j+1) = o_jacPhi(i+1,j+1)*this->m_step + this->coefficient(i,j,r);
     }
   }
 }
@@ -155,23 +156,23 @@ void CnSolver<MapType,StepControlT,CurveT>::sumTaylorSeries(C1TimeJetType& o_phi
 // ####################################################################
 
 template<typename MapType,typename StepControlT, typename CurveT>
-void CnSolver<MapType,StepControlT,CurveT>::sumTaylorSeries(C2TimeJetType& o_phi)
+void CnSolver<MapType,StepControlT,CurveT>::sumTaylorSeries(VectorType& o_phi, MatrixType& o_jacPhi, HessianType& o_hessianPhi)
 {
   size_type i,j,c;
   const int order = this->getOrder();
 
-  this->sumTaylorSeries(static_cast<C1TimeJetType&>(o_phi)); 
+  this->sumTaylorSeries(o_phi,o_jacPhi); 
  
   for(i=0;i<this->dimension();++i)
     for(j=0;j<this->dimension();++j)
       for(c=j;c<this->dimension();++c)
-        o_phi.hessian()(i,j,c) = this->coefficient(i,j,c,order);
+        o_hessianPhi(i,j,c) = this->coefficient(i,j,c,order);
 
   for(int r=order-1;r>=0;--r)
     for(i=0;i<this->dimension();++i)
       for(j=0;j<this->dimension();++j)
         for(c=j;c<this->dimension();++c)
-          o_phi.hessian()(i,j,c) = o_phi.hessian()(i,j,c)*this->m_step + this->coefficient(i,j,c,r);
+          o_hessianPhi(i,j,c) = o_hessianPhi(i,j,c)*this->m_step + this->coefficient(i,j,c,r);
 }
 
 // ####################################################################

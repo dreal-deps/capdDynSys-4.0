@@ -21,6 +21,7 @@
 #include <iostream>
 #include <iterator>
 #include <vector>
+#include <set>
 #include <algorithm>
 #include <utility>
 
@@ -84,12 +85,13 @@ namespace capd
 
 }
 
-namespace log4cxx
-{
-  namespace helpers
-  {
+namespace std {
+
     template<typename T>
     std::ostream& operator<<(std::ostream& out, const std::vector<T>& vec);
+
+    template<typename T>
+    std::ostream& operator<<(std::ostream& out, const std::set<T>& vec);
 
     template<typename F, typename S>
     std::ostream& operator<<(std::ostream& s, const std::pair<F, S>& p);
@@ -101,20 +103,35 @@ namespace log4cxx
       return s;
     }
 
+    namespace impl
+    {
+      template<typename It>
+      std::ostream& printRng(std::ostream& out, It begin, It end)
+      {
+        out << "{";
+        for (It it = begin; it != end; ++it) {
+          out << *it << ", ";
+        }
+        out << "}";
+
+        return out;
+      }
+    }
+
     template<typename T>
     std::ostream& operator<<(std::ostream& out, const std::vector<T>& vec)
     {
-      out << "{";
-      for (typename std::vector<T>::const_iterator it = vec.begin(), end = vec.end();
-           it != end; ++it) {
-        out << *it << ", ";
-      }
-      out << "}";
-
-      return out;
+      return impl::printRng(out, vec.begin(), vec.end());
     }
-  }
+
+    template<typename T>
+    std::ostream& operator<<(std::ostream& out, const std::set<T>& set)
+    {
+      return impl::printRng(out, set.begin(), set.end());
+    }
 }
+//   }
+// }
 
 #ifndef FILE_BUILD_DIR
    #define FILE_BUILD_DIR ""
@@ -168,14 +185,14 @@ struct CAPD_LOGGER {
         CAPD_LOGGER::return_type logger = CAPD_LOGGER::getCAPDLogger(__FILE__, FILE_BUILD_DIR); \
         if (CAPD_UNLIKELY(logger.isDebugEnabled())) {\
            std::stringstream oss_; \
-           using log4cxx::helpers::operator<<; oss_ << message;     \
+           /*using log4cxx::helpers::operator<<;*/ oss_ << message;     \
            logger.forcedLogDebug(oss_.str(), CAPD_LOCATION); }}
 
 #define CAPD_TRACE(message) { \
         CAPD_LOGGER::return_type logger = CAPD_LOGGER::getCAPDLogger(__FILE__, FILE_BUILD_DIR); \
         if (CAPD_UNLIKELY(logger.isTraceEnabled())) {\
            std::stringstream oss_; \
-           using log4cxx::helpers::operator<<; oss_ << message; \
+           /*using log4cxx::helpers::operator<<;*/ oss_ << message; \
            logger.forcedLogTrace(oss_.str(), CAPD_LOCATION); }}
 
 
@@ -183,28 +200,28 @@ struct CAPD_LOGGER {
         CAPD_LOGGER::return_type logger = CAPD_LOGGER::getCAPDLogger(__FILE__, FILE_BUILD_DIR); \
         if (logger.isInfoEnabled()) {\
            std::stringstream oss_; \
-           using log4cxx::helpers::operator<<; oss_ << message; \
+           /*using log4cxx::helpers::operator<<;*/ oss_ << message; \
            logger.forcedLogInfo(oss_.str(), CAPD_LOCATION); }}
 
 #define CAPD_WARN(message) { \
         CAPD_LOGGER::return_type logger = CAPD_LOGGER::getCAPDLogger(__FILE__, FILE_BUILD_DIR); \
         if (logger.isWarnEnabled()) {\
            std::stringstream oss_; \
-           using log4cxx::helpers::operator<<; oss_ << message; \
+           /*using log4cxx::helpers::operator<<;*/ oss_ << message; \
            logger.forcedLogWarn(oss_.str(), CAPD_LOCATION); }}
 
 #define CAPD_ERROR(message) { \
         CAPD_LOGGER::return_type logger = CAPD_LOGGER::getCAPDLogger(__FILE__, FILE_BUILD_DIR); \
         if (logger.isErrorEnabled()) {\
            std::stringstream oss_; \
-           using log4cxx::helpers::operator<<; oss_ << message; \
+           /*using log4cxx::helpers::operator<<;*/ oss_ << message; \
            logger.forcedLogError(oss_.str(), CAPD_LOCATION); }}
 
 #define CAPD_FATAL(message) { \
         CAPD_LOGGER::return_type logger = CAPD_LOGGER::getCAPDLogger(__FILE__, FILE_BUILD_DIR); \
         if (logger.isFatalEnabled()) {\
            std::stringstream oss_; \
-           using log4cxx::helpers::operator<<; oss_ << message; \
+           /*using log4cxx::helpers::operator<<;*/ oss_ << message; \
            logger.forcedLogFatal(oss_.str(), CAPD_LOCATION); }}
 
 
@@ -213,14 +230,14 @@ struct CAPD_LOGGER {
         typename CAPD_LOGGER::return_type logger = CAPD_LOGGER::getCAPDLogger(__FILE__, FILE_BUILD_DIR); \
         if (CAPD_UNLIKELY(logger.isDebugEnabled())) {\
            std::stringstream oss_; \
-           using log4cxx::helpers::operator<<; oss_ << message; \
+           /*using log4cxx::helpers::operator<<;*/ oss_ << message; \
            logger.forcedLogDebug(oss_.str(), CAPD_LOCATION); }}
 
 #define CAPD_TRACE_TMPL(message) { \
         typename CAPD_LOGGER::return_type logger = CAPD_LOGGER::getCAPDLogger(__FILE__, FILE_BUILD_DIR); \
         if (CAPD_UNLIKELY(logger.isTraceEnabled())) {\
            std::stringstream oss_; \
-           using log4cxx::helpers::operator<<; oss_ << message; \
+           /*using log4cxx::helpers::operator<<;*/ oss_ << message; \
            logger.forcedLogTrace(oss_.str(), CAPD_LOCATION); }}
 
 
@@ -228,28 +245,28 @@ struct CAPD_LOGGER {
         typename CAPD_LOGGER::return_type logger = CAPD_LOGGER::getCAPDLogger(__FILE__, FILE_BUILD_DIR); \
         if (logger.isInfoEnabled()) {\
            std::stringstream oss_; \
-           using log4cxx::helpers::operator<<; oss_ << message; \
+           /*using log4cxx::helpers::operator<<;*/ oss_ << message; \
            logger.forcedLogInfo(oss_.str(), CAPD_LOCATION); }}
 
 #define CAPD_WARN_TMPL(message) { \
         typename CAPD_LOGGER::return_type logger = CAPD_LOGGER::getCAPDLogger(__FILE__, FILE_BUILD_DIR); \
         if (logger.isWarnEnabled()) {\
            std::stringstream oss_; \
-           using log4cxx::helpers::operator<<; oss_ << message; \
+           /*using log4cxx::helpers::operator<<;*/ oss_ << message; \
            logger.forcedLogWarn(oss_.str(), CAPD_LOCATION); }}
 
 #define CAPD_ERROR_TMPL(message) { \
         typename CAPD_LOGGER::return_type logger = CAPD_LOGGER::getCAPDLogger(__FILE__, FILE_BUILD_DIR); \
         if (logger.isErrorEnabled()) {\
            std::stringstream oss_; \
-           using log4cxx::helpers::operator<<; oss_ << message; \
+           /*using log4cxx::helpers::operator<<;*/ oss_ << message; \
            logger.forcedLogError(oss_.str(), CAPD_LOCATION); }}
 
 #define CAPD_FATAL_TMPL(message) { \
         typename CAPD_LOGGER::return_type logger = CAPD_LOGGER::getCAPDLogger(__FILE__, FILE_BUILD_DIR); \
         if (logger.isFatalEnabled()) {\
            std::stringstream oss_; \
-           using log4cxx::helpers::operator<<; oss_ << message; \
+           /*using log4cxx::helpers::operator<<;*/ oss_ << message; \
            logger.forcedLogFatal(oss_.str(), CAPD_LOCATION); }}
 
 

@@ -18,7 +18,7 @@
 
 // #include
 #include "SmithFormFactory.h"
-#include <memory>
+#include <memory> //necessary for gcc 5.2 and unique_ptr
 
 namespace capd
 {
@@ -27,16 +27,21 @@ namespace capd
 
     struct IntMatrixAlgorithmsFactory
     {
+      typedef IntMatrixAlgorithmsFactory This;
+
       template<typename Matrix>
       struct SmithForm
       {
         struct SmithFormThroughFactory
         {
           typedef capd::matrixAlgorithms::SmithForm<Matrix> SmithFormType;
+          typedef typename SmithFormType::MatrixQ MatrixQ;
+          typedef typename SmithFormType::MatrixR MatrixR;
 
-          SmithFormThroughFactory(Matrix& B, bool computeQ, bool computeQinv, bool computeR, bool computeRinv)
+
+          SmithFormThroughFactory(Matrix& B, bool computeQ, bool computeQinv, bool computeR, bool computeRinv, bool usePARI)
           {
-            SmithFormFactory factory(true);
+            SmithFormFactory factory(usePARI);
             _smithForm.reset(factory(B, computeQ, computeQinv, computeR, computeRinv));
           }
 
@@ -45,16 +50,16 @@ namespace capd
             (*_smithForm)();
           }
 
-          const typename SmithFormType::SqMatrix1& getQ() const { return _smithForm->getQ(); }
-          const typename SmithFormType::SqMatrix1& getQinv() const { return _smithForm->getQinv(); }
-          const typename SmithFormType::SqMatrix2& getR() const { return _smithForm->getR(); }
-          const typename SmithFormType::SqMatrix2& getRinv() const { return _smithForm->getRinv(); }
+          const MatrixQ& getQ() const { return _smithForm->getQ(); }
+          const MatrixQ& getQinv() const { return _smithForm->getQinv(); }
+          const MatrixR& getR() const { return _smithForm->getR(); }
+          const MatrixR& getRinv() const { return _smithForm->getRinv(); }
 
           const int& getT() const { return _smithForm->getT(); }
           const int& getS() const { return _smithForm->getS(); }
 
         private:
-          std::auto_ptr<SmithFormType> _smithForm;
+          std::unique_ptr<SmithFormType> _smithForm;
         };
 
         typedef SmithFormThroughFactory type;
@@ -63,15 +68,46 @@ namespace capd
       template<typename Matrix>
       struct SolveLinearEquation
       {
-        typedef matrixAlgorithms::SolveLinearEquation<Matrix, IntMatrixAlgorithmsFactory> type;
+        typedef matrixAlgorithms::SolveLinearEquation<Matrix, This> type;
       };
 
-      template<typename Matrix, typename IntVector>
+      template<typename Matrix>
       struct QuotientBaseMatrix
       {
-        typedef matrixAlgorithms::QuotientBaseMatrix<Matrix, IntVector, IntMatrixAlgorithmsFactory> type;
+        typedef matrixAlgorithms::QuotientBaseMatrix<Matrix, This> type;
       };
 
+
+
+      IntMatrixAlgorithmsFactory(bool usePARI):
+        _usePARI(usePARI)
+      {}
+
+
+      template<typename Matrix>
+      typename SmithForm<Matrix>::type
+      smithForm(Matrix& B, bool computeQ, bool computeQinv, bool computeR, bool computeRinv)
+      {
+        return typename SmithForm<Matrix>::type(B, computeQ, computeQinv, computeR, computeRinv, _usePARI);
+      }
+
+      template<typename Matrix>
+      typename SolveLinearEquation<Matrix>::type
+      solveLinearEquation(Matrix& m)
+      {
+        return typename SolveLinearEquation<Matrix>::type(m, *this);
+      }
+
+      template<typename Matrix>
+      typename QuotientBaseMatrix<Matrix>::type
+      quotientBaseMatrix(Matrix& A_W, Matrix& A_V)
+      {
+        return typename QuotientBaseMatrix<Matrix>::type(A_W, A_V, *this);
+      }
+
+
+    private:
+      bool _usePARI;
     };
 
 

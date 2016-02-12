@@ -23,7 +23,7 @@ bool checkCoveringRelation(IMap & f, const HSet2D & N1, const HSet2D & N2) {
 // 2. We check if the image of the left edge of N1 is on the left size of N2
 
 	// We make grid containing left edge (in this simple case grid contains only one segment)
-	GridSet grid;
+	GridSet grid(2);
 	N1.gridLeftEdge(grid, 1);
 
 	// We again use RectSet to avoid wrapping effect when computing its image under map f

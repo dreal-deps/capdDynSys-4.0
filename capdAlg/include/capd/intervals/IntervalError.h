@@ -53,12 +53,10 @@ public:
     std::ostringstream str;
     str << "Interval error: " << std::runtime_error::what() 
         << "\n   left=" << m_left << "  right=" << m_right;
-    m_temp_buf = str.str();
-    return m_temp_buf.c_str();
+    return str.str().c_str();
   }
 
-protected:
-  mutable std::string m_temp_buf;
+protected: 
   T_Bound  m_left, 
            m_right;
 };  // IntervalError
@@ -75,22 +73,24 @@ protected:
 ///   @author Tomasz Kapela   @date 11-01-2006
 //////////////////////////////////////////////////////////////////////////////
 
-#ifdef  __DEBUGGING__
+template <class T>
+void ignore_unused(T&) {} 
+
 template < typename T_Bound > 
 inline void checkInterval( const char * A_msg,  
                            const T_Bound & A_left, 
                            const T_Bound & A_right)
 {
+#ifdef  __DEBUGGING__
     if( A_left > A_right)
       throw IntervalError<T_Bound>(A_msg, A_left, A_right);
-}
 #else
-template < typename T_Bound >
-inline void checkInterval( const char *,
-                           const T_Bound &,
-                           const T_Bound &) {
+    ignore_unused(A_msg);
+    ignore_unused(A_left);
+    ignore_unused(A_right);
+#endif   
 }
-#endif
-}} // namespace capd::intervals
+
+}} // namespace capd::intervals 
 
 #endif // _CAPD_INTERVAL_INTERVALERROR_H_ 

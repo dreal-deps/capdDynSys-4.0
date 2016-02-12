@@ -69,6 +69,17 @@ FadTaylor<FadMapT,StepControlT>::JacPhi(const ScalarType& t, const VectorType& u
 
 //###########################################################//
 
+template<class FadMapT, typename StepControlT>
+void FadTaylor<FadMapT,StepControlT>::computeTaylorCoefficients(ScalarType t, const VectorType& x, const VectorType& xx){
+  this->setCurrentTime(t);
+  this->setInitialCondition(x,this->m_center);
+  this->setInitialCondition(xx,this->m_in);
+  this->computeCoeff(this->m_center,this->m_centerOut,this->getOrder());
+  this->computeCoeff(this->m_in,this->m_out,this->getOrder());
+}
+
+//###########################################################//
+
 template<typename MapType, typename StepControlType>
 void FadTaylor<MapType,StepControlType>::encloseC0Map(
       const ScalarType& t,
@@ -81,11 +92,8 @@ void FadTaylor<MapType,StepControlType>::encloseC0Map(
   )
 {
   // here we compute all the coefficients for phi(t) and DPhi(t)
-  this->setCurrentTime(t);
-  this->setInitialCondition(x,this->m_center);
-  this->setInitialCondition(xx,this->m_in);
-  this->computeCoeff(this->m_center,this->m_centerOut,this->getOrder());
-  this->computeCoeff(this->m_in,this->m_out,this->getOrder());
+  this->computeTaylorCoefficients(t,x,xx);
+
   this->computeTimeStep(t,xx);
 
   // in the following function the time step can be adjusted
@@ -111,11 +119,8 @@ void FadTaylor<MapType,StepControlType>::encloseC1Map(
   )
 {
   // here we compute all the coefficients for phi(t) and DPhi(t)
-  this->setCurrentTime(t);
-  this->setInitialCondition(x,this->m_center);
-  this->setInitialCondition(xx,this->m_in);
-  this->computeCoeff(this->m_center,this->m_centerOut,this->getOrder());
-  this->computeCoeff(this->m_in,this->m_out,this->getOrder());
+  this->computeTaylorCoefficients(t,x,xx);
+
   this->computeTimeStep(t,xx);
 
   // in the following function the time step can be adjusted

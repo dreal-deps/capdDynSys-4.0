@@ -66,6 +66,23 @@ public:
 
   /// Bounds for perturbation of solution of selected ODE after one time step
   VectorType perturbations(const ScalarType & time, const VectorType & x);
+  
+  /// This operator computes image of the set (in given representation) using set.move function, see capd/dynsys/Move.h for details
+  /// This template together with SetTraits prevent usage of various types of jets with incompatible solvers.
+  /// The user will get an exception at runtime with clear message instead of unreadable compiler error.
+  template <typename SetType>
+  void operator()(SetType& set){
+    DiffInclusionSetMove<DiffInclusionLN,SetType>::move(set,*this);
+  }
+  
+  /// Computes image of the set (in set's representation) and stores it in the result set.
+   /// @param[in]  set       DiffIncl  set representing initial conditions
+   /// @param[out] result    on return contains image of the set   
+  template <typename SetType>
+  void operator()(SetType& set, SetType& result){
+//    this->saveCurrentSet(set);
+	  DiffInclusionSetMove<DiffInclusionLN,SetType>::move(set, result, *this);
+  }
 
   using BaseClass::enclosure;
   using BaseClass::diffInclusionEnclosure;
