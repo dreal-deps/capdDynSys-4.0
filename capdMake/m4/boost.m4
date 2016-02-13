@@ -1,10 +1,3 @@
-#
-#
-# Modified by CAPD, M Juda
-#
-#
-#
-
 # boost.m4: Locate Boost headers and libraries for autoconf-based projects.
 # Copyright (C) 2007-2011, 2014  Benoit Sigoure <tsuna@lrde.epita.fr>
 #
@@ -329,68 +322,28 @@ AS_VAR_PUSHDEF([Boost_lib], [boost_cv_lib_$1])dnl
 AS_VAR_PUSHDEF([Boost_lib_LDFLAGS], [boost_cv_lib_$1_LDFLAGS])dnl
 AS_VAR_PUSHDEF([Boost_lib_LDPATH], [boost_cv_lib_$1_LDPATH])dnl
 AS_VAR_PUSHDEF([Boost_lib_LIBS], [boost_cv_lib_$1_LIBS])dnl
-
-# Modified by CAPD, M Juda
-if test x"$boost_optional" != xyes; then
-   BOOST_FIND_HEADER([$4])
-else
-   BOOST_FIND_HEADER([$4], [Boost_lib=no
-                            AC_MSG_WARN([Cannot find boost optional headers for $1])])
-fi
-
-# BOOST_FIND_HEADER([$4])
-
+BOOST_FIND_HEADER([$4])
 boost_save_CPPFLAGS=$CPPFLAGS
 CPPFLAGS="$CPPFLAGS $BOOST_CPPFLAGS"
 AC_CACHE_CHECK([for the Boost $1 library], [Boost_lib],
                [_BOOST_FIND_LIBS($@)])
-
- case $Boost_lib in #(
-   (no) _AC_MSG_LOG_CONFTEST
-
-# Modified by CAPD, M Juda
-    HAVE_BOOST_$1=no
-    if test x"$boost_optional" != xyes; then
-       AC_MSG_ERROR([cannot find the flags to link with Boost $1])
-    fi
-#    AC_MSG_ERROR([cannot find the flags to link with Boost $1])
-
-     ;;
- esac
-
-# Modified by CAPD, M Juda
-
-if test x"${HAVE_BOOST_$1}" != xno; then
-    HAVE_BOOST_$1=yes
-    AC_DEFINE(AS_TR_CPP([HAVE_BOOST_$1]), [1], [Define to 1 if you have boost $1])
-
-    AC_SUBST(AS_TR_CPP([BOOST_$1_LDFLAGS]), [$Boost_lib_LDFLAGS])dnl
-    AC_SUBST(AS_TR_CPP([BOOST_$1_LDPATH]), [$Boost_lib_LDPATH])dnl
-    AC_SUBST([BOOST_LDPATH], [$Boost_lib_LDPATH])dnl
-    AC_SUBST(AS_TR_CPP([BOOST_$1_LIBS]), [$Boost_lib_LIBS])dnl
-    CPPFLAGS=$boost_save_CPPFLAGS
-    AS_VAR_POPDEF([Boost_lib])dnl
-    AS_VAR_POPDEF([Boost_lib_LDFLAGS])dnl
-    AS_VAR_POPDEF([Boost_lib_LDPATH])dnl
-    AS_VAR_POPDEF([Boost_lib_LIBS])dnl
-    AC_LANG_POP([C++])dnl
+case $Boost_lib in #(
+  (no) _AC_MSG_LOG_CONFTEST
+    AC_MSG_ERROR([cannot find the flags to link with Boost $1])
+    ;;
+esac
+AC_SUBST(AS_TR_CPP([BOOST_$1_LDFLAGS]), [$Boost_lib_LDFLAGS])dnl
+AC_SUBST(AS_TR_CPP([BOOST_$1_LDPATH]), [$Boost_lib_LDPATH])dnl
+AC_SUBST([BOOST_LDPATH], [$Boost_lib_LDPATH])dnl
+AC_SUBST(AS_TR_CPP([BOOST_$1_LIBS]), [$Boost_lib_LIBS])dnl
+CPPFLAGS=$boost_save_CPPFLAGS
+AS_VAR_POPDEF([Boost_lib])dnl
+AS_VAR_POPDEF([Boost_lib_LDFLAGS])dnl
+AS_VAR_POPDEF([Boost_lib_LDPATH])dnl
+AS_VAR_POPDEF([Boost_lib_LIBS])dnl
+AC_LANG_POP([C++])dnl
 fi
-   AC_SUBST([HAVE_BOOST_$1])
-fi
-AM_CONDITIONAL(HAVE_BOOST_$1, [ test x${HAVE_BOOST_$1}==x"yes" ])
-
-dnl AC_SUBST(AS_TR_CPP([BOOST_$1_LDFLAGS]), [$Boost_lib_LDFLAGS])dnl
-dnl AC_SUBST(AS_TR_CPP([BOOST_$1_LDPATH]), [$Boost_lib_LDPATH])dnl
-dnl AC_SUBST([BOOST_LDPATH], [$Boost_lib_LDPATH])dnl
-dnl AC_SUBST(AS_TR_CPP([BOOST_$1_LIBS]), [$Boost_lib_LIBS])dnl
-dnl CPPFLAGS=$boost_save_CPPFLAGS
-dnl AS_VAR_POPDEF([Boost_lib])dnl
-dnl AS_VAR_POPDEF([Boost_lib_LDFLAGS])dnl
-dnl AS_VAR_POPDEF([Boost_lib_LDPATH])dnl
-dnl AS_VAR_POPDEF([Boost_lib_LIBS])dnl
-dnl AC_LANG_POP([C++])dnl
-dnl fi
- ])
+])
 
 
 # BOOST_FIND_LIB([LIB-NAME],
