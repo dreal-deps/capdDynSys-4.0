@@ -31,6 +31,7 @@ capd/auxil/ofstreamcout.h \
 capd/auxil/skipCommentsIstream.h \
 capd/auxil/stringOstream.h \
 capd/auxil/timeused.h \
+capd/auxil/RemoveConst.h \
 capd/krak/IFrame.h \
 capd/krak/appl-mac.h \
 capd/krak/atom.h \
