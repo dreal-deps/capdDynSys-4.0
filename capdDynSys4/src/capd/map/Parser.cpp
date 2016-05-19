@@ -320,6 +320,18 @@ int parseExpression(
   if(it!=knownNodes.end())
     return it->second;
 
+  // check for constants
+  double value;
+  if(stringToDouble(expression, value)){
+    capd::autodiff::Node node(capd::autodiff::NODE_NULL,capd::autodiff::NODE_NULL,dag.size(),capd::autodiff::NODE_CONST);
+    node.val = value;
+    node.isConst = true;
+    node.isTimeDependentOnly = true;
+    knownNodes[expression] = node.result;
+    dag.push_back(node);
+    return node.result;
+  }
+
   // if <expression> starts with '-', then we insert '0' in front to turn
   // this into an occurrence of a subtraction
   if (expression.at(0)=='-') expression.insert(0,"0");
@@ -437,17 +449,7 @@ int parseExpression(
   }
 */
 
-  // now we check for  constants
-  double value;
-  if(stringToDouble(expression, value)){
-    capd::autodiff::Node node(capd::autodiff::NODE_NULL,capd::autodiff::NODE_NULL,dag.size(),capd::autodiff::NODE_CONST);
-    node.val = value;
-    node.isConst = true;
-    node.isTimeDependentOnly = true;
-    knownNodes[expression] = node.result;
-    dag.push_back(node);
-    return node.result;
-  }
+
   std::string re = "undefined symbol '" + expression + "' in the expression!\nIf this is a numerical constant in scientific notation please replace it by a parameter.";
 
   throw std::runtime_error(re);
@@ -826,7 +828,7 @@ void optimizeUnivariateFunction(
   }
 }
 
-void optimizeDAG(std::vector<capd::autodiff::Node>& dag)
+void optimizeDAG(std::vector<capd::autodiff::Node>& dag, std::vector<int>& pos)
 {
   using namespace capd::autodiff;
   // optimize expression
@@ -864,12 +866,25 @@ void optimizeDAG(std::vector<capd::autodiff::Node>& dag)
     if(dag[i].op == NODE_POW)
     {
       if(!dag[right].isConst)
-        throw std::logic_error("Error in the expression: exponent in x^c must be constant (can depend on constants and parameters only)!");
+        throw std::logic_error("Error in the expression: exponent in x^c must be constant expression (can depend on constants and parameters only)!");
       optimizeUnivariateFunction(dag,left,i,NODE_POW,NODE_POW_CONST,NODE_POW_TIME,NODE_POW_FUNTIME);
 
       if(dag[right].op == capd::autodiff::NODE_CONST)
       {
-        if(dag[right].val == 2.){
+        if(dag[right].val == 0.)
+          throw std::logic_error("Map constructor error: an expression of the form x^c, where c=0 is not allowed.");
+	else if(dag[right].val == 1.){
+          dag[i].op = NODE_NULL;
+          for(unsigned j=0;j<dag.size();++j)
+          {
+            if(dag[j].left==(int)i) dag[j].left = left;
+            if(dag[j].right==(int)i) dag[j].right = left;
+          }
+          for(unsigned j=0;j<pos.size();++j)
+            if(pos[j]==(int)i) pos[j] = left;
+
+        }
+        else  if(dag[right].val == 2.){
           dag[i].op = NODE_SQR;
           optimizeUnivariateFunction(dag,left,i,NODE_SQR,NODE_SQR_CONST,NODE_SQR_TIME,NODE_SQR_FUNTIME);
         }
@@ -931,7 +946,7 @@ int parseMap(unsigned numberOfVariables, std::string expression, const std::vect
     pos.push_back(current);
   }
 
-  optimizeDAG(dag);
+  optimizeDAG(dag,pos);
 
   return numberOfFunctions;
 }

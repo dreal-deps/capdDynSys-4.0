@@ -44,7 +44,7 @@ bool isConstant(std::string&, double& value);
 /// Converts given text to double (returns true on success)
 bool stringToDouble(std::string const & text, double & result);
 void removeWhiteSpaces(std::string & text);
-void optimizeDAG(std::vector<capd::autodiff::Node>& dag);
+void optimizeDAG(std::vector<capd::autodiff::Node>& dag, std::vector<int>& pos);
 }} // namespace capd::map
 
 #endif // _CAPD_MAP_PARSER_H_

@@ -118,6 +118,10 @@ Node operator*(double x, const Node& y){
 // ###############################################################
 
 Node operator^(const Node& x, double y){
+  if(y==1.)
+    return x;
+  if(y==0.)
+    throw std::logic_error("Map constructor error: an expression of the form x^c, where c=0 is not allowed.");
   Node c(y);
   return createBinaryNode(x,c,NODE_POW);
 }

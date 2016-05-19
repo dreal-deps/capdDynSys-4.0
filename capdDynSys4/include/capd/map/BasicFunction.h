@@ -148,19 +148,18 @@ void BasicFunction<Scalar>::reset(Function f, int dimIn, int dimOut, int noParam
   Node* var = new Node[dimIn+noParam+1];
   Node* out = new Node[dimOut];
   int i;
-  Node::dag = &this->m_fullGraph;
   // set variables
   for(i=0;i<dimIn;++i)
   {
     var[i] = Node(NODE_NULL,NODE_NULL,i,NODE_VAR);
-    Node::dag->push_back(var[i]);
+    this->m_fullGraph.push_back(var[i]);
   }
   // set time
   var[i].isTimeDependentOnly = true;
   var[i].isConst = false;
   var[i].op = NODE_TIME;
   var[i].result = i;
-  Node::dag->push_back(var[i]);
+  this->m_fullGraph.push_back(var[i]);
 
   this->m_indexOfFirstParam = dimIn;
   // set parameters
@@ -170,15 +169,16 @@ void BasicFunction<Scalar>::reset(Function f, int dimIn, int dimOut, int noParam
     var[i].isConst = true;
     var[i].op = NODE_PARAM;
     var[i].result = i;
-    Node::dag->push_back(var[i]);
+    this->m_fullGraph.push_back(var[i]);
   }
 
   // eval expression
+  Node::dag = &this->m_fullGraph;
   f(var[dimIn],var,dimIn,out,dimOut,var+dimIn+1,noParam);
   for(i=0;i<dimOut;++i)
     this->m_pos.push_back(out[i].result);
 
-  optimizeDAG(this->m_fullGraph);
+  optimizeDAG(this->m_fullGraph,this->m_pos);
 
   for(i=0;i<(int)this->m_fullGraph.size();++i)
     if( this->m_fullGraph[i].op!=NODE_NULL and
