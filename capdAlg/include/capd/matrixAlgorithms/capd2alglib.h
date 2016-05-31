@@ -39,16 +39,16 @@ void computeEigenvalues(const MatrixT & A,
    ap::real_2d_array a;
    size_type n = A.numberOfRows();
    a.setbounds(0,n-1, 0, n-1) ;
-   for(size_type i =0; i < n; i++)
+   for(size_type i =0; i < n; i++){
      for(size_type j=0; j< n; j++){
    	   a(i,j) = A[i][j];                   	
      }
-     
-     int vneeded = 0;
-     ap::real_1d_array wr;
-     ap::real_1d_array wi;
-     ap::real_2d_array vl;
-     ap::real_2d_array vr;
+   }
+   int vneeded = 0;
+   ap::real_1d_array wr;
+   ap::real_1d_array wi;
+   ap::real_2d_array vl;
+   ap::real_2d_array vr;
    if(! rmatrixevd(a, n, vneeded, wr, wi, vl, vr))
      throw std::runtime_error("algorithm for eigenvalues computation did not converge!");
    if((eigenRealPart.dimension() < n) or (eigenImPart.dimension() < n))
