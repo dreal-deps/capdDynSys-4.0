@@ -619,3 +619,4 @@ capdMake/libcapd/libtool
 config.log
 config.status
 lib/
+*~
