@@ -280,8 +280,17 @@ namespace Pow
   template<class T>
   inline void evalC0HomogenousPolynomial(const T* left, const T* right, T* result)
   {
-    if(!((*left)>capd::TypeTraits<T>::zero()))
-	throw std::runtime_error("Map evaluation error: negative argument in x^c, where c is not an integer.");
+    if ((*right) == capd::TypeTraits<T>::one()) {
+        *result = *left;
+        return;
+    }
+    if ((*right) == capd::TypeTraits<T>::zero()) {
+        *result = capd::TypeTraits<T>::one();
+        return;
+    }
+    if(!((*left)>capd::TypeTraits<T>::zero())) {
+        throw std::runtime_error("Map evaluation error: negative argument in x^c, where c is not an integer.");
+    }
     *result = exp((*right) * log(*left));
   }
 
