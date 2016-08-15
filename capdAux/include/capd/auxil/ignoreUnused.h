@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   removeUnused.h
  * Author: kapela
  *
@@ -10,11 +10,24 @@
 
 namespace capd{
   namespace auxil{
-    template <class T>
-    void ignoreUnused(T&) {} 
-    
+
+    template <class T1>
+    inline void ignoreUnused(const T1&) {}
+
+    template <class T1, class T2>
+    inline void ignoreUnused(const T1&, const T2&) {}
+
+    template <class T1, class T2, class T3>
+    inline void ignoreUnused(const T1&, const T2&, const T3&) {}
+
+    template <class T1, class T2, class T3, class T4>
+    inline void ignoreUnused(const T1&, const T2&, const T3&, const T4&) {}
+
+    template <class T1, class T2, class T3, class T4, class T5>
+    inline void ignoreUnused(const T1&, const T2&, const T3&, const T4&, const T5&) {}
+
+
   }
 }
 
 #endif	/* CAPD_AUXIL_IGNOREUNUSED_H */
-

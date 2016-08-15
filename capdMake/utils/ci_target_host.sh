@@ -13,7 +13,7 @@ else
     case "${NODE_NAME}" in
         jenkins-slave-noname)
             TARGET_HOST="noname" ;;
-        jenkins-slave-dockerin*)
+        jenkins-slaves-docker-*)
             TARGET_HOST="$(echo ${docker_image} | sed 's/.*-\(.*\)/\1/')" ;;
         jenkins-slave-*)
             TARGET_HOST="$(echo $NODE_NAME  | sed 's/jenkins-slave-\([a-zA-Z0-9_]*\)-[0-9]*$/\1/')";;

@@ -13,6 +13,7 @@ capd/auxil/Functor.h \
 capd/auxil/Logger.h \
 capd/auxil/LoggerConsole.h \
 capd/auxil/OutputStream.h \
+capd/auxil/RemoveConst.h \
 capd/auxil/ResourceUsage.h \
 capd/auxil/Stopwatch.h \
 capd/auxil/arg.h \
@@ -70,3 +71,5 @@ capd/krak/wxWin.h \
 capd/settings/archSetting.h \
 capd/settings/compilerSetting.h \
 capd/settings/operatingSystemSetting.h
+
+

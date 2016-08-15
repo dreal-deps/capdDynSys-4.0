@@ -32,7 +32,7 @@ PoincareMap<DS,FunT>::computePoincareMap(T& originalSet, int n)
 {
   // We move the set to be very close to the section
   T setAfterTheSection = this->reachSection(originalSet, n);
-  VectorType bound(this->m_solver.dimension(),true);
+  VectorType bound = (VectorType)originalSet;
   ScalarType oneStepReturnTime;
 
   // try to cross section in one step and use Newton method
@@ -45,7 +45,7 @@ PoincareMap<DS,FunT>::computePoincareMap(T& originalSet, int n)
       *(this->hessianOfFlow) = this->m_solver.getCurve().hessian(oneStepReturnTime);
     if(this->jet!=0){
       this->m_solver.getCurve().eval(oneStepReturnTime,*jet);
-      (*jet)() = bound;
+      (*jet)() = (typename JetType::VectorType)bound;
     }
 
     return bound;
@@ -68,11 +68,10 @@ PoincareMap<DS,FunT>::operator()(T& originalSet, const VectorType& c, const Matr
   this->returnTime = &out_returnTime;
 
   // We move the set to be very close to the section
-  const size_type D = this->m_solver.dimension();
+  const size_type D = A.numberOfRows();
   T setAfterTheSection = this->reachSection(originalSet, n);
-  VectorType bound(D,true);
+  VectorType bound = (VectorType)setAfterTheSection;
   ScalarType oneStepReturnTime;
-
   // try to cross section in one step and use Newton method to resolve for return time
   if(this->crossSection<T>(originalSet,oneStepReturnTime,bound)){
     SaveStepControl<Solver> ssc(this->m_solver);
@@ -106,20 +105,26 @@ PoincareMap<DS,FunT>::operator()(T& originalSet, const VectorType& c, const Matr
     // estimate [ A*Df(x(t)) ] * [ f(x(t)) * (0.5*dt^2) ]
     VectorType fx = this->getVectorField()(*(this->returnTime),bound,M);
     VectorType result = (A*M)*(fx*(typename capd::TypeTraits<ScalarType>::Real(0.5)*sqr(dt)));
-
     this->m_solver.setStep(t0);
     originalSet.move(this->m_solver);
     VectorType X = (VectorType)(originalSet);
-    VectorType x0(D), dx(D);
+    //VectorType x0(D), dx(D);
+    VectorType x0 = X, dx=X;
     split(X,x0,dx);
 
     // add [ A*Df(x(t0))] *  [ dt*dx ]
-    result += (A*this->getVectorField().derivative(originalSet.getCurrentTime(),X))*(dx*dt);
+    M = A*this->getVectorField().derivative(originalSet.getCurrentTime(),X);
+    VectorType second = M*(dx*dt);
 
     // add [ A*f(x0) ] * dt. VERY important: first multiply "thin objects", i.e. A and f(x0).
-    result += (A*this->getVectorField()(originalSet.getCurrentTime(),x0))*dt;
+    VectorType first = (A*this->getVectorField()(originalSet.getCurrentTime(),x0))*dt;
 
+    // intersect bounds and add to result
+    VectorType Y = intersection(originalSet.affineTransformation(M,x0)*dt,first+second);
+    result += Y;
+    
     // eventually add A*(x(t0)-c) taking into account representation of the set. This is hidden in the class that represents the set.
+    VectorType Y0 = originalSet.affineTransformation(A,c);
     result += originalSet.affineTransformation(A,c);
 
     // reset the set

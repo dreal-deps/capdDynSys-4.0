@@ -14,6 +14,7 @@
 #define _CAPD_DYNSET_C0TRIPLETONSET_HPP_
 
 #include <stdexcept>
+#include <sstream>
 #include "capd/vectalg/iobject.hpp"
 #include "capd/geomset/CenteredDoubletonSet.hpp"
 #include "capd/geomset/CenteredTripletonSet.hpp"
@@ -129,9 +130,14 @@ void C0TripletonSet<MatrixType, Policies>::move(const BaseSet& set, BaseSet& res
   intersection( data.B*set.m_r, data.Q*set.m_q, data.qr );
 
   // another enclosure is phi + C*r0 + qr
-  if( !intersection(bound,result.m_x + result.m_C*set.m_r0 + data.qr, bound) )
-    throw std::logic_error("C0TripletonSet: empty intersection of two representations. Report this error to CAPD developers!");
-
+  if( !intersection(bound,result.m_x + result.m_C*set.m_r0 + data.qr, bound) ){
+      std::ostringstream out;
+      out << "C0TripletonSet: empty intersection of two representations. Report this error to CAPD developers!\n";
+      out << "currentTime=" << dynamic_cast<C0TripletonSet&>(result).getCurrentTime() << std::endl;
+      out << "bound=" << bound << std::endl;
+      out << "result.m_x + result.m_C*set.m_r0 + data.qr=" << result.m_x + result.m_C*set.m_r0 + data.qr << std::endl ;
+      throw std::logic_error(out.str());
+  }
   // here we compute representation for the new set
   split(result.m_C, data.deltaC);
   split(result.m_x, data.y);

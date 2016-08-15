@@ -14,6 +14,7 @@
 #define _CAPD_DYNSET_C0DOUBLETONSET_HPP_
 
 #include <stdexcept>
+#include <sstream>
 #include "capd/vectalg/iobject.hpp"
 #include "capd/dynset/C0DoubletonSet.h"
 #include "capd/geomset/CenteredDoubletonSet.hpp"
@@ -82,9 +83,16 @@ void C0DoubletonSet<MatrixType, Policies>::move(const BaseSet& set, BaseSet& res
   result.m_C = data.jacPhi * set.m_C;
   matrixByMatrix(data.jacPhi,set.m_B,data.B);
   result.m_B = data.B;
-  if(!intersection(bound,result.m_x + result.m_C * set.m_r0 + result.m_B*set.m_r,bound))
-      throw std::logic_error("C0DoubletonSet fatal error! Intersection of two enclosures of the same object is empty. Report this error to CAPD developers!");
-
+  if(!intersection(bound,result.m_x + result.m_C * set.m_r0 + result.m_B*set.m_r,bound)){
+      std::ostringstream out;
+      out << "C0DoubletonSet fatal error! Intersection of two enclosures of the same object is empty. Report this error to CAPD developers!\n";
+      out << "bound=" << bound << std::endl;
+      out << "result.m_x=" << result.m_x << std::endl ;
+      out << "result.m_C=" << result.m_C << std::endl ;
+      out << "result.m_B=" << result.m_B << std::endl ;
+      out << "result.m_x + result.m_C * set.m_r0 + result.m_B*set.m_r=" << result.m_x + result.m_C * set.m_r0 + result.m_B*set.m_r << std::endl ;
+      throw std::logic_error(out.str());
+  }
   // here we compute representation for the new set
   split(result.m_C, data.deltaC);
   split(result.m_x, data.y);

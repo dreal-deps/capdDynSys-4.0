@@ -33,10 +33,10 @@ BOOST_AUTO_TEST_SUITE(TexWriterDouble)
 
 BOOST_AUTO_TEST_CASE(numberOfDigits)
 {
-  
+
   std::ostringstream sout;
   capd::TexWriter out(sout);
-  
+
   BOOST_CHECK_EQUAL(3,out.numberOfDigits(112.1432453254));
   BOOST_CHECK_EQUAL(31,out.numberOfDigits(1.1432453254e30));
   BOOST_CHECK_EQUAL(256,out.numberOfDigits(1.1432453254e255));
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE(numberOfDigits)
   BOOST_CHECK_EQUAL(1,out.numberOfDigits(-0.000123));
   BOOST_CHECK_EQUAL(1,out.numberOfDigits(-1.23e-42));
   BOOST_CHECK_EQUAL(1,out.numberOfDigits(0.0));
-  
+
 }
 
 BOOST_AUTO_TEST_CASE(totalNumberOfDigits)
@@ -96,8 +96,8 @@ BOOST_AUTO_TEST_CASE(totalNumberOfDigits)
   BOOST_CHECK_EQUAL(1, numDecDig);
   BOOST_CHECK_EQUAL(11, length);
   BOOST_CHECK_EQUAL(1, exponent);
-  BOOST_CHECK_EQUAL(1.0, left);
-  BOOST_CHECK_EQUAL(1.0, right);
+  BOOST_CHECK_CLOSE(1.0, left, 1./precision);
+  BOOST_CHECK_CLOSE(1.0, right, 1./precision);
   }
   {
   int precision = 10;
@@ -170,7 +170,7 @@ BOOST_AUTO_TEST_CASE(totalNumberOfDigits)
 
 
 //  {
-//    
+//
 //    Vector<int, 0> v1 = {1, 2, 3};
 //
 //    BOOST_CHECK_EQUAL(3, v1.dimension());
@@ -187,7 +187,7 @@ BOOST_AUTO_TEST_CASE(totalNumberOfDigits)
 //    BOOST_CHECK_EQUAL(2, v1[1]);
 //    BOOST_CHECK_EQUAL(3, v1[2]);
 //  }
-// 
+//
 //  {
 //    typedef Vector<int, 2> V2;
 //    BOOST_CHECK_THROW(V2 v1({1, 2, 3}) , std::range_error);
@@ -201,4 +201,3 @@ BOOST_AUTO_TEST_SUITE_END()
 //INIT_CAPD_CXX_LOGGER;
 
 //INIT_CAPD_CXX_LOGGER;
-

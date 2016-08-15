@@ -42,8 +42,9 @@ deb: dist
 
 
 
-package_version:
-	@$(ECHO) package_version=$(PACKAGE)-$(VERSION)
+EXTRA_DIST = capdMake/make/capd_version.m4 capdMake/make/common_makefile.mkf capdMake/make/common_programs_makefile.mkf capdMake/make/configure_common.ac capdMake/make/configure_common_boost.ac capdMake/make/configure_common_cxx11.ac capdMake/make/configure_common_mathematica.ac capdMake/make/configure_common_mpfr.ac capdMake/make/configure_common_mpi.ac capdMake/make/configure_common_pari.ac capdMake/make/configure_common_tbb.ac capdMake/make/configure_common_x.ac capdMake/debian capdMake/capd_library_version_number.m4 capdMake/capd_version_number.m4 capdMake/utils/capd_library_version.sh  ChangeLog README.md capdMake/docs capdAlg/docs
 
 
-EXTRA_DIST = capdMake/make/common_makefile.mkf capdMake/make/common_programs_makefile.mkf capdMake/debian capdMake/capd_library_version_number.m4 capdMake/capd_version_number.m4 ChangeLog README.md
+dist-hook:
+	rm -rf `find $(distdir) -type d -name .svn`
+	rm -rf `find $(distdir) -type d -name .git`

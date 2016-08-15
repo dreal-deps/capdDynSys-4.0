@@ -193,11 +193,11 @@ fi
 
 AM_MAINTAINER_MODE
 
+# -g0 save disk space without debug symbols
 if test "x${CAPD_REPOS}" = "xyes"; then
-   CAPD_CXXFLAGS="${CAPD_CXXFLAGS} -Wall -Wextra"
-   CAPD_CPPFLAGS="${CAPD_CPPFLAGS} -Wall -Wextra"
+   CAPD_CXXFLAGS="${CAPD_CXXFLAGS} -g0 -Wall -Wextra"
+   CAPD_CPPFLAGS="${CAPD_CPPFLAGS} -g0 -Wall -Wextra"
 else
- #save disk space without debug symbols
    CAPD_CXXFLAGS="${CAPD_CXXFLAGS} -g0 -O2"
    CAPD_CPPFLAGS="${CAPD_CPPFLAGS} -g0 -O2"
 : ${CFLAGS="-O2"}

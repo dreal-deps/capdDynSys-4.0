@@ -5,24 +5,9 @@
  *      Author: kapela
  */
 
-// it provides IVector, IMatrix, IMap
-#include "capd/capdlib.h"
-
-#include "capd/diffIncl/DiffInclusionLN.hpp"
-#include "capd/diffIncl/DiffInclusionCW.hpp"
-#include "capd/diffIncl/InclRect2Set.hpp"
-#include "capd/diffIncl/MultiMap.h"
-#include "capd/vectalg/Norm.hpp"
-#include "capd/poincare/PoincareMap.hpp"
 #include <iostream>
-
+#include "capd/capdlib.h"
 using namespace capd;
-
-typedef capd::diffIncl::InclRect2Set<IMatrix> InclRect2Set;
-typedef capd::diffIncl::MultiMap<IMap> IMultiMap;
-typedef capd::diffIncl::DiffInclusionCW<IMultiMap> DiffInclusionCW;
-typedef capd::diffIncl::DiffInclusionLN<IMultiMap> DiffInclusionLN;
-typedef capd::poincare::PoincareMap<DiffInclusionCW> DiffPoincare;
 
 /**
  *  In this example we integrate differential inclusion based on rossler equation
@@ -54,34 +39,34 @@ void RosslerExample() {
   int order = 10; //  order of Taylor method
 
   // We set up two differential inclusions (they differ in the way they handle perturbations)
-  DiffInclusionCW diffInclCW(rhs, order, IMaxNorm());
-  DiffInclusionLN diffInclLN(rhs, order, IEuclLNorm());
-  diffInclCW.setStep(timeStep);
-  diffInclLN.setStep(timeStep);
+  CWDiffInclSolver cwDiffInclSolver(rhs, order, IMaxNorm());
+  LNDiffInclSolver lnDiffInclSolver(rhs, order, IEuclLNorm());
+  cwDiffInclSolver.setStep(timeStep);
+  lnDiffInclSolver.setStep(timeStep);
 
   // Starting point for computations
   IVector x1(3);
   x1[0] = 0.0;    x1[1] = -10.3;      x1[2] = 0.03;
 
   // We prepare sets that know how to propagate themselves with differential inclusions
-  InclRect2Set setLN(x1),
-               setCW(x1);
+  InclRect2Set lnSet(x1),
+               cwSet(x1);
 
   // We do the numberOfSets steps
   int numberOfSteps = 10;
   for(int i = 0; i < numberOfSteps; ++i) {
-    setLN.move(diffInclLN);
-    setCW.move(diffInclCW);
+    lnSet.move(lnDiffInclSolver);
+    cwSet.move(cwDiffInclSolver);
   }
 
   // We compute interval vector that covers given set.
-  IVector resultLN = IVector(setLN),
-          resultCW = IVector(setCW);
+  IVector lnResult = IVector(lnSet),
+          cwResult = IVector(cwSet);
   std::cout.precision(16);
-  std::cout << "\n\n Method based on logarithmic norms : \n " << resultLN
-      << "\n  diam = " << maxDiam(resultLN) << "\n";
-  std::cout << "\n\n Method based on component wise estimates : \n " << resultCW
-      << "\n  diam = " << maxDiam(resultCW) << "\n";
+  std::cout << "\n\n Method based on logarithmic norms : \n " << lnResult
+      << "\n  diam = " << maxDiam(lnResult) << "\n";
+  std::cout << "\n\n Method based on component wise estimates : \n " << cwResult
+      << "\n  diam = " << maxDiam(cwResult) << "\n";
 
 }
 

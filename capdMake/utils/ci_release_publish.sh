@@ -16,6 +16,7 @@ This folder contains compiled CAPD.
 
 *  *amd64.deb - Ubuntu package compiled on Ubuntu 13.10
 *  capd-*-dev-<distro>.tar.gz - binaries compiled on linux <distro> with prefix=/usr/local
+*  capd-capdDynSys*-dev-<distro>.tar.gz - binaries of capdDynSys compiled on linux <distro> with prefix=/usr/local
 *  capd-*-dev-osx-<version>.tar.gz - binaries compiled on Mac OSX <version>
 *  capd-*-<version>.bottle.tar.gz - binaries compiled on Mac OSX <version> for Homebrew
 *  *winows-mxe.zip - cross-compiled binaries for Windows using Linux [MXE](http://mxe.cc/)
@@ -29,7 +30,8 @@ EOF
 
 cat - > src/README.md <<EOF
 This folder contains CAPD source files.
-
+* capd-*.tar.gz - sources of capdDynSys and capdRedHom
+* capd-capdDynSys*.tar.gz - sources of capdDynSys
 Enjoy!
 
 EOF
@@ -43,35 +45,35 @@ Enjoy!
 EOF
 
 
-mv -n capd-release-osx/*/* bin/
-mv -n capd-release-osx-bottle/*/* bin/
-mv -n capd-release-linux*/*/* bin/
+#mv -n capd-release-osx/*/* bin/
+#mv -n capd-release-osx-bottle/*/* bin/
+mv -n capd-release-bin/* bin/
 
-for deb_dir in capd-release-deb-docker/*; do
-    system=$(echo $deb_dir | sed 's/.*docker_image=capd-api-\(.*\),.*/\1/')
-    mkdir -p bin/${system}
-    mv -n ${deb_dir}/* bin/${system}/
-done
-
-
-cp ./capdMake/osx/capd.rb.in bin/capd.rb
-
-echo "Replace homebrew src variables"
-sed -i.bac "s|src_SHA1_PLACEHOLDER|${src_sha}|" bin/capd.rb
-sed -i.bac "s|src_URL_PLACEHOLDER|${sf_url}/${src_file}|" bin/capd.rb
-sed -i.bac "s|VERSION_PLACEHOLDER|${version}|" bin/capd.rb
-sed -i.bac "s|bottle_URL_PLACEHOLDER|${sf_url}/bin|" bin/capd.rb
+# for deb_dir in capd-release-deb-docker/*; do
+#     system=$(echo $deb_dir | sed 's/.*docker_image=capd-api-\(.*\),.*/\1/')
+#     mkdir -p bin/${system}
+#     mv -n ${deb_dir}/* bin/${system}/
+# done
 
 
-for bottle_file in bin/capd*-${version}.*.bottle.tar.gz; do
-    echo "Replace homebrew bottle variables ${bottle_file}"
-    osx_version_name=$(basename ${bottle_file} | sed "s|capd.*-${version}\.\(.*\)\.bottle\.tar\.gz|\1|")
-    echo ${osx_version_name}
-    bottle_sha=$(sha1sum ${bottle_file}  | cut -f1 -d' ')
-    sed -i.bac "s|${osx_version_name}_SHA1_PLACEHOLDER|${bottle_sha}|" bin/capd.rb
-done
+# cp ./capdMake/osx/capd.rb.in bin/capd.rb
 
-rm bin/capd.rb.bac
+# echo "Replace homebrew src variables"
+# sed -i.bac "s|src_SHA1_PLACEHOLDER|${src_sha}|" bin/capd.rb
+# sed -i.bac "s|src_URL_PLACEHOLDER|${sf_url}/${src_file}|" bin/capd.rb
+# sed -i.bac "s|VERSION_PLACEHOLDER|${version}|" bin/capd.rb
+# sed -i.bac "s|bottle_URL_PLACEHOLDER|${sf_url}/bin|" bin/capd.rb
+
+
+# for bottle_file in bin/capd*-${version}.*.bottle.tar.gz; do
+#     echo "Replace homebrew bottle variables ${bottle_file}"
+#     osx_version_name=$(basename ${bottle_file} | sed "s|capd.*-${version}\.\(.*\)\.bottle\.tar\.gz|\1|")
+#     echo ${osx_version_name}
+#     bottle_sha=$(sha1sum ${bottle_file}  | cut -f1 -d' ')
+#     sed -i.bac "s|${osx_version_name}_SHA1_PLACEHOLDER|${bottle_sha}|" bin/capd.rb
+# done
+
+# rm bin/capd.rb.bac
 
 
 

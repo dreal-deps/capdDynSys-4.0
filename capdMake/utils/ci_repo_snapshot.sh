@@ -8,8 +8,11 @@ export PATH=/usr/local/bin:$PATH
 source "$(dirname $0)/ci_configure_flags.sh"
 source "$(dirname $0)/ci_funcs.sh"
 
-env
 
+output=$PWD/output
+cd workdir/src
 
 autoreconf --force --install --verbose
-do_dist build_snapshot "VERSION=$(date +%Y%m%d_%H%M)"
+do_dist build "" "$output"
+
+echo $(date +%Y%m%d_%H%M) > $output/build_date

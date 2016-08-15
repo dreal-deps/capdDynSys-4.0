@@ -30,7 +30,7 @@ template<typename MatrixT>
 class AffineSection : public AbstractSection<MatrixT>
 {
 public:
-  typedef MatrixT                   MatrixType;
+  typedef MatrixT MatrixType;
   typedef typename MatrixType::RowVectorType VectorType;
   typedef typename MatrixType::ScalarType ScalarType;
   typedef typename VectorType::size_type size_type;             ///< integral type used to index containers (vectors, matrices, etc)

@@ -38,6 +38,7 @@ void derivativesToSeries(capd::diffAlgebra::Jet< MatrixType,DEGREE >& s)
   {
     typename capd::diffAlgebra::Jet<MatrixType,DEGREE>::Multipointer mp = s.first(i);
     do{
+     // cannot be just double - fails with Scalar=std::complex<Interval<MpFloat>>   
      typename capd::TypeTraits<ScalarType>::Real fac = mp.factorial();
      s(mp) /= ScalarType(fac);
     }while(s.hasNext(mp));

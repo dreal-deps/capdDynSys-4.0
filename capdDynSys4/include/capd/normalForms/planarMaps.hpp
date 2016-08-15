@@ -19,6 +19,7 @@
 #include <cmath>
 #include "capd/intervals/Interval.h"
 #include "capd/normalForms/normalForms.h"
+#include "capd/diffAlgebra/Jet.hpp"
 
 template<class Scalar>
 inline Scalar takePhiByTwo()
@@ -220,7 +221,7 @@ std::complex<ScalarType>& takeCoeff(
 
 template<typename ScalarType, unsigned DEGREE>
 capd::vectalg::Vector<std::complex<ScalarType>,0> 
-computePlanarElipticNormalForm(capd::diffAlgebra::Jet< capd::vectalg::Matrix<ScalarType,2,2>, DEGREE >& c)
+computePlanarEllipticNormalForm(capd::diffAlgebra::Jet< capd::vectalg::Matrix<ScalarType,2,2>, DEGREE >& c)
 {   
    typedef std::complex<ScalarType> Complex;
    typedef capd::vectalg::Matrix<Complex,2,2> ComplexMatrix;
@@ -614,6 +615,17 @@ computePlanarElipticNormalForm(capd::diffAlgebra::Jet< capd::vectalg::Matrix<Sca
    }       
 
    return result;
+}
+
+template<typename ScalarType>
+capd::vectalg::Vector<std::complex<ScalarType>,0>
+computePlanarEllipticNormalForm(capd::diffAlgebra::Jet< capd::vectalg::Matrix<ScalarType,0,0>, 0 >& c)
+{
+  if(c.dimension()!=2 or c.imageDimension()!=2)
+    throw std::runtime_error("Computation of normal form of non-planar maps is not implemented");
+  capd::diffAlgebra::Jet< capd::vectalg::Matrix<ScalarType,2,2>, 0 > jet(2,2,3);
+  std::copy(c.begin(),c.end(),jet.begin());
+  return computePlanarEllipticNormalForm(jet);
 }
 
 }} // namespace capd::normalForms

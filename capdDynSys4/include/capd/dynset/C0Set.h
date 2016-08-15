@@ -83,13 +83,10 @@ struct SetTraits< C0Set<MatrixT> >{
  * NOTE: In the present implementation order cannot be bigger than 33. This is due to the capacity of long type when compute binomial.
  */
 
-template<class DS>
-void computePsi(DS& ds, int p, int q,
-      const typename DS::ScalarType& h,
-      typename DS::VectorType& psi,
-      typename DS::MatrixType& Dpsi)
+template<class DS, class V, class M>
+void computePsi(DS& ds, int p, int q, const typename DS::ScalarType& h, V& psi, M& Dpsi)
 {
-  int dimension = ds.dimension();
+  int dimension = psi.dimension();
 
   int i,j,k;
   long denominator = binomial(p+q,p);

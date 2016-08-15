@@ -61,12 +61,12 @@ struct HOData : public BaseData {
   }
 
   void computeC0HOCoefficients(){
-    const size_type dimension = this->x.dimension();
     mid(this->JMinus,this->midJMinusInverse);
     mid(capd::matrixAlgorithms::gaussInverseMatrix(this->midJMinusInverse),this->midJMinusInverse);
     matrixByMatrix(this->midJMinusInverse,this->JPlus,this->jacPhi);
     matrixByMatrix(this->midJMinusInverse,this->JMinus,this->T);
-    for(size_type i=1;i<=dimension;++i) this->T(i,i) -= TypeTraits<typename ScalarType::BoundType>::one();
+    for(size_type i=1;i<=this->T.numberOfRows();++i)
+      this->T(i,i) -= TypeTraits<typename ScalarType::BoundType>::one();
   }
 
   VectorType psiPlus, psiMinus, pBound, cBound;

@@ -57,12 +57,11 @@ PoincareMap<SolverT,FunT>::getSign(const T & theSet,  VectorType & position, boo
   // we check if we cross the section and than return during one step
   // i.e. if during section crossing the section gradient is orthogonal to vector field
   this->checkTransversability(theSet, bound);
-
   // Now we are sure that either sing is constant during the time step
   // or we crossed the section transversely, so we can compute sign on position after the step.
-  if(updatePosition){
-    position = VectorType(theSet);
-  }
+  if(updatePosition)
+    position = (VectorType)theSet;
+
   return this->getSign(theSet);
 }
 
@@ -109,7 +108,7 @@ void PoincareMap<SolverT,FunT>::findSectionCrossing(T & theSet, T & setAfterSect
   this->m_solver.getStepControl().init(this->m_solver,theSet.getCurrentTime(),theSet);
   for(int iterate = 0; iterate < n; ++iterate){
 
-     VectorType setPosition = VectorType(theSet);
+     VectorType setPosition = (VectorType)theSet;
      ScalarType sign = getSign(theSet);
 
     //------------------------------------------------------------------------------------------------
@@ -123,13 +122,11 @@ void PoincareMap<SolverT,FunT>::findSectionCrossing(T & theSet, T & setAfterSect
             ((this->m_crossingDirection == PlusMinus) && (sign > 0.0))
         )
     ){
-      this->m_solver(theSet);
-//      theSet.move(this->m_solver);   // we make one step to leave the section and try again
+      this->m_solver(theSet); // we make one step to leave the section and try again
       sign = this->getSign(theSet, setPosition, true);
     }
-
     //------------------------------------------------
-    // first return to section
+    // first return to the section
 
     assert(!sign.contains(ScalarType(0.0)));
 
@@ -142,11 +139,9 @@ void PoincareMap<SolverT,FunT>::findSectionCrossing(T & theSet, T & setAfterSect
     while(check*sign>0)
     {
       this->m_solver(*original, *tempSet);
-//      original->move(this->m_solver,*tempSet);
       check = this->getSign(*tempSet, setPosition, true);
       std::swap(original, tempSet);
     } // end while
-
     if(iterate == n-1) {           // last iterate
       setAfterSection = *original;
       // We take the last set with not changed section sign
@@ -168,9 +163,6 @@ void PoincareMap<SolverT,FunT>::findSectionCrossing(T & theSet, T & setAfterSect
 template <typename SolverT, typename FunT>
 template<typename T>
 void PoincareMap<SolverT,FunT>::approachSection(T & theSet, T & setAfterSection){
-
-  //std::cout << "\n-   approachSection : " << VectorType(theSet) << std::endl;
-  
   SaveStepControl<SolverT> ssc(this->m_solver);
   
   ScalarType check = this->getSign(theSet);
@@ -182,7 +174,6 @@ void PoincareMap<SolverT,FunT>::approachSection(T & theSet, T & setAfterSection)
   ScalarType sign = mid(check);
   check  = this->m_crossSectionSign;
   
-  // TODO: Maybe in case when check contains 0 we still should use current function
   if(!(check*sign < 0)){ // we did not crossed the section in one step 
     return approachSectionByTryAndError(theSet);
   }
@@ -197,7 +188,7 @@ void PoincareMap<SolverT,FunT>::approachSection(T & theSet, T & setAfterSection)
   {
     ScalarType h = oneStepReturnTime.mid();
     ScalarType valAtH = (*this->m_section)(c(h));
-    ScalarType derAtDomain = this->m_section->gradient(bound) * vfOnBound;
+    ScalarType derAtDomain = this->m_section->gradientByVector(bound,vfOnBound);
     ScalarType N = h - valAtH/derAtDomain;
     ScalarType newReturnTime;  
     if(!intersection(oneStepReturnTime, N, newReturnTime)){
@@ -217,16 +208,16 @@ void PoincareMap<SolverT,FunT>::approachSection(T & theSet, T & setAfterSection)
     }
     vfOnBound = this->m_solver.getVectorField()(timeBeforeSection+oneStepReturnTime,bound);
   }
-  
-  VectorType  setPosition = VectorType(theSet);
-  VectorType Grad = this->m_section->gradient(setPosition);
-
+  VectorType setPosition = (VectorType)theSet;
+  ScalarType distance = this->m_section->gradientByVector(setPosition,setPosition);
   typedef typename ScalarType::BoundType BoundType;
   // maximal distance is sectionFactor * size of the set in the direction perpendicular to the section
-  BoundType maxDistance = diam(abs(setPosition*Grad)).rightBound()*this->m_sectionFactor;
+  BoundType maxDistance = diam(abs(distance)).rightBound()*this->m_sectionFactor;
   BoundType approxDistance = (abs(this->getSign(theSet))).leftBound();
   
   ScalarType stepFactor = (1.0 - maxDistance/approxDistance/10.0);
+  if(!(stepFactor>0)) return;
+
   ScalarType lastStep = oneStepReturnTime.left()*stepFactor;
   ScalarType maxStepBackup = this->m_solver.getMaxStep();
   // We try to make lastStep and check if we are still before section
@@ -257,7 +248,6 @@ void PoincareMap<SolverT,FunT>::approachSection(T & theSet, T & setAfterSection)
 template <typename SolverT, typename FunT>
 template<typename T>
 void PoincareMap<SolverT,FunT>::approachSectionByTryAndError(T & theSet){
-
   SaveStepControl<SolverT> ssc(this->m_solver);
   ScalarType step = this->m_solver.getStep(); // time step used to reach the section
 
@@ -275,10 +265,10 @@ void PoincareMap<SolverT,FunT>::approachSectionByTryAndError(T & theSet){
   T *original = &theSet, *tempSet = &temp;
 
   setPosition = VectorType(theSet);
-  VectorType Grad = this->m_section->gradient(setPosition);
+  ScalarType distance = this->m_section->gradientByVector(setPosition,setPosition);
 
   // maximal distance is sectionFactor * size of the set in the direction perpendicular to the section
-  typename ScalarType::BoundType maxDistance = diam(abs(setPosition*Grad)).rightBound()*this->m_sectionFactor;
+  typename ScalarType::BoundType maxDistance = diam(abs(distance)).rightBound()*this->m_sectionFactor;
   int maxIterations = 30; // usually 2-3 iterations are necessary to come close enough to the section
 
   original = &theSet;
@@ -291,8 +281,8 @@ void PoincareMap<SolverT,FunT>::approachSectionByTryAndError(T & theSet){
       break;
 
     VectorType setCenter = midVector(setPosition);
-    VectorType velocity = this->m_solver.getVectorField()(setCenter);
-    ScalarType velocityInNormalDirection = abs(velocity * Grad);
+    VectorType velocity = this->m_solver.getVectorField()(original->getCurrentTime(),setCenter);
+    ScalarType velocityInNormalDirection = abs(this->m_section->gradientByVector(setPosition,velocity));
     // We want to stop at distance equal to 1/15 of maxDistance
     // (1/15 is an experimental value, chosen as well working)
     ScalarType approxTime = ((approxDistance-(maxDistance/15))/ velocityInNormalDirection).mid().left();
@@ -324,7 +314,6 @@ void PoincareMap<SolverT,FunT>::approachSectionByTryAndError(T & theSet){
     if(correctionAttempts!= -1) {
       std::swap(original, tempSet);
       setPosition = VectorType(*original);
-      Grad = this->m_section->gradient(setPosition);
       maxIterations--;
     }else{
       break;
@@ -384,7 +373,7 @@ bool PoincareMap<SolverT,FunT>::crossSection(T theSet, ScalarType& oneStepReturn
   {
     ScalarType h = oneStepReturnTime.mid();
     ScalarType valAtH = (*this->m_section)(c(h));
-    ScalarType derAtDomain = this->m_section->gradient(bound) * vfOnBound;
+    ScalarType derAtDomain = this->m_section->gradientByVector(bound,vfOnBound);
     ScalarType N = h - valAtH/derAtDomain;
     ScalarType newReturnTime;
     if(!intersection(oneStepReturnTime,N,newReturnTime))
@@ -430,8 +419,8 @@ PoincareMap<SolverT,FunT>::crossSection(T& theSet, const T & setAfterTheSection)
 
   // We want stop after section, closer than  maxDistance =  sectionFactor * size of set in section gradient direction
   VectorType setPosition = VectorType(theSet);
-  VectorType Grad = this->m_section->gradient(setPosition);
-  typename ScalarType::BoundType maxDistance = diam(abs(setPosition*Grad)).rightBound()*this->m_sectionFactor;
+  ScalarType distance = this->m_section->gradientByVector(setPosition,setPosition);
+  typename ScalarType::BoundType maxDistance = diam(abs(distance)).rightBound()*this->m_sectionFactor;
   typename ScalarType::BoundType approxDistance = - abs(this->getSign(theSet)).rightBound();
 
   VectorType result = setPosition;
@@ -455,8 +444,8 @@ PoincareMap<SolverT,FunT>::crossSection(T& theSet, const T & setAfterTheSection)
 
   while(!(check*sign < 0))
   {
-    VectorType fieldDirection = this->m_solver.getVectorField()(midVector(setPosition));
-    ScalarType fieldSectionDirection = abs(fieldDirection * Grad);
+    VectorType fieldDirection = this->m_solver.getVectorField()(original->getCurrentTime(),midVector(setPosition));
+    ScalarType fieldSectionDirection = abs(this->m_section->gradientByVector(setPosition,fieldDirection));
     ScalarType approxTime = ((maxDistance/2 - approxDistance ) / fieldSectionDirection).mid();
 
     // if approxTime is too big, it can cause problems with finding an enclosure.
@@ -487,7 +476,7 @@ PoincareMap<SolverT,FunT>::crossSection(T& theSet, const T & setAfterTheSection)
       }
     }
 
-    typename SolverT::SolutionCurve c = this->m_solver.getCurve();
+    const typename SolverT::SolutionCurve& c = this->m_solver.getCurve();
     ScalarType domain(c.getLeftDomain(),c.getRightDomain());
     VectorType bound = c(domain);
 
@@ -499,7 +488,7 @@ PoincareMap<SolverT,FunT>::crossSection(T& theSet, const T & setAfterTheSection)
       this->updateJacEnclosure(*original);
 
       // TODO: It was computed already in checkTranversability
-      VectorType Fresult = this->m_solver.getVectorField()(bound);
+      VectorType Fresult = this->m_solver.getVectorField()(domain,bound);
 
       for(size_type i=0;i<this->getVectorField().dimension();i++)
       {
@@ -527,13 +516,15 @@ void PoincareMap<SolverT,FunT>::checkTransversability(
   const T & theSet, const VectorType & bound
 ){
   ScalarType check = (*this->m_section)(bound);
+  const typename SolverT::SolutionCurve& c = this->m_solver.getCurve();
+  ScalarType domain(c.getLeftDomain(),c.getRightDomain());
 
   if(subset(ScalarType(0.0), check)) {  // Is the section crossed?
-    ScalarType innerProduct = this->m_section->gradient(bound)*this->m_solver.getVectorField()(bound);
+    ScalarType innerProduct = this->m_section->gradientByVector(bound,this->m_solver.getVectorField()(domain,bound));
     if (innerProduct.contains(0.0)) {  // Is the vector field orthogonal to section gradient?
       throw PoincareException<T>(
               "PoincareMap error: possible nontransversal return to the section ", theSet, theSet,
-              bound, this->m_solver.getVectorField()(bound),
+              bound, this->m_solver.getVectorField()(domain,bound),
               check, this->m_section->gradient(bound), innerProduct
               );
     }

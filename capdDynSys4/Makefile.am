@@ -10,3 +10,9 @@ endif
 
 lib:
 	$(MAKE) $(AM_MAKEFLAGS) -C src
+
+EXTRA_DIST = docs examples
+
+dist-hook:
+	rm -rf `find $(distdir) -type d -name .svn`
+	rm -rf `find $(distdir) -type d -name .git`

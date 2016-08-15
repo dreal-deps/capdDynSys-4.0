@@ -20,6 +20,13 @@ function do_config() {
 
 
 function do_relese_build() {
+    ppwd=$(pwd)
+    output="$1"
+
+    ver="$(pwd_version)"
+
+    mkdir -p "$output"
+
     if [ $(uname) == 'Darwin' ]; then
         CORES=$(sysctl hw.ncpu | awk '{print $2}')
     elif [ -e /proc/cpuinfo ]; then
@@ -57,33 +64,29 @@ function do_relese_build() {
        export host_alias="${HOST_CONFIG}"
    fi
 
-   make -j $CORES
+   make -j $CORES check
 
    if [ "$mxe_build" = "yes" ]; then
-       BIN_NAME=$(make package_version | grep package_version | sed 's/package_version=\(.*\)/\1/')-dev-winows-mxe
+       #       BIN_NAME=$(make package_version | grep package_version | sed 's/package_version=\(.*\)/\1/')-dev-winows-mxe
+              BIN_NAME="capd-${ver}-dev-winows-mxe"
    else
-       BIN_NAME=$(make package_version | grep package_version | sed 's/package_version=\(.*\)/\1/')-dev-${TARGET_HOST}-$(uname -m)
+       #       BIN_NAME=$(make package_version | grep package_version | sed 's/package_version=\(.*\)/\1/')-dev-${TARGET_HOST}-$(uname -m)
+              BIN_NAME="capd-${ver}-dev-${TARGET_HOST}-$(uname -m)"
    fi
 
    make install-strip DESTDIR=$PWD/$BIN_NAME
 
+   find $BIN_NAME -type f -print > files.lst
+
    if [ "$mxe_build" = "yes" ]; then
        zip -r $BIN_NAME.zip $BIN_NAME
-       mv $BIN_NAME.zip build_result/
+       mv $BIN_NAME.zip $output/
    else
-       tar czf $BIN_NAME.tar.gz $BIN_NAME
-       mv $BIN_NAME.tar.gz build_result/
+       tar zcvf $BIN_NAME.tar.gz $(cat files.lst)
+       mv $BIN_NAME.tar.gz $output/
    fi
 
-
-
-# We have mathematica in binary archive (prefix/libexec/capdredhom), do not need it here
-#   mathematica_build=(capdRedHom/programs/apiRedHom-mathematica/capdRedHomM-*.zip)
-
-#   if [ -e "${mathematica_build}" ]; then
-#       mathematica_build_dist=$(basename $(echo "$mathematica_build" | sed "s/\(.*\).zip/\1-${TARGET_HOST}.zip/"))
-#       cp $mathematica_build build_result/$mathematica_build_dist
-#   fi
+   cd $ppwd
 }
 
 #it is quite difficult to set PATH for jenkins-slave started by launchd on OSX.
@@ -95,6 +98,8 @@ source "$(dirname $0)/ci_target_host.sh"
 export WITHOUT_CAPD_EXAMPLES=true
 
 
+output=$PWD/output
+input=$PWD/input
 
 env
 
@@ -108,4 +113,5 @@ else
 fi
 
 go_to_dist
-do_relese_build
+do_relese_build "$output"
+mv $input/build_date $output/

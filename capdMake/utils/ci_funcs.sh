@@ -2,15 +2,17 @@
 
 
 function go_to_dist() {
-    files=(capd-*.tar.gz)
+    files=($PWD/input/capd-*[0-9]*.tar.gz)
 
     if [ "1" != "${#files[*]}" ]; then
         echo "ERROR: Found more than one file"
         exit 1
     fi
 
-    dist_archive=${files[0]}
+    mkdir workdir
+    cd workdir
 
+    dist_archive=${files[0]}
     tar xzf ${dist_archive}
 
     dirs=(capd-*/)
@@ -25,7 +27,7 @@ function go_to_dist() {
 }
 
 function pwd_version() {
-    echo $(basename $PWD) | sed 's/capd.*-\(.*\)/\1/'
+    echo $(basename $PWD) | sed 's/capd-\(.*\)/\1/'
 }
 
 function detect_cores() {
@@ -44,6 +46,8 @@ function detect_cores() {
 }
 
 function do_distcheck() {
+    ppwd=$(pwd)
+
     BUILD_DIR="$1"
     MAKE_ARGS="$2"
 
@@ -73,21 +77,18 @@ function do_distcheck() {
        export host_alias="${HOST_CONFIG}"
    fi
 
-    if command -v zip 2>/dev/null; then
-        make -j $CORES distcheck $MAKE_ARGS
-# default do not create zip. Do it leter, so distcheck do not compleain about not cleaned files
-        make -j $CORES dist DIST_TARGETS="dist-zip" $MAKE_ARGS
-    else
-        echo "Do not have zip"
-        make -j $CORES distcheck $MAKE_ARGS
-    fi
+   make -j $CORES distcheck $MAKE_ARGS
+
+   cd $ppwd
 }
 
 
 function do_dist() {
+    ppwd=$(pwd)
+
     BUILD_DIR="$1"
     MAKE_ARGS="$2"
-
+    OUTPUT_DIR="$3"
 
     if [ -e $BUILD_DIR ]; then
         chmod -R u+rw $BUILD_DIR
@@ -105,4 +106,11 @@ function do_dist() {
         echo "Do not have zip"
         make -j $CORES dist DIST_TARGETS=dist-gzip $MAKE_ARGS
     fi
+
+    if [ ! -z "$OUTPUT_DIR" ]; then
+        mkdir -p "$OUTPUT_DIR"
+        mv *.{tar.gz,zip} $OUTPUT_DIR/
+    fi;
+
+    cd $ppwd
 }

@@ -21,8 +21,6 @@
 #include "capd/capdlib.h"
 using namespace capd;
 
-const int DIMENSION = 3;
-
 double minx=-2.6;
 double maxx=2.6;
 double miny=-2.6;

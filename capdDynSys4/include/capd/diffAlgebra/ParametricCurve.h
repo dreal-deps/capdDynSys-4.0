@@ -35,11 +35,11 @@ namespace diffAlgebra{
 
 // ##########################################################
 
-template<class MatrixT>
+template<class MatrixT, class VectorT = typename MatrixT::RowVectorType>
 class ParametricCurve{
 public:
   typedef MatrixT MatrixType;
-  typedef typename MatrixType::RowVectorType VectorType;
+  typedef VectorT VectorType;
   typedef typename MatrixType::ScalarType ScalarType;
   typedef typename TypeTraits<ScalarType>::Real Real;
   typedef Hessian<ScalarType,VectorType::csDim,VectorType::csDim> HessianType;
@@ -72,29 +72,29 @@ protected:
 
 // ----------------- inline definitions ------------------
 
-template<class MatrixT>
-ParametricCurve<MatrixT>::ParametricCurve(Real left, Real right)
+template<class MatrixT, class VectorT>
+ParametricCurve<MatrixT,VectorT>::ParametricCurve(Real left, Real right)
   : m_left(left), m_right(right)
 {}
 
-template<class MatrixT>
+template<class MatrixT, class VectorT>
 inline
-void ParametricCurve<MatrixT>::setDomain(Real left, Real right)
+void ParametricCurve<MatrixT,VectorT>::setDomain(Real left, Real right)
 {
   this->m_left = left;
   this->m_right = right;
 }
 
-template<class MatrixT>
+template<class MatrixT, class VectorT>
 inline
-typename ParametricCurve<MatrixT>::Real ParametricCurve<MatrixT>::getLeftDomain() const
+typename ParametricCurve<MatrixT,VectorT>::Real ParametricCurve<MatrixT,VectorT>::getLeftDomain() const
 {
   return this->m_left;
 }
 
-template<class MatrixT>
+template<class MatrixT, class VectorT>
 inline
-typename ParametricCurve<MatrixT>::Real ParametricCurve<MatrixT>::getRightDomain() const
+typename ParametricCurve<MatrixT,VectorT>::Real ParametricCurve<MatrixT,VectorT>::getRightDomain() const
 {
   return this->m_right;
 }

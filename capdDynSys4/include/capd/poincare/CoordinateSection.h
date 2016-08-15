@@ -56,6 +56,7 @@ public:
   void setDirection(size_type i){
     if(i>=n.dimension())
        throw std::runtime_error("CoordinateSection::setDirection error - index of variable that defines PoincareSection must be less that dimension.");
+    this->n.clear();
     this->i = i;
     this->n[i] = 1.;
   }
@@ -70,6 +71,9 @@ public:
 
   VectorType gradient(const VectorType&) const{
     return n;
+  }
+  ScalarType gradientByVector(const VectorType& /*x*/, const VectorType& u) const {
+    return u[this->i];
   }
 
   bool isSpecialSection() const {

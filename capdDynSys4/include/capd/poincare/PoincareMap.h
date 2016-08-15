@@ -58,9 +58,7 @@ namespace poincare{
  *  Parameters:
  *   - DS    dynamical system
  *       - DS::MapType  vector field type
- *   - FunT  map describing section :
- *       - FunT::FunctionType - section function type
- *       - FunT               - gradient function type
+ *   - SectionT  scalar function describing section :
  */
 
 template<typename SolverT, typename SectionT = AbstractSection<typename SolverT::MatrixType> >

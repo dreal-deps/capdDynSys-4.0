@@ -38,22 +38,22 @@ capd/intervals/minmax_interval.h \
 capd/intervals/mplib.h \
 capd/matrixAlgorithms/CAPDIntMatrixAlgorithms.h \
 capd/matrixAlgorithms/CAPDSmithForm.h \
+capd/matrixAlgorithms/IntMatrixAlgorithmsFactory.h \
 capd/matrixAlgorithms/Invert.h \
 capd/matrixAlgorithms/MatrixOp.h \
-capd/matrixAlgorithms/PARIInterface.h \
 capd/matrixAlgorithms/PARIIntMatrixAlgorithms.h \
+capd/matrixAlgorithms/PARIInterface.h \
 capd/matrixAlgorithms/PARISmithForm.h \
+capd/matrixAlgorithms/QuotientBaseMatrix.h \
 capd/matrixAlgorithms/SmithForm.h \
 capd/matrixAlgorithms/SmithFormFactory.h \
+capd/matrixAlgorithms/SolveLinearEquation.h \
 capd/matrixAlgorithms/capd2alglib.h \
 capd/matrixAlgorithms/floatMatrixAlgorithms.h \
 capd/matrixAlgorithms/floatMatrixAlgorithms.hpp \
 capd/matrixAlgorithms/intMatrixAlgorithms.hpp \
-capd/matrixAlgorithms/IntMatrixAlgorithmsFactory.h \
 capd/matrixAlgorithms/lib.h \
 capd/matrixAlgorithms/matrixAlgorithmsLib.h \
-capd/matrixAlgorithms/SolveLinearEquation.h \
-capd/matrixAlgorithms/QuotientBaseMatrix.h \
 capd/multiPrec/MpInt.h \
 capd/multiPrec/MpReal.h \
 capd/multiPrec/MpReal_Base.hpp \
@@ -99,3 +99,5 @@ capd/vectalg/lib.h \
 capd/vectalg/mplib.h \
 capd/vectalg/typedefs.h \
 capd/vectalg/vectalgLib.h
+
+

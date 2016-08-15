@@ -14,6 +14,7 @@
 #define _CAPD_GEOMSET_CENTEREDTRIPLETONSET_HPP_
 
 #include <stdexcept>
+#include <sstream>
 #include "capd/vectalg/iobject.hpp"
 #include "capd/geomset/CenteredDoubletonSet.hpp"
 #include "capd/geomset/CenteredTripletonSet.h"
@@ -135,7 +136,11 @@ CenteredTripletonSet<MatrixType>::evalAffineFunctional(const VectorType& gradien
   }
   ScalarType y;
   if(!intersection(rB,rQ,y)){
-    throw std::logic_error("CenteredTripletonSet::evalAffineFunctional - empty intersection of rB and rQ. Report this error to CAPD developers!");
+    std::ostringstream message;
+    message << "CenteredTripletonSet::evalAffineFunctional - empty intersection of rB and rQ. Report this error to CAPD developers!\n";
+    message << "rB=" << rB << std::endl;
+    message << "rQ=" << rQ << std::endl;
+    throw std::logic_error(message.str());
   }
   return r+y;
 }

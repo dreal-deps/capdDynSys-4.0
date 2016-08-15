@@ -37,7 +37,6 @@ class TimeMap
 public:
   typedef SolverT Solver;
   typedef typename Solver::MapType MapType;
-  typedef typename Solver::FunctionType FunctionType;
   typedef typename Solver::MatrixType MatrixType;
   typedef typename Solver::VectorType VectorType;
   typedef typename Solver::ScalarType ScalarType;

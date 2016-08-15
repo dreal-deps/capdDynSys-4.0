@@ -9,12 +9,12 @@
 
 // Copyright (C) 2000-2006 by the CAPD Group.
 //
-// This file constitutes a part of the CAPD library, 
+// This file constitutes a part of the CAPD library,
 // distributed under the terms of the GNU General Public License.
-// Consult  http://capd.wsb-nlu.edu.pl/ for details. 
+// Consult  http://capd.wsb-nlu.edu.pl/ for details.
 
-#ifndef _CAPD_AUXIL_OFSTREAMCOUT_H_ 
-#define _CAPD_AUXIL_OFSTREAMCOUT_H_ 
+#ifndef _CAPD_AUXIL_OFSTREAMCOUT_H_
+#define _CAPD_AUXIL_OFSTREAMCOUT_H_
 #include <iostream>
 #include <fstream>
 class ofstreamcout : public std::ofstream{
@@ -22,7 +22,7 @@ class ofstreamcout : public std::ofstream{
   public:
 
   friend ofstreamcout& operator<<(ofstreamcout& out, std::ostream& (*op)(std::ostream&) ){
-    if(&out and out.streaming){
+    if(out.streaming){
       (*op)(std::cout);
       if(!out.bad()) (*op)(out);
     }
@@ -30,7 +30,7 @@ class ofstreamcout : public std::ofstream{
   }
   template<typename T>
   friend ofstreamcout& operator<<(ofstreamcout& out, const T& t){
-    if(&out and out.streaming){
+    if(out.streaming){
       if(!out.bad()) static_cast<std::ofstream&>(out) << t;
       std::cout << t;
     }
@@ -43,6 +43,5 @@ class ofstreamcout : public std::ofstream{
     streaming=false;
   }
 };
-#endif // _CAPD_AUXIL_OFSTREAMCOUT_H_ 
+#endif // _CAPD_AUXIL_OFSTREAMCOUT_H_
 /// @}
-

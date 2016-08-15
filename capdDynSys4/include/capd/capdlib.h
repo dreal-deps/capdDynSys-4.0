@@ -27,6 +27,7 @@
 #include "capd/dynsys/lib.h"
 #include "capd/poincare/lib.h"
 #include "capd/alglib/lib.h"
+#include "capd/diffIncl/lib.h"
 
 #include "capd/matrixAlgorithms/lib.h"
 #undef CAPD_DEFAULT_DIMENSION

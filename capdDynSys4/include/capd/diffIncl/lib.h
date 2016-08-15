@@ -15,6 +15,7 @@
 #ifndef _CAPD_DIFFINCL_LIB_H_
 #define _CAPD_DIFFINCL_LIB_H_
 #include "capd/map/lib.h"
+#include "capd/poincare/lib.h"
 #include "capd/diffIncl/MultiMap.h"
 #include "capd/diffIncl/DiffInclusion.h"
 #include "capd/diffIncl/DiffInclusionCW.h"
@@ -23,10 +24,12 @@
 
 namespace capd{
 typedef capd::diffIncl::MultiMap<capd::IMap> IMultiMap;
-typedef capd::diffIncl::DiffInclusion<IMultiMap> IDiffInclusion;
-typedef capd::diffIncl::DiffInclusionCW<IMultiMap> IDiffInclusionCW;
-typedef capd::diffIncl::DiffInclusionLN<IMultiMap> IDiffInclusionLN;
-typedef capd::diffIncl::InclRect2Set<capd::IMatrix> IInclRect2Set;
+typedef capd::diffIncl::DiffInclusion<IMultiMap> DiffInclSolver;
+typedef capd::diffIncl::DiffInclusionCW<IMultiMap> CWDiffInclSolver;
+typedef capd::diffIncl::DiffInclusionLN<IMultiMap> LNDiffInclSolver;
+typedef capd::diffIncl::InclRect2Set<capd::IMatrix> InclRect2Set;
+typedef capd::poincare::TimeMap<CWDiffInclSolver> CWTimeMap;
+typedef capd::poincare::TimeMap<LNDiffInclSolver> LNTimeMap;
 } // end of namespace capd
 
 #endif // _CAPD_DIFFINCL_LIB_H_

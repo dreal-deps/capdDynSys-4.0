@@ -68,7 +68,9 @@ public:
 
   virtual ScalarType operator() (const VectorType& v) const = 0;     ///< evaluates function at a given vector
   virtual VectorType gradient(const VectorType& u) const = 0;        ///< returns gradient of the function computed at vector u
-
+  virtual ScalarType gradientByVector(const VectorType& x, const VectorType& u) const {
+    return this->gradient(x)*u;
+  }
   /** This is very important function.
       If it returns true, class PoincareMap delegates computation of value of section(set) to the section.
       Otherwise it is assumed that the set has more information to compute value of section(set) in most optimal way.
