@@ -72,15 +72,15 @@ AC_SUBST([DEF_LIBRARY_VERSION], ["$CAPD_VERSION_INFO"])
 AC_DEFINE_UNQUOTED([DEF_LIBRARY_VERSION], ["$CAPD_VERSION_INFO"], [DEF_LIBRARY_VERSION])
 
 
-PKG_CHECK_MODULES([liblog4cxx], [liblog4cxx >= 0.10.0], [AC_DEFINE([HAVE_LOG4CXX], [1], [Use log4cxx])],
-				 [
-				 AC_MSG_WARN([Cannot find log4cxx])
-				 ])
+#PKG_CHECK_MODULES([liblog4cxx], [liblog4cxx >= 0.10.0], [AC_DEFINE([HAVE_LOG4CXX], [1], [Use log4cxx])],
+#				 [
+#				 AC_MSG_WARN([Cannot find log4cxx])
+#				 ])
 
 CAPD_MODULES="capdauxil "
 
-capdauxil_CFLAGS="${capdauxil_CFLAGS} ${liblog4cxx_CFLAGS}"
-capdauxil_LIBS="${capdauxil_LIBS} ${liblog4cxx_LIBS}"
+capdauxil_CFLAGS="${capdauxil_CFLAGS}" # ${liblog4cxx_CFLAGS}"
+capdauxil_LIBS="${capdauxil_LIBS}" # ${liblog4cxx_LIBS}"
 
 if test x"$HAVE_BOOST_system" = xyes && test x"$HAVE_BOOST_filesystem" = xyes && test x"$HAVE_BOOST_regex" = xyes; then
    capdauxil_CFLAGS="${capdauxil_CFLAGS} ${BOOST_CPPFLAGS}"
