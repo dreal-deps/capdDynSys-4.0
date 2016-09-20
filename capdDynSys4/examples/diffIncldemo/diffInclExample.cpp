@@ -71,6 +71,7 @@ void RosslerExample() {
 }
 
 int main() {
-  RosslerExample();
+  // soonho-kong: somehow the following examples doesn't work with maintainer-mode disabled.
+  // RosslerExample();
   return 0;
 } // END
