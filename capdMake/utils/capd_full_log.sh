@@ -29,7 +29,7 @@ fi
 if [ -e "${CAPD_SRC_ROOT}/.git" ]; then
     function vcs_log() {
         abs_path=`cd $1 && pwd`
-        git --git-dir=$abs_path/.git --work-tree=$abs_path svn log
+#        git --git-dir=$abs_path/.git --work-tree=$abs_path svn log
     }
 else
     function vcs_log() {
