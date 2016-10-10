@@ -258,11 +258,23 @@ void BasicFunction<Scalar>::setParameters(const Scalar* values, size_type d)
 
   size_type cnt= this->m_indexOfFirstParam+1;
   size_type i=0;
-  while(cnt < vars and i<d)
-  {
-      this->m_dag(VarNo(cnt),CoeffNo(0)) = values[i];
-      ++cnt;
-      ++i;
+  // Soonho: previously we have the following code
+  //
+  // while(cnt < vars && i < d) {
+  //     this->m_dag(VarNo(cnt++),CoeffNo(0)) = values[i++];
+  // }
+  //
+  // and it caused vectorization error in clang-3.7 (see
+  // https://github.com/dreal/dreal3/issues/308). As a workaround, I
+  // replaced the above code with the following one:
+  if (vars - cnt > d - i) {
+      while(i<d) {
+          this->m_dag(VarNo(cnt++),CoeffNo(0)) = values[i++];
+      }
+  } else {
+      while(cnt < vars) {
+          this->m_dag(VarNo(cnt++),CoeffNo(0)) = values[i++];
+      }
   }
 }
 
